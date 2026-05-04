@@ -23,6 +23,7 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - colormath
 - Rich
 - Typer
+- **Palette Studio** (optional): [FastAPI](https://fastapi.tiangolo.com/) + [Alpine.js](https://alpinejs.dev/) — local UI on `127.0.0.1:8765`, animated CSS mesh background, no separate frontend build step
 
 ## Quick start
 
@@ -41,6 +42,10 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
    - `setx ROB_ROSS_EMBED_MODEL sentence-transformers/all-MiniLM-L6-v2`
 5. Run CLI:
    - `python cli.py --help`
+6. **Palette Studio** (infinite select → regen loop in the browser):
+   - `python -m studio`
+   - Open [http://127.0.0.1:8765](http://127.0.0.1:8765) (override host/port with `ROB_ROSS_STUDIO_HOST` / `ROB_ROSS_STUDIO_PORT`; set `ROB_ROSS_STUDIO_RELOAD=true` for dev autoreload)
+   - Check variants to set the **shortlist** for the next run, edit the brief, **Regenerate**. **Heart** adds a palette to the export roster (same as `roster add`).
 
 ## Commands
 
@@ -63,7 +68,8 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - `vector_store/` Chroma persistence (`rob_ross_principles` collection)
 - `outputs/palettes/` generated palettes JSON
 - `outputs/reports/` rationale markdown reports
-- `core/` implementation modules
+- `core/` implementation modules (`quick_session.py` is shared by CLI **quick** and Studio)
+- `studio/` FastAPI app + templates + static CSS
 - `tests/` unit tests
 - `scripts/export_vscode_themes.py` — installable Cursor/VS Code themes (`rob-ross-ide-palettes`)
 - `vscode-themes/` local theme extension package

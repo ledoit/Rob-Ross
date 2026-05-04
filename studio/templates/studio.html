@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Rob Ross Palette Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="/static/studio.css"/>
+</head>
+<body>
+  <div class="wrap" x-data="studio()" x-init="init()">
+    <header class="hero">
+      <h1>Palette Studio</h1>
+      <p class="lead">Pick variants, steer with a brief, regenerate. Hearts land on your VS Code export roster — shortlist biases the next batch.</p>
+      <div class="pill-row">
+        <span class="pill" x-show="boot.seed_active">Reproducible batch (ROB_ROSS_SEED)</span>
+        <span class="pill hot" x-show="roster.export_ids.length">Export: <span x-text="roster.export_ids.join(', ')"></span></span>
+        <span class="pill" x-show="roster.shortlist_ids.length">Shortlist: <span x-text="roster.shortlist_ids.join(', ')"></span></span>
+      </div>
+    </header>
+
+    <div class="grid-main">
+      <div class="panel">
+        <h2>Generation</h2>
+        <label class="field">Color brief</label>
+        <textarea class="prompt" x-model="prompt" placeholder="e.g. black sand beach at blue hour, soft amber accents"></textarea>
+
+        <div class="row-2">
+          <div>
+            <label class="field">Variants</label>
+            <input type="number" min="1" max="12" x-model.number="count"/>
+          </div>
+          <div>
+            <label class="field">Variety (optional)</label>
+            <input type="text" placeholder="auto" x-model="varietyStr"/>
+          </div>
+        </div>
+        <div>
+          <label class="field">Prompt adherence (optional)</label>
+          <input type="text" placeholder="auto" x-model="adherenceStr"/>
+        </div>
+
+        <label class="chk">
+          <input type="checkbox" x-model="fresh"/>
+          Fresh batch (delete old ide_palette_*.json after bias)
+        </label>
+        <label class="chk">
+          <input type="checkbox" x-model="useShortlist"/>
+          Replace shortlist with checked rows (empty = clear breeders)
+        </label>
+        <label class="chk">
+          <input type="checkbox" x-model="exportThemes"/>
+          Run VS Code theme export after gen
+        </label>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" @click="regenerate()" :disabled="busy || !prompt.trim()">Regenerate</button>
+          <button type="button" class="btn btn-ghost" @click="selectAll()" :disabled="busy">All</button>
+          <button type="button" class="btn btn-ghost" @click="clearSel()" :disabled="busy">Clear</button>
+        </div>
+        <p class="toast" :class="{ err: toastErr }" x-text="toast"></p>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:1rem;">
+          <h2>Batch</h2>
+          <p class="lead" style="font-size:0.82rem;margin:0 0 0.75rem;color:var(--muted);">Check rows to breed the next regen. Heart sends a palette to the export roster.</p>
+          <div class="toolbar-mini">
+            <span class="export-badge" x-show="selected.size">Selected: <span x-text="selected.size"></span></span>
+          </div>
+          <div class="palette-list">
+            <template x-if="!palettes.length">
+              <div class="palette-row"><span class="meta">No ide_palette_*.json yet — run Regenerate.</span></div>
+            </template>
+            <template x-for="row in palettes" :key="row.id">
+              <div class="palette-row">
+                <input type="checkbox" :checked="selected.has(row.id)" @change="toggle(row.id)"/>
+                <div>
+                  <div class="id" x-text="row.id"></div>
+                  <div class="meta" x-text="metaLine(row)"></div>
+                </div>
+                <button type="button" class="btn btn-heart" @click="heart(row.id)" :disabled="busy">Heart</button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="preview-frame-wrap">
+          <iframe id="preview-frame" title="Preview gallery" src="/preview/latest"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="boot-data">{{ boot_json | safe }}</script>
+  <script>
+    function studio() {
+      return {
+        boot: {},
+        palettes: [],
+        roster: { export_ids: [], shortlist_ids: [] },
+        prompt: 'cozy terminal greens and warm paper',
+        count: 4,
+        varietyStr: '',
+        adherenceStr: '',
+        fresh: true,
+        useShortlist: true,
+        exportThemes: false,
+        selected: new Set(),
+        busy: false,
+        toast: '',
+        toastErr: false,
+
+        init() {
+          const el = document.getElementById('boot-data');
+          this.boot = JSON.parse(el.textContent);
+          this.palettes = this.boot.palettes || [];
+          this.roster = this.boot.roster || this.roster;
+        },
+
+        metaLine(row) {
+          const parts = [];
+          if (row.user_prompt) parts.push(row.user_prompt);
+          if (row.taste_context) parts.push(String(row.taste_context).slice(0, 80));
+          if (row.chromatic_variety != null && row.prompt_adherence != null) {
+            parts.push(`v=${row.chromatic_variety} a=${row.prompt_adherence}`);
+          }
+          return parts.join(' · ') || '—';
+        },
+
+        toggle(id) {
+          if (this.selected.has(id)) this.selected.delete(id);
+          else this.selected.add(id);
+          this.selected = new Set(this.selected);
+        },
+
+        selectAll() {
+          this.selected = new Set(this.palettes.map((p) => p.id));
+        },
+
+        clearSel() {
+          this.selected = new Set();
+        },
+
+        _parseOptFloat(s) {
+          const t = String(s || '').trim();
+          if (!t) return null;
+          const n = Number(t);
+          return Number.isFinite(n) ? n : null;
+        },
+
+        async regenerate() {
+          this.busy = true;
+          this.toast = '';
+          this.toastErr = false;
+          try {
+            const body = {
+              prompt: this.prompt.trim(),
+              count: this.count,
+              variety: this._parseOptFloat(this.varietyStr),
+              adherence: this._parseOptFloat(this.adherenceStr),
+              fresh: this.fresh,
+              use_selection_as_shortlist: this.useShortlist,
+              shortlist_ids: Array.from(this.selected),
+              export_themes: this.exportThemes,
+            };
+            const res = await fetch('/api/regenerate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.palettes = data.palettes || [];
+            this.roster = data.roster || this.roster;
+            this.selected = new Set();
+            const bias = data.shortlist_bias && data.shortlist_bias.ids ? data.shortlist_bias.ids.join(', ') : '';
+            this.toast = `Generated ${data.generated_count}.` + (bias ? ` Breeders: ${bias}.` : '') + (data.fresh_removed ? ` Cleared ${data.fresh_removed} files.` : '');
+            this._bumpPreview();
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        async heart(id) {
+          this.busy = true;
+          this.toast = '';
+          this.toastErr = false;
+          try {
+            const res = await fetch('/api/heart', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                palette_id: id,
+                prompt: this.prompt.trim() || null,
+                learn: true,
+              }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.roster.export_ids = data.export_ids || [];
+            this.toast = `Heart’d ${id}. Export roster updated.`;
+            this._bumpPreview();
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        _bumpPreview() {
+          const f = document.getElementById('preview-frame');
+          if (f) f.src = '/preview/latest?t=' + Date.now();
+        },
+      };
+    }
+  </script>
+</body>
+</html>

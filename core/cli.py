@@ -17,10 +17,8 @@ from core.generate import build_superset_from_palettes, generate_palettes
 from core.genome import default_genome, ensure_genome_dir, load_genome, merge_genomes, save_genome
 from core.ingest import ingest_source
 from core.preview_html import build_preview_page, load_ide_palettes_from_dir
-from core.prompt_brief import apply_prompt_archetype_order, genome_patch_from_prompt
 from core.roster import (
     apply_roster_learning_to_disk,
-    apply_shortlist_bias_to_session,
     load_roster,
     roster_add,
     roster_path,
@@ -29,7 +27,8 @@ from core.roster import (
     shortlist_clear,
     shortlist_remove,
 )
-from core.user_loop import delete_ide_palette_outputs, ensure_user_loop_state, state_path as user_loop_state_path
+from core.quick_session import run_quick
+from core.user_loop import ensure_user_loop_state, state_path as user_loop_state_path
 
 app = typer.Typer(help="Rob Ross palette OS CLI")
 roster_app = typer.Typer(help="Final export list, shortlist, and genome learning from picks")
@@ -187,44 +186,25 @@ def quick(
         raise typer.Exit(code=1)
     base = load_genome(gpath)
     ensure_user_loop_state(user_loop_state_path(gdir), base)
-    if fresh:
-        n = delete_ide_palette_outputs(root / "outputs" / "palettes")
-        if n:
-            console.print(f"[yellow]--fresh:[/yellow] removed {n} ide_palette_*.json")
-    patch = genome_patch_from_prompt(prompt)
-    merged, _conf = merge_genomes(base, patch)
-    merged["user_loop_state"] = ensure_user_loop_state(user_loop_state_path(gdir), base)
-    ps = merged.setdefault("prompt_session", {})
-    if variety is not None:
-        ps["chromatic_variety"] = max(0.0, min(1.0, variety))
-    if adherence is not None:
-        ps["prompt_adherence"] = max(0.0, min(1.0, adherence))
-    apply_prompt_archetype_order(merged)
-    bias = apply_shortlist_bias_to_session(merged, load_roster(root / "genome"), root / "outputs" / "palettes")
-    if bias:
-        console.print(f"[cyan]Shortlist breeders applied:[/cyan] {bias.get('ids')}")
-    task = f"make {count} ide palettes"
-    result = generate_palettes(task, merged, root / "outputs" / "palettes", user_prompt=prompt)
 
-    report_path = root / "outputs" / "reports" / f"quick_{result['generated_count']}.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    lines = [
-        "# Quick generation",
-        "",
-        f"- Prompt: {prompt}",
-        f"- Variants: {count}",
-        f"- Task plan: `{result['task_plan']}`",
-        "",
-    ]
-    for p in result["palettes"]:
-        lines.append(f"## {p['id']}")
-        lines.append(p.get("palette_rationale", ""))
-        lines.append("")
-    report_path.write_text("\n".join(lines), encoding="utf-8")
+    result = run_quick(
+        root,
+        prompt,
+        count=count,
+        variety=variety,
+        adherence=adherence,
+        export_themes=export,
+        fresh=fresh,
+        shortlist_palette_ids=None,
+    )
+    if result.get("shortlist_bias"):
+        console.print(f"[cyan]Shortlist breeders applied:[/cyan] {result['shortlist_bias'].get('ids')}")
+    if fresh and result.get("fresh_removed"):
+        console.print(f"[yellow]--fresh:[/yellow] removed {result['fresh_removed']} ide_palette_*.json (after shortlist bias).")
 
     console.print("[green]Quick batch ready.[/green]")
     console.print(f"Palettes: {root / 'outputs' / 'palettes'}")
-    console.print(f"Report: {report_path}")
+    console.print(f"Report: {result['report_path']}")
     console.print("Preview in browser: [cyan]python cli.py preview[/cyan]")
     console.print("Final export pick: [cyan]python cli.py roster add ide_palette_02 --prompt \"...\"[/cyan]")
     console.print("Shortlist (next regen): [cyan]python cli.py roster shortlist add ide_palette_02 --prompt \"...\"[/cyan]")
