@@ -1,0 +1,150 @@
+{
+  "version": "1.1.0",
+  "created": "2026-04-24T08:03:12.371665+00:00",
+  "last_modified": "2026-04-24T10:00:00.000000+00:00",
+  "sources_ingested": [],
+  "hue_strategy": {
+    "base_hue_range": [
+      210,
+      270
+    ],
+    "accent_hue_range": [
+      280,
+      320
+    ],
+    "interval_method": "golden_ratio",
+    "notes": "Initial default strategy."
+  },
+  "contrast_philosophy": {
+    "mode": "readability_first",
+    "min_contrast_ratio": 4.5,
+    "ui_min_contrast_ratio": 4.5,
+    "token_min_contrast_ratio": 3.2,
+    "dark_bg_preference": true,
+    "notes": "Bias toward readability and dark themes."
+  },
+  "saturation_profile": {
+    "base_saturation": [
+      10,
+      25
+    ],
+    "accent_saturation": [
+      60,
+      85
+    ],
+    "notes": "Muted base with vibrant accents."
+  },
+  "lightness_profile": {
+    "background_range": [
+      8,
+      18
+    ],
+    "foreground_range": [
+      85,
+      97
+    ],
+    "midtone_range": [
+      40,
+      60
+    ],
+    "notes": "Dark UI baseline with bright foreground text."
+  },
+  "emotional_register": {
+    "primary": "focused",
+    "secondary": "nocturnal",
+    "tertiary": "slightly_playful",
+    "notes": "Starter emotion profile."
+  },
+  "palette_math": {
+    "methods": [
+      "golden_ratio_hsl",
+      "analogous_split",
+      "triadic_weighted"
+    ],
+    "notes": "Use deterministic palette math combinations."
+  },
+  "design_paradigms": [
+    "readability_first",
+    "semantic_separation",
+    "low_fatigue_long_sessions",
+    "accent_as_wayfinding",
+    "cohesive_chrome_minimalism"
+  ],
+  "techniques": [
+    "split_complementary_syntax_distribution",
+    "simultaneous_contrast_balancing",
+    "chroma_taper_for_depth",
+    "luminance_ladder_spacing",
+    "contextual_accent_reuse"
+  ],
+  "taste_contexts": {
+    "ide": [
+      "nocturne_labs",
+      "fjord_ink",
+      "retro_terminal",
+      "studio_neon",
+      "forest_console"
+    ],
+    "web": [
+      "editorial_minimal",
+      "product_bold",
+      "calm_enterprise"
+    ]
+  },
+  "style_archetypes": {
+    "ide": [
+      "dracula_punch",
+      "fjord_hammer",
+      "alpenglow_paper",
+      "kimbie_warm",
+      "ion_storm",
+      "forest_canopy",
+      "void_forge",
+      "bonfire_gold",
+      "candy_voltage",
+      "night_siren",
+      "high_contrast_signal"
+    ]
+  },
+  "reference_themes": [
+    "dracula",
+    "red",
+    "solarized_dark",
+    "tomorrow_night_blue",
+    "cursor_light",
+    "kimbie_dark",
+    "abyss"
+  ],
+  "conflict_resolutions": [],
+  "context_overrides": {
+    "ide": {
+      "token_differentiation_priority": "high",
+      "max_hues_in_syntax": 8,
+      "min_token_distance": 14.0,
+      "tone_controls": {
+        "calmness": 0.7,
+        "vibrancy": 0.6,
+        "separation": 0.7,
+        "comment_quietness": 0.75
+      },
+      "notes": "IDE requires token legibility differentiation."
+    },
+    "web": {
+      "brand_flexibility": "high",
+      "primary_accent_dominance": true,
+      "notes": "Web can lean harder into brand accent."
+    }
+  },
+  "feedback_schema": {
+    "dimensions": [
+      "legibility",
+      "vibe_match",
+      "syntax_separation",
+      "ui_chrome_balance",
+      "fatigue_after_30min"
+    ],
+    "scale": "1-5",
+    "notes": "Structured scoring used for future adaptive tuning."
+  },
+  "genome_weights": {}
+}

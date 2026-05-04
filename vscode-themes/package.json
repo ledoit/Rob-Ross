@@ -1,0 +1,72 @@
+{
+  "name": "robross-ide-palettes",
+  "displayName": "RobRoss IDE Palettes",
+  "description": "Generated IDE themes from RobRoss Palette Engine",
+  "version": "0.0.19",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "RR Dracula Punch",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_01.json"
+      },
+      {
+        "label": "RR Fjord Hammer",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_02.json"
+      },
+      {
+        "label": "RR Alpenglow Paper",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_03.json"
+      },
+      {
+        "label": "RR Kimbie Warm",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_04.json"
+      },
+      {
+        "label": "RR Ion Storm",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_05.json"
+      },
+      {
+        "label": "RR Forest Canopy",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_06.json"
+      },
+      {
+        "label": "RR Void Forge",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_07.json"
+      },
+      {
+        "label": "RR Bonfire Gold",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_08.json"
+      },
+      {
+        "label": "RR Candy Voltage",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_09.json"
+      },
+      {
+        "label": "RR Night Siren",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_10.json"
+      },
+      {
+        "label": "RR High Contrast Signal",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_11.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "generated": "2026-04-24T08:04:26.891215+00:00",
+  "colors": [
+    "#525264",
+    "#6590E6",
+    "#576751",
+    "#767053",
+    "#D04148",
+    "#E665A6",
+    "#6B516F",
+    "#D0419A"
+  ],
+  "coverage_analysis": {
+    "total_input_colors": 96,
+    "deduplicated_colors": 8,
+    "selected_count": 8,
+    "selection_ratio": 8.33
+  }
+}

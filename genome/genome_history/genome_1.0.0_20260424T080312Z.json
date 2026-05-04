@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "created": "2026-04-24T08:03:12.371665+00:00",
+  "last_modified": "2026-04-24T08:03:12.371665+00:00",
+  "sources_ingested": [],
+  "hue_strategy": {
+    "base_hue_range": [
+      210,
+      270
+    ],
+    "accent_hue_range": [
+      280,
+      320
+    ],
+    "interval_method": "golden_ratio",
+    "notes": "Initial default strategy."
+  },
+  "contrast_philosophy": {
+    "mode": "readability_first",
+    "min_contrast_ratio": 4.5,
+    "dark_bg_preference": true,
+    "notes": "Bias toward readability and dark themes."
+  },
+  "saturation_profile": {
+    "base_saturation": [
+      10,
+      25
+    ],
+    "accent_saturation": [
+      60,
+      85
+    ],
+    "notes": "Muted base with vibrant accents."
+  },
+  "lightness_profile": {
+    "background_range": [
+      8,
+      18
+    ],
+    "foreground_range": [
+      85,
+      97
+    ],
+    "midtone_range": [
+      40,
+      60
+    ],
+    "notes": "Dark UI baseline with bright foreground text."
+  },
+  "emotional_register": {
+    "primary": "focused",
+    "secondary": "nocturnal",
+    "tertiary": "slightly_playful",
+    "notes": "Starter emotion profile."
+  },
+  "palette_math": {
+    "methods": [
+      "golden_ratio_hsl",
+      "analogous_split",
+      "triadic_weighted"
+    ],
+    "notes": "Use deterministic palette math combinations."
+  },
+  "conflict_resolutions": [],
+  "context_overrides": {
+    "ide": {
+      "token_differentiation_priority": "high",
+      "max_hues_in_syntax": 8,
+      "notes": "IDE requires token legibility differentiation."
+    },
+    "web": {
+      "brand_flexibility": "high",
+      "primary_accent_dominance": true,
+      "notes": "Web can lean harder into brand accent."
+    }
+  },
+  "genome_weights": {}
+}

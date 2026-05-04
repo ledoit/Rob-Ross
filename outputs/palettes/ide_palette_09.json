@@ -1,0 +1,249 @@
+{
+  "id": "ide_palette_09",
+  "context": "ide",
+  "hue_family": "magenta",
+  "taste_context": "studio_neon:candy_voltage",
+  "design_paradigms_applied": [
+    "readability_first",
+    "semantic_separation",
+    "low_fatigue_long_sessions",
+    "accent_as_wayfinding",
+    "cohesive_chrome_minimalism"
+  ],
+  "techniques_applied": [
+    "split_complementary_syntax_distribution",
+    "simultaneous_contrast_balancing",
+    "chroma_taper_for_depth",
+    "luminance_ladder_spacing",
+    "contextual_accent_reuse"
+  ],
+  "genome_version": "1.1.0",
+  "generated": "2026-04-24T11:31:02.094958+00:00",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#191016",
+      "hsl": [
+        320,
+        22,
+        8
+      ],
+      "contrast_with_foreground": 17.35,
+      "contrast_with_background": 1.0,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "background tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "surface",
+      "hex": "#341E2A",
+      "hsl": [
+        327,
+        27,
+        16
+      ],
+      "contrast_with_foreground": 14.32,
+      "contrast_with_background": 1.21,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "surface tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "border",
+      "hex": "#55253C",
+      "hsl": [
+        331,
+        39,
+        24
+      ],
+      "contrast_with_foreground": 11.39,
+      "contrast_with_background": 1.52,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "border tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "muted",
+      "hex": "#984364",
+      "hsl": [
+        337,
+        39,
+        43
+      ],
+      "contrast_with_foreground": 5.89,
+      "contrast_with_background": 2.95,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "muted tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "foreground",
+      "hex": "#F9F6F7",
+      "hsl": [
+        340,
+        20,
+        97
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 17.35,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "foreground tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#FB41BA",
+      "hsl": [
+        321,
+        96,
+        62
+      ],
+      "contrast_with_foreground": 2.98,
+      "contrast_with_background": 5.83,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "accent_primary tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#F53256",
+      "hsl": [
+        349,
+        91,
+        58
+      ],
+      "contrast_with_foreground": 3.57,
+      "contrast_with_background": 4.86,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "accent_secondary tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_1",
+      "hex": "#F985D1",
+      "hsl": [
+        321,
+        91,
+        75
+      ],
+      "contrast_with_foreground": 2.1,
+      "contrast_with_background": 8.25,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_1 tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#C8F575",
+      "hsl": [
+        81,
+        86,
+        71
+      ],
+      "contrast_with_foreground": 1.17,
+      "contrast_with_background": 14.88,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_2 tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#65C0F1",
+      "hsl": [
+        201,
+        83,
+        67
+      ],
+      "contrast_with_foreground": 1.89,
+      "contrast_with_background": 9.2,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_3 tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#F48B95",
+      "hsl": [
+        354,
+        83,
+        75
+      ],
+      "contrast_with_foreground": 2.18,
+      "contrast_with_background": 7.96,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_4 tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_5",
+      "hex": "#70FABC",
+      "hsl": [
+        153,
+        93,
+        71
+      ],
+      "contrast_with_foreground": 1.22,
+      "contrast_with_background": 14.28,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_5 tuned for magenta family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_6",
+      "hex": "#6083F6",
+      "hsl": [
+        226,
+        89,
+        67
+      ],
+      "contrast_with_foreground": 3.22,
+      "contrast_with_background": 5.39,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_magenta"
+      ],
+      "rationale": "syntax_6 tuned for magenta family while preserving dark-editor readability."
+    }
+  ],
+  "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
+  "conflicts_flagged": [],
+  "feedback_score": null,
+  "feedback_dimensions": {}
+}

@@ -1,0 +1,249 @@
+{
+  "id": "ide_palette_11",
+  "context": "ide",
+  "hue_family": "green",
+  "taste_context": "nocturne_labs:high_contrast_signal",
+  "design_paradigms_applied": [
+    "readability_first",
+    "semantic_separation",
+    "low_fatigue_long_sessions",
+    "accent_as_wayfinding",
+    "cohesive_chrome_minimalism"
+  ],
+  "techniques_applied": [
+    "split_complementary_syntax_distribution",
+    "simultaneous_contrast_balancing",
+    "chroma_taper_for_depth",
+    "luminance_ladder_spacing",
+    "contextual_accent_reuse"
+  ],
+  "genome_version": "1.1.0",
+  "generated": "2026-04-24T11:31:02.105316+00:00",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#131712",
+      "hsl": [
+        108,
+        12,
+        8
+      ],
+      "contrast_with_foreground": 16.99,
+      "contrast_with_background": 1.0,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "background tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "surface",
+      "hex": "#223021",
+      "hsl": [
+        116,
+        19,
+        16
+      ],
+      "contrast_with_foreground": 13.02,
+      "contrast_with_background": 1.31,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "surface tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "border",
+      "hex": "#203C20",
+      "hsl": [
+        120,
+        30,
+        18
+      ],
+      "contrast_with_foreground": 11.39,
+      "contrast_with_background": 1.49,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "border tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "muted",
+      "hex": "#417B46",
+      "hsl": [
+        125,
+        31,
+        37
+      ],
+      "contrast_with_foreground": 4.75,
+      "contrast_with_background": 3.58,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "muted tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "foreground",
+      "hex": "#F6F8F7",
+      "hsl": [
+        150,
+        12,
+        97
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 16.99,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "foreground tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#64F646",
+      "hsl": [
+        110,
+        91,
+        62
+      ],
+      "contrast_with_foreground": 1.33,
+      "contrast_with_background": 12.78,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "accent_primary tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#38F06E",
+      "hsl": [
+        138,
+        86,
+        58
+      ],
+      "contrast_with_foreground": 1.42,
+      "contrast_with_background": 11.96,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "accent_secondary tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_1",
+      "hex": "#88A4F6",
+      "hsl": [
+        225,
+        86,
+        75
+      ],
+      "contrast_with_foreground": 2.27,
+      "contrast_with_background": 7.5,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_1 tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#8E78F2",
+      "hsl": [
+        251,
+        82,
+        71
+      ],
+      "contrast_with_foreground": 3.22,
+      "contrast_with_background": 5.28,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_2 tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#EE68EA",
+      "hsl": [
+        302,
+        80,
+        67
+      ],
+      "contrast_with_foreground": 2.52,
+      "contrast_with_background": 6.73,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_3 tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#EF8FB6",
+      "hsl": [
+        336,
+        75,
+        75
+      ],
+      "contrast_with_foreground": 2.12,
+      "contrast_with_background": 8.0,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_4 tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_5",
+      "hex": "#F67F74",
+      "hsl": [
+        5,
+        88,
+        71
+      ],
+      "contrast_with_foreground": 2.4,
+      "contrast_with_background": 7.08,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_5 tuned for green family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_6",
+      "hex": "#F2CE64",
+      "hsl": [
+        45,
+        85,
+        67
+      ],
+      "contrast_with_foreground": 1.43,
+      "contrast_with_background": 11.9,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_green"
+      ],
+      "rationale": "syntax_6 tuned for green family while preserving dark-editor readability."
+    }
+  ],
+  "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
+  "conflicts_flagged": [],
+  "feedback_score": null,
+  "feedback_dimensions": {}
+}

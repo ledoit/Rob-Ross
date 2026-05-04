@@ -1,0 +1,198 @@
+{
+  "name": "RR Dracula Punch",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#18141A",
+    "editor.foreground": "#F8F7F8",
+    "editorCursor.foreground": "#C64CF0",
+    "editor.lineHighlightBackground": "#2E222F40",
+    "editor.selectionBackground": "#C64CF066",
+    "editor.inactiveSelectionBackground": "#864B8666",
+    "editorIndentGuide.background1": "#864B8666",
+    "editorIndentGuide.activeBackground1": "#C64CF088",
+    "editorWhitespace.foreground": "#864B8688",
+    "sideBar.background": "#342735",
+    "sideBar.foreground": "#F8F7F8",
+    "activityBar.background": "#1B161D",
+    "activityBar.foreground": "#F8F7F8",
+    "statusBar.background": "#342735",
+    "statusBar.foreground": "#F8F7F8",
+    "titleBar.activeBackground": "#1B161D",
+    "titleBar.activeForeground": "#F8F7F8",
+    "panel.background": "#342735",
+    "panel.border": "#864B86",
+    "terminal.background": "#18141A",
+    "terminal.foreground": "#F8F7F8",
+    "terminal.ansiBlue": "#C64CF0",
+    "terminal.ansiMagenta": "#EA3EC6",
+    "terminal.ansiGreen": "#D88CF2",
+    "terminal.ansiRed": "#69D7EC",
+    "terminal.ansiYellow": "#6EE7C8",
+    "focusBorder": "#C64CF0",
+    "button.background": "#C64CF0",
+    "button.foreground": "#18141A",
+    "button.hoverBackground": "#EA3EC6"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#864B86"
+      }
+    },
+    {
+      "scope": [
+        "keyword",
+        "storage",
+        "storage.type"
+      ],
+      "settings": {
+        "foreground": "#ED92B2"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#C7F278"
+      }
+    },
+    {
+      "scope": [
+        "string",
+        "constant.other.symbol"
+      ],
+      "settings": {
+        "foreground": "#D88CF2"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
+      "settings": {
+        "foreground": "#6EE7C8"
+      }
+    },
+    {
+      "scope": [
+        "variable",
+        "meta.definition.variable.name"
+      ],
+      "settings": {
+        "foreground": "#F8F7F8"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type",
+        "support.type"
+      ],
+      "settings": {
+        "foreground": "#EDD07D"
+      }
+    },
+    {
+      "scope": [
+        "invalid",
+        "invalid.illegal"
+      ],
+      "settings": {
+        "foreground": "#69D7EC"
+      }
+    },
+    {
+      "scope": [
+        "support.class.component.js",
+        "entity.name.type.class.ts"
+      ],
+      "settings": {
+        "foreground": "#EDD07D"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type.module.js",
+        "support.type.primitive.ts"
+      ],
+      "settings": {
+        "foreground": "#ED92B2"
+      }
+    },
+    {
+      "scope": [
+        "storage.type.function.python",
+        "entity.name.function.decorator.python"
+      ],
+      "settings": {
+        "foreground": "#C7F278"
+      }
+    },
+    {
+      "scope": [
+        "support.type.python",
+        "entity.name.class.python"
+      ],
+      "settings": {
+        "foreground": "#EDD07D"
+      }
+    },
+    {
+      "scope": [
+        "support.type.property-name.json"
+      ],
+      "settings": {
+        "foreground": "#EA3EC6"
+      }
+    },
+    {
+      "scope": [
+        "constant.language.json"
+      ],
+      "settings": {
+        "foreground": "#ED92B2"
+      }
+    },
+    {
+      "scope": [
+        "markup.heading.markdown",
+        "markup.bold.markdown"
+      ],
+      "settings": {
+        "foreground": "#C64CF0"
+      }
+    },
+    {
+      "scope": [
+        "markup.italic.markdown",
+        "markup.inline.raw.string.markdown"
+      ],
+      "settings": {
+        "foreground": "#D88CF2"
+      }
+    },
+    {
+      "scope": [
+        "support.function.builtin.shell",
+        "keyword.operator.pipe.shell"
+      ],
+      "settings": {
+        "foreground": "#C7F278"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.normal.shell"
+      ],
+      "settings": {
+        "foreground": "#EDD07D"
+      }
+    }
+  ]
+}
