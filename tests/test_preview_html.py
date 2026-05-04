@@ -1,6 +1,13 @@
 from pathlib import Path
 
-from core.preview_html import build_preview_page
+from core.preview_html import _explain_taste_context, build_preview_page
+
+
+def test_explain_taste_context_two_parts():
+    s = _explain_taste_context("forest_console:ion_storm")
+    assert "taste mood" in s
+    assert "ion_storm" in s
+    assert "omitted" in s or "Theme mode" in s
 
 
 def test_build_preview_writes_html(tmp_path: Path):

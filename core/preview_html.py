@@ -72,16 +72,23 @@ def _snippet_html(roles: dict[str, str]) -> str:
 
 
 def _explain_taste_context(tc: str) -> str:
-    """Human-readable caption for internal taste_context string."""
-    parts = tc.split(":")
+    """Human-readable caption for internal taste_context string (always same prose shape)."""
+    raw = (tc or "").strip()
+    if not raw:
+        return "Recipe line: (missing). This file has no taste_context; try regenerating."
+    parts = [p.strip() for p in raw.split(":") if p.strip()]
+    suffix = " This is not your export list — only how the generator labeled this variant."
     if len(parts) >= 3:
         return (
             f"Recipe line: taste mood “{html.escape(parts[0])}”, style archetype “{html.escape(parts[1])}”, "
-            f"light/dark “{html.escape(parts[2])}”. Not your export list — it is how this theme was cooked."
+            f"light/dark “{html.escape(parts[2])}”.{suffix}"
         )
-    if tc:
-        return html.escape(tc)
-    return ""
+    if len(parts) == 2:
+        return (
+            f"Recipe line: taste mood “{html.escape(parts[0])}”, style archetype “{html.escape(parts[1])}”. "
+            f"Theme mode was omitted in the label (older or partial write).{suffix}"
+        )
+    return f"Recipe line: single tag “{html.escape(parts[0])}”.{suffix}"
 
 
 def build_preview_page(
@@ -96,18 +103,29 @@ def build_preview_page(
         tc_raw = str(pal.get("taste_context", ""))
         tc_expl = _explain_taste_context(tc_raw)
         gc = pal.get("generation_controls") or {}
-        gc_line = ""
-        if gc:
-            gc_line = (
-                f'<p class="gc">Controls: variety {html.escape(str(gc.get("chromatic_variety", "")))}, '
-                f'prompt adherence {html.escape(str(gc.get("prompt_adherence", "")))}</p>'
+        if gc.get("chromatic_variety") is not None and gc.get("prompt_adherence") is not None:
+            gc_body = (
+                f'variety {html.escape(str(gc.get("chromatic_variety")))}, '
+                f'prompt adherence {html.escape(str(gc.get("prompt_adherence")))}'
             )
+        else:
+            gc_body = (
+                "not stored on this JSON. Common when this slot was reused from disk before a full "
+                "<span class='mono'>quick</span> regen — run "
+                "<span class='mono'>python cli.py quick \"…\"</span> again so every slot is rewritten."
+            )
+        gc_line = f'<p class="label">Generation controls</p><p class="gc">{gc_body}</p>'
         up = pal.get("user_prompt")
-        prompt_line = ""
         if up:
-            prompt_line = f'<p class="label">Your brief</p><p class="prompt">{html.escape(str(up))}</p>'
-        elif gc:
-            prompt_line = '<p class="prompt muted2">No brief stored on this file (often an older run or reused slot).</p>'
+            prompt_body = html.escape(str(up))
+        else:
+            prompt_body = (
+                "<span class='muted2'>Not stored. Only slots that were actually regenerated in your last "
+                "<span class='mono'>quick</span> run get a brief; delete stale "
+                "<span class='mono'>ide_palette_*.json</span> "
+                "or run <span class='mono'>quick</span> again so all files match.</span>"
+            )
+        prompt_line = f'<p class="label">Your brief</p><p class="prompt">{prompt_body}</p>'
         roles = _role_colors(pal)
         snippet = _snippet_html(roles)
         finalize_hint = html.escape(f'python cli.py roster add {pal.get("id", "")} --prompt "your brief"')
@@ -123,7 +141,7 @@ def build_preview_page(
   <footer>
     <p class="label">Final pick (goes to VS Code export list)</p>
     <code>{finalize_hint}</code>
-    <p class="label">Shortlist (best of batch — biases next <code>quick</code> regen only)</p>
+    <p class="label">Shortlist (best of batch — biases the next quick regen only)</p>
     <code>{shortlist_hint}</code>
   </footer>
 </article>"""
@@ -148,8 +166,9 @@ def build_preview_page(
     .gc {{ margin: 0 0 8px; color: #a3a3a3; font-size: 0.78rem; }}
     .prompt {{ margin: 0 0 10px; color: #fafafa; font-size: 0.88rem; }}
     .muted2 {{ color: #71717a; }}
+    .mono {{ font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85em; }}
     .card footer {{ margin-top: 14px; }}
-    .card footer code {{ display: block; font-size: 0.68rem; color: #a1a1aa; word-break: break-all; margin-bottom: 8px; }}
+    .card footer > code {{ display: block; font-size: 0.68rem; color: #a1a1aa; word-break: break-all; margin-bottom: 8px; }}
   </style>
 </head>
 <body>
