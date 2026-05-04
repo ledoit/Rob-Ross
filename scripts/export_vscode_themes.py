@@ -165,15 +165,43 @@ def _theme_json(palette: dict) -> dict:
     }
 
 
+def _parse_roster_arg(argv: list[str]) -> tuple[list[str] | None, list[str]]:
+    """Return (optional palette stems like ide_palette_01, argv with --roster stripped)."""
+    if "--roster" not in argv:
+        return None, argv
+    idx = argv.index("--roster")
+    try:
+        roster_path = Path(argv[idx + 1])
+    except IndexError:
+        raise SystemExit("--roster requires a path") from None
+    new_argv = argv[:idx] + argv[idx + 2 :]
+    if not roster_path.is_file():
+        raise SystemExit(f"Roster file not found: {roster_path}")
+    data = json.loads(roster_path.read_text(encoding="utf-8"))
+    ids = data.get("palette_ids") or []
+    return [str(x).replace(".json", "") for x in ids], new_argv
+
+
 def main() -> None:
-    package_vsix = "--no-package-vsix" not in sys.argv
+    argv = list(sys.argv[1:])
+    roster_ids, argv = _parse_roster_arg(argv)
+    package_vsix = "--no-package-vsix" not in argv
     root = ROOT
     palettes_dir = root / "outputs" / "palettes"
     ext_dir = root / "vscode-themes"
     themes_dir = ext_dir / "themes"
     themes_dir.mkdir(parents=True, exist_ok=True)
 
-    ide_palettes = sorted(palettes_dir.glob("ide_palette_*.json"))
+    if roster_ids:
+        ide_palettes = []
+        for stem in sorted(roster_ids):
+            p = palettes_dir / f"{stem}.json"
+            if p.is_file():
+                ide_palettes.append(p)
+        if not ide_palettes:
+            raise SystemExit(f"No rostered palette files found under {palettes_dir}")
+    else:
+        ide_palettes = sorted(palettes_dir.glob("ide_palette_*.json"))
     if not ide_palettes:
         raise SystemExit("No IDE palette files found. Generate first.")
 

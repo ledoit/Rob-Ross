@@ -313,11 +313,23 @@ def _build_palette_colors(
         archetypes = genome.get("style_archetypes", {}).get("ide", IDE_STYLE_ARCHETYPES)
         archetype_name = str(archetypes[variant_index % len(archetypes)]) if archetypes else IDE_STYLE_ARCHETYPES[variant_index % len(IDE_STYLE_ARCHETYPES)]
         archetype = ARCHETYPE_PROFILES.get(archetype_name, ARCHETYPE_PROFILES["fjord_hammer"])
-        base_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
-        family_name = _nearest_family(base_hue)
-        base_hue = (base_hue + taste_profile.get("hue_offset", 0.0)) % 360
+        ps = genome.get("prompt_session") or {}
+        if ps.get("accent_hue_center") is not None:
+            center = float(ps["accent_hue_center"])
+            spread = float(ps.get("accent_hue_spread", 12))
+            span = max(1, int(spread * 2) + 1)
+            jitter = (variant_index * 19) % span - int(spread)
+            base_hue = (center + jitter) % 360
+            family_name = _nearest_family(base_hue)
+            base_hue = (base_hue + taste_profile.get("hue_offset", 0.0) * 0.35) % 360
+        else:
+            base_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
+            family_name = _nearest_family(base_hue)
+            base_hue = (base_hue + taste_profile.get("hue_offset", 0.0)) % 360
         accent_primary_h = base_hue
         accent_secondary_h = (base_hue + 28) % 360
+        if ps.get("accent_secondary_hue") is not None:
+            accent_secondary_h = float(ps["accent_secondary_hue"]) % 360
         syntax_count = max(3, int(ide_cfg.get("syntax_color_count", 6)))
         support_hues = _build_support_hues(base_hue, syntax_count, str(archetype.get("relation_mode", "analogous")))
 
@@ -476,7 +488,12 @@ def _build_palette_colors(
     return colors, family_name, _select_taste_context(genome, context, variant_index)
 
 
-def generate_palettes(task: str, genome: dict[str, Any], output_dir: str | Path) -> dict[str, Any]:
+def generate_palettes(
+    task: str,
+    genome: dict[str, Any],
+    output_dir: str | Path,
+    user_prompt: str | None = None,
+) -> dict[str, Any]:
     plan = parse_generation_task(task)
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -509,6 +526,7 @@ def generate_palettes(task: str, genome: dict[str, Any], output_dir: str | Path)
                 "conflicts_flagged": [],
                 "feedback_score": None,
                 "feedback_dimensions": {},
+                "user_prompt": user_prompt,
             }
             with palette_path.open("w", encoding="utf-8") as f:
                 json.dump(payload, f, indent=2)

@@ -10,3 +10,6 @@ venv/
 .eggs/
 dist/
 build/
+
+# Generated local previews (regenerate with `python cli.py preview`)
+outputs/preview/
