@@ -167,6 +167,13 @@ def _clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
+def _lerp_hue_shortest(a: float, b: float, t: float) -> float:
+    """Interpolate hue along shortest arc; t=0 → a, t=1 → b."""
+    t = _clamp(float(t), 0.0, 1.0)
+    da = ((b - a + 540) % 360) - 180
+    return (a + da * t) % 360
+
+
 def _ensure_min_contrast(color_hex: str, bg_hex: str, min_ratio: float) -> str:
     if contrast_ratio(color_hex, bg_hex) >= min_ratio:
         return color_hex
@@ -314,24 +321,47 @@ def _build_palette_colors(
         archetype_name = str(archetypes[variant_index % len(archetypes)]) if archetypes else IDE_STYLE_ARCHETYPES[variant_index % len(IDE_STYLE_ARCHETYPES)]
         archetype = ARCHETYPE_PROFILES.get(archetype_name, ARCHETYPE_PROFILES["fjord_hammer"])
         ps = genome.get("prompt_session") or {}
+        variety = float(ps.get("chromatic_variety", 0.55))
+        variety = _clamp(variety, 0.0, 1.0)
+        adherence = float(ps.get("prompt_adherence", 0.55))
+        adherence = _clamp(adherence, 0.0, 1.0)
+
         if ps.get("accent_hue_center") is not None:
             center = float(ps["accent_hue_center"])
             spread = float(ps.get("accent_hue_spread", 12))
             span = max(1, int(spread * 2) + 1)
-            jitter = (variant_index * 19) % span - int(spread)
-            base_hue = (center + jitter) % 360
+            # Tighter variant spread when adherence is high (stay on brief)
+            spread_scale = 0.35 + 0.65 * (1.0 - adherence)
+            jitter = int(((variant_index * 19) % span - int(spread)) * spread_scale)
+            prompt_anchor = (center + jitter) % 360
+            creative_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
+            toffset = taste_profile.get("hue_offset", 0.0) * (1.0 - adherence)
+            creative_hue = (creative_hue + toffset) % 360
+            base_hue = _lerp_hue_shortest(creative_hue, prompt_anchor, adherence)
             family_name = _nearest_family(base_hue)
-            base_hue = (base_hue + taste_profile.get("hue_offset", 0.0) * 0.35) % 360
+            base_hue = (base_hue + taste_profile.get("hue_offset", 0.0) * 0.35 * (1.0 - adherence)) % 360
         else:
             base_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
             family_name = _nearest_family(base_hue)
             base_hue = (base_hue + taste_profile.get("hue_offset", 0.0)) % 360
         accent_primary_h = base_hue
-        accent_secondary_h = (base_hue + 28) % 360
+        default_secondary = (base_hue + 22.0 + 36.0 * variety) % 360
+        accent_secondary_h = default_secondary
         if ps.get("accent_secondary_hue") is not None:
-            accent_secondary_h = float(ps["accent_secondary_hue"]) % 360
+            sec = float(ps["accent_secondary_hue"]) % 360
+            accent_secondary_h = _lerp_hue_shortest(default_secondary, sec, adherence)
         syntax_count = max(3, int(ide_cfg.get("syntax_color_count", 6)))
-        support_hues = _build_support_hues(base_hue, syntax_count, str(archetype.get("relation_mode", "analogous")))
+        rel = str(archetype.get("relation_mode", "analogous"))
+        if variety < 0.42:
+            fan = 14.0 + 52.0 * (variety / 0.42)
+            support_hues = analogous_split(base_hue, fan, syntax_count)
+        elif variety < 0.72:
+            support_hues = analogous_split(base_hue, 38.0 + 55.0 * ((variety - 0.42) / 0.3), syntax_count)
+        else:
+            support_hues = _build_support_hues(base_hue, syntax_count, rel)
+
+        pull = _clamp(0.12 + 0.62 * (1.0 - variety), 0.0, 0.82)
+        support_hues = [_lerp_hue_shortest(h, base_hue, pull) for h in support_hues]
 
         base_sat = sat_cfg.get("base_saturation", [10, 25])
         acc_sat = sat_cfg.get("accent_saturation", [60, 85])
@@ -342,8 +372,14 @@ def _build_palette_colors(
         vibrancy = float(_clamp(float(tone.get("vibrancy", 0.6)), 0.0, 1.0))
         separation = float(_clamp(float(tone.get("separation", 0.7)), 0.0, 1.0))
 
-        if "split_complementary_syntax_distribution" in techniques and str(archetype.get("relation_mode")) == "analogous":
+        if (
+            "split_complementary_syntax_distribution" in techniques
+            and str(archetype.get("relation_mode")) == "analogous"
+            and variety > 0.48
+            and adherence < 0.82
+        ):
             support_hues = analogous_split((base_hue + 180) % 360, 120, len(support_hues))
+            support_hues = [_lerp_hue_shortest(h, base_hue, pull * 0.85) for h in support_hues]
         if "semantic_separation" in paradigms:
             separation = _clamp(separation + 0.15, 0.0, 1.0)
         if "low_fatigue_long_sessions" in paradigms:
@@ -393,10 +429,15 @@ def _build_palette_colors(
             }
 
         syntax_hexes: list[str] = []
+        light_step = 3.0 + 5.0 * (1.0 - variety)
         for idx, hue in enumerate(support_hues):
-            syntax_sat = accent_sat_floor - (idx % 4) * 4
-            syntax_hexes.append(hsl_to_hex(hue, syntax_sat, syntax_base_light - (idx % 3) * 4))
-        syntax_hexes = _enforce_token_distance(syntax_hexes, float(ide_cfg.get("min_token_distance", 14.0)))
+            syntax_sat = accent_sat_floor - (idx % 4) * max(1.0, 4.0 * variety)
+            syntax_hexes.append(
+                hsl_to_hex(hue, syntax_sat, syntax_base_light - (idx % 3) * light_step - idx * 0.35 * (1.0 - variety))
+            )
+        base_td = float(ide_cfg.get("min_token_distance", 14.0))
+        eff_td = base_td * (0.38 + 0.62 * variety)
+        syntax_hexes = _enforce_token_distance(syntax_hexes, eff_td)
         for idx, hx in enumerate(syntax_hexes):
             role_map[f"syntax_{idx + 1}"] = hx
 
@@ -512,6 +553,7 @@ def generate_palettes(
                     continue
             colors, family_name, taste_context = _build_palette_colors(genome, context=context, variant_index=i)
             role_map = {c["role"]: c["hex"] for c in colors}
+            ps_meta = genome.get("prompt_session") or {}
             payload = {
                 "id": palette_id,
                 "context": context,
@@ -527,6 +569,10 @@ def generate_palettes(
                 "feedback_score": None,
                 "feedback_dimensions": {},
                 "user_prompt": user_prompt,
+                "generation_controls": {
+                    "chromatic_variety": float(ps_meta.get("chromatic_variety", 0.55)),
+                    "prompt_adherence": float(ps_meta.get("prompt_adherence", 0.55)),
+                },
             }
             with palette_path.open("w", encoding="utf-8") as f:
                 json.dump(payload, f, indent=2)

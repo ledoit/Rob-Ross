@@ -80,6 +80,9 @@ def genome_patch_from_prompt(text: str) -> dict[str, Any]:
         ps["accent_words"] = [a[0] for a in accents]
         if len(accents) > 1:
             ps["accent_secondary_hue"] = accents[1][1]
+        # Tight chroma + strong brief lock when user names explicit accent colors
+        ps["chromatic_variety"] = 0.22
+        ps["prompt_adherence"] = 0.9
 
     has_dark = bool(tokens & DARK_WORDS)
     has_light = bool(tokens & LIGHT_WORDS)
@@ -105,6 +108,14 @@ def genome_patch_from_prompt(text: str) -> dict[str, Any]:
     if not accents and not has_dark and not has_light:
         # Still record prompt for palette metadata; no strong color steering
         ps["accent_hue_spread"] = 18.0
+
+    if "chromatic_variety" not in ps:
+        if has_dark or has_light:
+            ps["chromatic_variety"] = 0.42
+            ps["prompt_adherence"] = 0.62
+        else:
+            ps["chromatic_variety"] = 0.58
+            ps["prompt_adherence"] = 0.48
 
     patch["prompt_session"] = ps
     return patch

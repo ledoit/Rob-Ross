@@ -150,6 +150,20 @@ def feedback() -> None:
 def quick(
     prompt: str = typer.Argument(..., help='Short color brief, e.g. "black and yellow"'),
     count: int = typer.Option(4, "--count", "-n", help="How many IDE palette variants"),
+    variety: float | None = typer.Option(
+        None,
+        "--variety",
+        min=0.0,
+        max=1.0,
+        help="Chromatic variety: 0 tight (near prompt hues), 1 wide (rainbow-ish syntax)",
+    ),
+    adherence: float | None = typer.Option(
+        None,
+        "--adherence",
+        min=0.0,
+        max=1.0,
+        help="Prompt lock: 1 obey brief, 0 more archetype/creative drift",
+    ),
     export: bool = typer.Option(False, "--export", help="Run export-themes after generation"),
 ) -> None:
     """Generate a few IDE themes from a plain-language color prompt (session-only genome tweaks)."""
@@ -161,6 +175,11 @@ def quick(
     base = load_genome(gpath)
     patch = genome_patch_from_prompt(prompt)
     merged, _conf = merge_genomes(base, patch)
+    ps = merged.setdefault("prompt_session", {})
+    if variety is not None:
+        ps["chromatic_variety"] = max(0.0, min(1.0, variety))
+    if adherence is not None:
+        ps["prompt_adherence"] = max(0.0, min(1.0, adherence))
     apply_prompt_archetype_order(merged)
     task = f"make {count} ide palettes"
     result = generate_palettes(task, merged, root / "outputs" / "palettes", user_prompt=prompt)
