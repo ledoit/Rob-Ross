@@ -11,6 +11,11 @@ from typing import Any
 
 from core.genome import load_genome, merge_genomes, save_genome
 from core.generate import IDE_STYLE_ARCHETYPES
+from core.user_loop import (
+    bump_weights_from_palette_json,
+    ensure_user_loop_state,
+    state_path as user_loop_state_path,
+)
 
 ROSTER_FILENAME = "theme_roster.json"
 
@@ -56,11 +61,15 @@ def roster_add(
     palette_dir: Path,
     palette_id: str,
     prompt: str | None = None,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     pid = normalize_palette_id(palette_id)
     pal_file = palette_dir / f"{pid}.json"
     if not pal_file.exists():
         raise FileNotFoundError(f"No palette file: {pal_file}")
+
+    gpath = genome_dir / "genome_v1.json"
+    if gpath.is_file():
+        ensure_user_loop_state(user_loop_state_path(genome_dir), load_genome(gpath))
 
     data = load_roster(genome_dir)
     if pid not in data["palette_ids"]:
@@ -70,7 +79,12 @@ def roster_add(
     if prompt:
         entry["prompt"] = prompt
     save_roster(genome_dir, data)
-    return data
+    bump_stats = bump_weights_from_palette_json(
+        user_loop_state_path(genome_dir),
+        palette_dir / f"{pid}.json",
+        export_pick=True,
+    )
+    return data, bump_stats
 
 
 def roster_remove(genome_dir: Path, palette_id: str) -> dict[str, Any]:
@@ -89,12 +103,16 @@ def shortlist_add(
     palette_dir: Path,
     palette_id: str,
     prompt: str | None = None,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Intermediary pick: best-of-batch; biases the next quick() regen (not the VS Code export list)."""
     pid = normalize_palette_id(palette_id)
     pal_file = palette_dir / f"{pid}.json"
     if not pal_file.exists():
         raise FileNotFoundError(f"No palette file: {pal_file}")
+
+    gpath = genome_dir / "genome_v1.json"
+    if gpath.is_file():
+        ensure_user_loop_state(user_loop_state_path(genome_dir), load_genome(gpath))
 
     data = load_roster(genome_dir)
     if pid not in data["shortlist_ids"]:
@@ -104,7 +122,12 @@ def shortlist_add(
     if prompt:
         entry["prompt"] = prompt
     save_roster(genome_dir, data)
-    return data
+    bump_stats = bump_weights_from_palette_json(
+        user_loop_state_path(genome_dir),
+        palette_dir / f"{pid}.json",
+        export_pick=False,
+    )
+    return data, bump_stats
 
 
 def shortlist_remove(genome_dir: Path, palette_id: str) -> dict[str, Any]:

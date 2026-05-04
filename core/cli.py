@@ -29,6 +29,7 @@ from core.roster import (
     shortlist_clear,
     shortlist_remove,
 )
+from core.user_loop import delete_ide_palette_outputs, ensure_user_loop_state, state_path as user_loop_state_path
 
 app = typer.Typer(help="Rob Ross palette OS CLI")
 roster_app = typer.Typer(help="Final export list, shortlist, and genome learning from picks")
@@ -171,16 +172,28 @@ def quick(
         help="Prompt lock: 1 obey brief, 0 more archetype/creative drift",
     ),
     export: bool = typer.Option(False, "--export", help="Run export-themes after generation"),
+    fresh: bool = typer.Option(
+        False,
+        "--fresh",
+        help="Delete outputs/palettes/ide_palette_*.json before generating (clean batch)",
+    ),
 ) -> None:
     """Generate a few IDE themes from a plain-language color prompt (session-only genome tweaks)."""
     root = _project_root()
     gpath = _genome_path()
+    gdir = gpath.parent
     if not gpath.exists():
         typer.echo("Genome not found. Copy or create genome/genome_v1.json first.")
         raise typer.Exit(code=1)
     base = load_genome(gpath)
+    ensure_user_loop_state(user_loop_state_path(gdir), base)
+    if fresh:
+        n = delete_ide_palette_outputs(root / "outputs" / "palettes")
+        if n:
+            console.print(f"[yellow]--fresh:[/yellow] removed {n} ide_palette_*.json")
     patch = genome_patch_from_prompt(prompt)
     merged, _conf = merge_genomes(base, patch)
+    merged["user_loop_state"] = ensure_user_loop_state(user_loop_state_path(gdir), base)
     ps = merged.setdefault("prompt_session", {})
     if variety is not None:
         ps["chromatic_variety"] = max(0.0, min(1.0, variety))
@@ -281,8 +294,10 @@ def roster_add_cmd(
     root = _project_root()
     gdir = root / "genome"
     palette_dir = root / "outputs" / "palettes"
-    roster_add(gdir, palette_dir, palette_id, prompt=prompt)
+    _data, bump = roster_add(gdir, palette_dir, palette_id, prompt=prompt)
     console.print(f"[green]Added[/green] {palette_id} to export roster ({roster_path(gdir)})")
+    if bump:
+        console.print(f"[dim]Taste weights: {bump}[/dim]")
     if learn:
         stats = apply_roster_learning_to_disk(
             gdir / "genome_v1.json",
@@ -336,10 +351,12 @@ def shortlist_add_cmd(
     root = _project_root()
     gdir = root / "genome"
     palette_dir = root / "outputs" / "palettes"
-    shortlist_add(gdir, palette_dir, palette_id, prompt=prompt)
+    _data, bump = shortlist_add(gdir, palette_dir, palette_id, prompt=prompt)
     console.print(
         f"[green]Shortlisted[/green] {palette_id} — next [cyan]quick[/cyan] will bias variety/adherence from these picks."
     )
+    if bump:
+        console.print(f"[dim]Taste weights: {bump}[/dim]")
 
 
 @shortlist_app.command("remove")

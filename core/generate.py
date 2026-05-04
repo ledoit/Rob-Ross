@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import random
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +14,7 @@ from typing import Any
 from rich.console import Console
 
 from core.env_rob_ross import ollama_model, use_llm_rationale
+from core.user_loop import load_user_loop_state, precompute_ide_taste_moods
 from core.math_engine import (
     analogous_split,
     build_role_map,
@@ -284,7 +287,7 @@ Write a concise design rationale for this generated {context} palette.
 Reference genome principles explicitly and keep it technical.
 
 Genome excerpt:
-{json.dumps(genome, indent=2)[:3000]}
+{json.dumps({k: v for k, v in genome.items() if k != "user_loop_state"}, indent=2)[:3000]}
 
 Role map:
 {json.dumps(role_map, indent=2)}
@@ -297,7 +300,11 @@ Role map:
 
 
 def _build_palette_colors(
-    genome: dict[str, Any], context: str, palette_size: int = 9, variant_index: int = 0
+    genome: dict[str, Any],
+    context: str,
+    palette_size: int = 9,
+    variant_index: int = 0,
+    forced_taste_mood: str | None = None,
 ) -> tuple[list[dict[str, Any]], str, str]:
     hue_cfg = genome.get("hue_strategy", {})
     sat_cfg = genome.get("saturation_profile", {})
@@ -313,8 +320,8 @@ def _build_palette_colors(
     if context == "ide":
         ide_cfg = genome.get("context_overrides", {}).get("ide", {})
         tone = ide_cfg.get("tone_controls", {})
-        taste_context = _select_taste_context(genome, context, variant_index)
-        taste_profile = TASTE_CONTEXT_PROFILES.get(taste_context, {})
+        taste_mood = forced_taste_mood if forced_taste_mood is not None else _select_taste_context(genome, context, variant_index)
+        taste_profile = TASTE_CONTEXT_PROFILES.get(taste_mood, {})
         paradigms = set(genome.get("design_paradigms", []))
         techniques = set(genome.get("techniques", []))
         archetypes = genome.get("style_archetypes", {}).get("ide", IDE_STYLE_ARCHETYPES)
@@ -334,14 +341,14 @@ def _build_palette_colors(
             spread_scale = 0.35 + 0.65 * (1.0 - adherence)
             jitter = int(((variant_index * 19) % span - int(spread)) * spread_scale)
             prompt_anchor = (center + jitter) % 360
-            creative_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
+            creative_hue = _derive_archetype_hue(genome, archetype_name, taste_mood)
             toffset = taste_profile.get("hue_offset", 0.0) * (1.0 - adherence)
             creative_hue = (creative_hue + toffset) % 360
             base_hue = _lerp_hue_shortest(creative_hue, prompt_anchor, adherence)
             family_name = _nearest_family(base_hue)
             base_hue = (base_hue + taste_profile.get("hue_offset", 0.0) * 0.35 * (1.0 - adherence)) % 360
         else:
-            base_hue = _derive_archetype_hue(genome, archetype_name, taste_context)
+            base_hue = _derive_archetype_hue(genome, archetype_name, taste_mood)
             family_name = _nearest_family(base_hue)
             base_hue = (base_hue + taste_profile.get("hue_offset", 0.0)) % 360
         accent_primary_h = base_hue
@@ -502,7 +509,7 @@ def _build_palette_colors(
                     "rationale": f"{role} tuned for {family_name} family while preserving dark-editor readability.",
                 }
             )
-        return colors, family_name, f"{taste_context}:{archetype_name}:{theme_mode}"
+        return colors, family_name, f"{taste_mood}:{archetype_name}:{theme_mode}"
 
     base_hue = default_base_hue + (variant_index * 11)
     hue_series = golden_ratio_hue_series(base_hue, palette_size)
@@ -552,11 +559,26 @@ def generate_palettes(
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
+    root = out.resolve().parents[1]
+    state_p = root / "genome" / "user_loop_state.json"
+    if "user_loop_state" not in genome and state_p.is_file():
+        loaded = load_user_loop_state(state_p)
+        if loaded:
+            genome["user_loop_state"] = loaded
+
+    seed_s = os.getenv("ROB_ROSS_SEED", "").strip()
+    rng = random.Random(int(seed_s)) if seed_s.isdigit() else random.Random()
+    ide_n = int(plan.get("ide", 0) or 0)
+    batch_moods = precompute_ide_taste_moods(genome, ide_n, rng) if ide_n > 0 else None
+
     generated: list[dict[str, Any]] = []
     for context in ("ide", "web"):
         for i in range(plan[context]):
             palette_id = f"{context}_palette_{i + 1:02d}"
             palette_path = out / f"{palette_id}.json"
+            forced_mood: str | None = None
+            if context == "ide" and batch_moods and i < len(batch_moods):
+                forced_mood = batch_moods[i]
             if context == "ide":
                 archetypes = genome.get("style_archetypes", {}).get("ide", IDE_STYLE_ARCHETYPES)
                 archetype_name = str(archetypes[i % len(archetypes)]) if archetypes else IDE_STYLE_ARCHETYPES[i % len(IDE_STYLE_ARCHETYPES)]
@@ -569,7 +591,12 @@ def generate_palettes(
                     existing = json.loads(palette_path.read_text(encoding="utf-8"))
                     generated.append(existing)
                     continue
-            colors, family_name, taste_context = _build_palette_colors(genome, context=context, variant_index=i)
+            colors, family_name, taste_context = _build_palette_colors(
+                genome,
+                context=context,
+                variant_index=i,
+                forced_taste_mood=forced_mood,
+            )
             role_map = {c["role"]: c["hex"] for c in colors}
             ps_meta = genome.get("prompt_session") or {}
             payload = {
@@ -590,6 +617,7 @@ def generate_palettes(
                 "generation_controls": {
                     "chromatic_variety": float(ps_meta.get("chromatic_variety", 0.55)),
                     "prompt_adherence": float(ps_meta.get("prompt_adherence", 0.55)),
+                    "taste_mood_weighted": bool(forced_mood is not None),
                 },
             }
             with palette_path.open("w", encoding="utf-8") as f:

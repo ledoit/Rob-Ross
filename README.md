@@ -47,7 +47,8 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - `python cli.py ingest <source>`
 - `python cli.py build-genome`
 - `python cli.py generate --task "make 11 ide palettes and 5 web palettes then build a superset of 25"`
-- `python cli.py quick "black and yellow"` — prompt-driven IDE batch (`--variety`, `--adherence`)
+- `python cli.py quick "black and yellow"` — prompt-driven IDE batch (`--variety`, `--adherence`, `--fresh` to wipe `ide_palette_*.json` first)
+- Taste moods are **weighted-sampled** per batch when `genome/user_loop_state.json` exists (auto-created on first `quick`). Hearts / `roster add` / `roster shortlist add` bump weights. Optional reproducibility: `ROB_ROSS_SEED=12345`.
 - `python cli.py preview` — HTML mock-editor gallery
 - `python cli.py roster add ide_palette_02` — **final** pick (VS Code export list); alias `roster export-add`
 - `python cli.py roster shortlist add ide_palette_02` — **shortlist** (best-of-batch; biases the next `quick` only)
@@ -57,7 +58,7 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 
 ## Layout
 
-- `genome/` genome JSON, `theme_roster.json` (export + shortlist), history snapshots
+- `genome/` genome JSON, `theme_roster.json` (export + shortlist), `user_loop_state.json` (taste mood weights + event tail), history snapshots
 - `sources/` raw and processed extracted principles
 - `vector_store/` Chroma persistence (`rob_ross_principles` collection)
 - `outputs/palettes/` generated palettes JSON
