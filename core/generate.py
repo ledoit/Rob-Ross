@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +11,7 @@ from typing import Any
 
 from rich.console import Console
 
+from core.env_rob_ross import ollama_model, use_llm_rationale
 from core.math_engine import (
     analogous_split,
     build_role_map,
@@ -270,7 +270,7 @@ def _enforce_token_distance(hexes: list[str], min_distance: float) -> list[str]:
 
 
 def _llm_palette_rationale(genome: dict[str, Any], context: str, role_map: dict[str, str]) -> str:
-    if os.getenv("ROBROSS_USE_LLM_RATIONALE", "0").strip().lower() not in {"1", "true", "yes"}:
+    if not use_llm_rationale():
         return f"Generated with deterministic {context} profile derived from genome settings."
 
     try:
@@ -278,7 +278,7 @@ def _llm_palette_rationale(genome: dict[str, Any], context: str, role_map: dict[
     except Exception:
         return f"Generated with deterministic {context} profile derived from genome settings."
 
-    model_name = os.getenv("ROBROSS_OLLAMA_MODEL", "mistral")
+    model_name = ollama_model()
     prompt = f"""
 Write a concise design rationale for this generated {context} palette.
 Reference genome principles explicitly and keep it technical.
@@ -401,6 +401,8 @@ def _build_palette_colors(
 
         theme_mode = str(archetype.get("theme_mode", "dark"))
         is_light = theme_mode == "light"
+        use_neutral = bool(ps.get("use_neutral_dark_background")) and not is_light
+        nu = float(ps.get("neutral_ui_hue", 235))
         bg_light_default = bg_range[0] + 1 if not is_light else 94
         bg_light = _clamp(float(archetype.get("bg_light", bg_light_default)), 5, 97)
         surface_delta = _clamp(float(archetype.get("surface_delta", 5)), 3, 9)
@@ -416,6 +418,17 @@ def _build_palette_colors(
                 "foreground": hsl_to_hex((base_hue + fg_hue_shift) % 360, max(8, base_sat_low + 2 + fg_sat_boost), fg_light),
                 "accent_primary": hsl_to_hex(accent_primary_h, accent_sat_peak, 46),
                 "accent_secondary": hsl_to_hex(accent_secondary_h, accent_sat_floor, 42),
+            }
+        elif use_neutral:
+            # Near-neutral chrome (readable black) while accents stay on prompt hues (e.g. yellow)
+            role_map = {
+                "background": hsl_to_hex(nu, 5, bg_light),
+                "surface": hsl_to_hex(nu, 7, bg_light + surface_delta),
+                "border": hsl_to_hex(nu, 12, bg_light + surface_delta + 2),
+                "muted": hsl_to_hex(nu, 14, muted_light),
+                "foreground": hsl_to_hex(nu, 6, fg_range[1]),
+                "accent_primary": hsl_to_hex(accent_primary_h, accent_sat_peak, 62),
+                "accent_secondary": hsl_to_hex(accent_secondary_h, accent_sat_floor, 58),
             }
         else:
             role_map = {
@@ -547,7 +560,12 @@ def generate_palettes(
             if context == "ide":
                 archetypes = genome.get("style_archetypes", {}).get("ide", IDE_STYLE_ARCHETYPES)
                 archetype_name = str(archetypes[i % len(archetypes)]) if archetypes else IDE_STYLE_ARCHETYPES[i % len(IDE_STYLE_ARCHETYPES)]
-                if archetype_name in HARD_KEEP_ARCHETYPES and palette_path.exists():
+                # Reuse disk only for full generate(); quick/session prompts must rewrite every slot.
+                if (
+                    user_prompt is None
+                    and archetype_name in HARD_KEEP_ARCHETYPES
+                    and palette_path.exists()
+                ):
                     existing = json.loads(palette_path.read_text(encoding="utf-8"))
                     generated.append(existing)
                     continue

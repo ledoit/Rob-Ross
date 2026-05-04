@@ -30,3 +30,4 @@ def test_build_preview_writes_html(tmp_path: Path):
     assert "ide_palette_01" in text
     assert "#0a0a0c" in text
     assert "black and yellow" in text
+    assert "Rob Ross" in text

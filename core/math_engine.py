@@ -1,4 +1,4 @@
-"""Deterministic color math utilities for RobRoss Palette OS.
+"""Deterministic color math utilities for Rob Ross palette OS.
 
 This module intentionally contains no LLM dependencies.
 """

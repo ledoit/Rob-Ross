@@ -34,7 +34,7 @@ def _snippet_html(roles: dict[str, str]) -> str:
         return f'<span style="{html.escape(style)}">{html.escape(text)}</span>'
 
     line1 = (
-        span(f"color:{cm};font-style:italic", "// preview — RobRoss")
+        span(f"color:{cm};font-style:italic", "// preview — Rob Ross")
         + span(f"color:{fg}", "\n")
     )
     line2 = (
@@ -71,28 +71,61 @@ def _snippet_html(roles: dict[str, str]) -> str:
     return f'<pre style="margin:0;padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.45;background:{html.escape(bg)};color:{html.escape(fg)};border-radius:8px;overflow:auto">{inner}</pre>'
 
 
+def _explain_taste_context(tc: str) -> str:
+    """Human-readable caption for internal taste_context string."""
+    parts = tc.split(":")
+    if len(parts) >= 3:
+        return (
+            f"Recipe line: taste mood “{html.escape(parts[0])}”, style archetype “{html.escape(parts[1])}”, "
+            f"light/dark “{html.escape(parts[2])}”. Not your export list — it is how this theme was cooked."
+        )
+    if tc:
+        return html.escape(tc)
+    return ""
+
+
 def build_preview_page(
     palettes: list[dict[str, Any]],
     out_path: Path,
-    title: str = "RobRoss palette preview",
+    title: str = "Rob Ross palette preview",
 ) -> Path:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cards: list[str] = []
     for pal in palettes:
         pid = html.escape(str(pal.get("id", "palette")))
-        tc = html.escape(str(pal.get("taste_context", "")))
+        tc_raw = str(pal.get("taste_context", ""))
+        tc_expl = _explain_taste_context(tc_raw)
+        gc = pal.get("generation_controls") or {}
+        gc_line = ""
+        if gc:
+            gc_line = (
+                f'<p class="gc">Controls: variety {html.escape(str(gc.get("chromatic_variety", "")))}, '
+                f'prompt adherence {html.escape(str(gc.get("prompt_adherence", "")))}</p>'
+            )
         up = pal.get("user_prompt")
-        prompt_line = (
-            f'<p class="prompt">{html.escape(str(up))}</p>' if up else ""
-        )
+        prompt_line = ""
+        if up:
+            prompt_line = f'<p class="label">Your brief</p><p class="prompt">{html.escape(str(up))}</p>'
+        elif gc:
+            prompt_line = '<p class="prompt muted2">No brief stored on this file (often an older run or reused slot).</p>'
         roles = _role_colors(pal)
         snippet = _snippet_html(roles)
-        roster_hint = html.escape(f'python cli.py roster add {pal.get("id", "")} --prompt "..."')
+        finalize_hint = html.escape(f'python cli.py roster add {pal.get("id", "")} --prompt "your brief"')
+        shortlist_hint = html.escape(f'python cli.py roster shortlist add {pal.get("id", "")} --prompt "your brief"')
         cards.append(
             f"""<article class="card">
-  <header><h2>{pid}</h2><p class="meta">{tc}</p>{prompt_line}</header>
+  <header><h2>{pid}</h2></header>
+  <p class="label">Internal recipe (not export roster)</p>
+  <p class="meta">{tc_expl}</p>
+  {gc_line}
+  {prompt_line}
   {snippet}
-  <footer><code>{roster_hint}</code></footer>
+  <footer>
+    <p class="label">Final pick (goes to VS Code export list)</p>
+    <code>{finalize_hint}</code>
+    <p class="label">Shortlist (best of batch — biases next <code>quick</code> regen only)</p>
+    <code>{shortlist_hint}</code>
+  </footer>
 </article>"""
         )
 
@@ -110,15 +143,18 @@ def build_preview_page(
     .grid {{ display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }}
     .card {{ background: #18181b; border-radius: 12px; padding: 16px; border: 1px solid #27272a; }}
     .card header h2 {{ margin: 0 0 4px; font-size: 1rem; }}
-    .meta {{ margin: 0 0 8px; color: #a1a1aa; font-size: 0.8rem; word-break: break-all; }}
-    .prompt {{ margin: 0 0 10px; color: #d4d4d8; font-size: 0.85rem; }}
-    .card footer {{ margin-top: 12px; }}
-    .card footer code {{ font-size: 0.7rem; color: #71717a; word-break: break-all; }}
+    .label {{ margin: 10px 0 4px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #a1a1aa; }}
+    .meta {{ margin: 0 0 8px; color: #d4d4d8; font-size: 0.82rem; line-height: 1.4; }}
+    .gc {{ margin: 0 0 8px; color: #a3a3a3; font-size: 0.78rem; }}
+    .prompt {{ margin: 0 0 10px; color: #fafafa; font-size: 0.88rem; }}
+    .muted2 {{ color: #71717a; }}
+    .card footer {{ margin-top: 14px; }}
+    .card footer code {{ display: block; font-size: 0.68rem; color: #a1a1aa; word-break: break-all; margin-bottom: 8px; }}
   </style>
 </head>
 <body>
   <h1>{html.escape(title)}</h1>
-  <p class="hint">Compare mock editor chrome below, then add keepers with <code>python cli.py roster add …</code></p>
+  <p class="hint">Each card shows one generated <code>ide_palette_XX.json</code>. The “recipe” line is an internal label (taste + archetype + theme mode), not which themes you chose for export.</p>
   <div class="grid">
 {"".join(cards)}
   </div>

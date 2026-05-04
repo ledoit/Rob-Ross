@@ -97,7 +97,7 @@ def _theme_json(palette: dict) -> dict:
     style = _style_name(palette)
     theme_mode = _theme_mode(palette)
     style_label = style.replace("_", " ").title() if style else family
-    name = f"RR {style_label}"
+    name = f"Rob Ross {style_label}"
     chrome = STYLE_CHROME_PROFILES.get(style, {"bar_lift": 2, "selection_alpha": "55", "focus": "accent"})
     panel_bg = _tone(surface, l_shift=chrome["bar_lift"])
     bar_bg = _tone(bg, l_shift=max(0, chrome["bar_lift"] - 1))
@@ -243,9 +243,9 @@ def main() -> None:
     next_version = _bump_patch_version(str(current_package.get("version", "0.0.0")))
 
     package_json = {
-        "name": "robross-ide-palettes",
-        "displayName": "RobRoss IDE Palettes",
-        "description": "Generated IDE themes from RobRoss Palette Engine",
+        "name": "rob-ross-ide-palettes",
+        "displayName": "Rob Ross IDE Palettes",
+        "description": "Generated IDE themes from Rob Ross palette engine",
         "version": next_version,
         "publisher": "local",
         "engines": {"vscode": "^1.85.0"},
@@ -256,7 +256,7 @@ def main() -> None:
     (ext_dir / "README.md").write_text(
         "\n".join(
             [
-                "# RobRoss IDE Themes",
+                "# Rob Ross IDE themes",
                 "",
                 "Generated from `outputs/palettes/ide_palette_*.json`.",
                 "",

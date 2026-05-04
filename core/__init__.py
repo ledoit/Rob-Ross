@@ -1,1 +1,1 @@
-"""Core modules for RobRoss Palette OS."""
+"""Core modules for Rob Ross palette OS."""

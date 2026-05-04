@@ -13,6 +13,8 @@ from urllib.parse import urlparse
 
 from rich.console import Console
 
+from core.env_rob_ross import embed_model_name, ollama_model
+
 console = Console()
 
 
@@ -55,7 +57,7 @@ def _llm_extract_principles(source_id: str, content: str) -> list[PrincipleChunk
     except Exception:
         return _heuristic_extract_principles(source_id, content)
 
-    model_name = os.getenv("ROBROSS_OLLAMA_MODEL", "mistral")
+    model_name = ollama_model()
     prompt = f"""
 You are a design systems analyst.
 Extract structural color-design principles from this source.
@@ -156,9 +158,9 @@ def _index_chunks_chroma(chunks: list[PrincipleChunk], vector_dir: Path) -> None
 
     vector_dir.mkdir(parents=True, exist_ok=True)
     client = chromadb.PersistentClient(path=str(vector_dir))
-    collection = client.get_or_create_collection("robross_principles")
+    collection = client.get_or_create_collection("rob_ross_principles")
     vector_store = ChromaVectorStore(chroma_collection=collection)
-    embed_model = HuggingFaceEmbedding(model_name=os.getenv("ROBROSS_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2"))
+    embed_model = HuggingFaceEmbedding(model_name=embed_model_name())
 
     docs = [
         Document(

@@ -1,4 +1,4 @@
-# RobRoss IDE Themes
+# Rob Ross IDE themes
 
 Generated from `outputs/palettes/ide_palette_*.json`.
 
@@ -7,7 +7,7 @@ Generated from `outputs/palettes/ide_palette_*.json`.
 1. `npm i -g @vscode/vsce`
 2. `cd vscode-themes`
 3. `vsce package`
-4. In Cursor/VSCode: Extensions -> ... -> Install from VSIX
+4. In Cursor/VS Code: Extensions -> ... -> Install from VSIX
 
 ## Regenerate themes
 

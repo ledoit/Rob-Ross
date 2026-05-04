@@ -6,8 +6,9 @@ def test_black_and_yellow_sets_accent_and_dark():
     assert p["prompt_session"]["accent_hue_center"] == 52.0
     assert p["lightness_profile"]["background_range"] == [3, 12]
     assert p["prompt_session"]["prefer_dark_theme_archetypes"] is True
-    assert p["prompt_session"]["chromatic_variety"] == 0.22
-    assert p["prompt_session"]["prompt_adherence"] == 0.9
+    assert p["prompt_session"]["chromatic_variety"] == 0.12
+    assert p["prompt_session"]["prompt_adherence"] == 0.92
+    assert p["prompt_session"]["use_neutral_dark_background"] is True
 
 
 def test_no_false_red_in_substring():

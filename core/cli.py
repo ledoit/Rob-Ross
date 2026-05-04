@@ -1,4 +1,4 @@
-"""Typer CLI for RobRoss Palette OS."""
+"""Typer CLI for Rob Ross palette OS."""
 
 from __future__ import annotations
 
@@ -20,15 +20,21 @@ from core.preview_html import build_preview_page, load_ide_palettes_from_dir
 from core.prompt_brief import apply_prompt_archetype_order, genome_patch_from_prompt
 from core.roster import (
     apply_roster_learning_to_disk,
+    apply_shortlist_bias_to_session,
     load_roster,
     roster_add,
     roster_path,
     roster_remove,
+    shortlist_add,
+    shortlist_clear,
+    shortlist_remove,
 )
 
-app = typer.Typer(help="RobRoss Palette OS CLI")
-roster_app = typer.Typer(help="Curate palettes for export and teach the genome from picks")
+app = typer.Typer(help="Rob Ross palette OS CLI")
+roster_app = typer.Typer(help="Final export list, shortlist, and genome learning from picks")
 app.add_typer(roster_app, name="roster")
+shortlist_app = typer.Typer(help="Best-of-batch: biases the next quick() only (not VS Code export)")
+roster_app.add_typer(shortlist_app, name="shortlist")
 console = Console()
 
 
@@ -181,6 +187,9 @@ def quick(
     if adherence is not None:
         ps["prompt_adherence"] = max(0.0, min(1.0, adherence))
     apply_prompt_archetype_order(merged)
+    bias = apply_shortlist_bias_to_session(merged, load_roster(root / "genome"), root / "outputs" / "palettes")
+    if bias:
+        console.print(f"[cyan]Shortlist breeders applied:[/cyan] {bias.get('ids')}")
     task = f"make {count} ide palettes"
     result = generate_palettes(task, merged, root / "outputs" / "palettes", user_prompt=prompt)
 
@@ -204,7 +213,8 @@ def quick(
     console.print(f"Palettes: {root / 'outputs' / 'palettes'}")
     console.print(f"Report: {report_path}")
     console.print("Preview in browser: [cyan]python cli.py preview[/cyan]")
-    console.print("Add keepers: [cyan]python cli.py roster add ide_palette_02 --prompt \"...\"[/cyan]")
+    console.print("Final export pick: [cyan]python cli.py roster add ide_palette_02 --prompt \"...\"[/cyan]")
+    console.print("Shortlist (next regen): [cyan]python cli.py roster shortlist add ide_palette_02 --prompt \"...\"[/cyan]")
     if export:
         export_themes(all_palettes=False)
 
@@ -261,16 +271,18 @@ def export_themes(
 
 
 @roster_app.command("add")
+@roster_app.command("export-add")
 def roster_add_cmd(
     palette_id: str = typer.Argument(..., help="e.g. ide_palette_03"),
     prompt: str | None = typer.Option(None, "--prompt", "-p", help="Original quick prompt (for learning metadata)"),
-    learn: bool = typer.Option(True, "--learn/--no-learn", help="Update genome from full roster"),
+    learn: bool = typer.Option(True, "--learn/--no-learn", help="Update genome from full export roster"),
 ) -> None:
+    """Final pick: this theme is included when you run export-themes (and VSIX packaging)."""
     root = _project_root()
     gdir = root / "genome"
     palette_dir = root / "outputs" / "palettes"
     roster_add(gdir, palette_dir, palette_id, prompt=prompt)
-    console.print(f"[green]Added[/green] {palette_id} to roster ({roster_path(gdir)})")
+    console.print(f"[green]Added[/green] {palette_id} to export roster ({roster_path(gdir)})")
     if learn:
         stats = apply_roster_learning_to_disk(
             gdir / "genome_v1.json",
@@ -314,6 +326,48 @@ def roster_learn_cmd() -> None:
         root / "outputs" / "palettes",
     )
     console.print(stats)
+
+
+@shortlist_app.command("add")
+def shortlist_add_cmd(
+    palette_id: str = typer.Argument(..., help="e.g. ide_palette_03"),
+    prompt: str | None = typer.Option(None, "--prompt", "-p", help="Brief you used (stored for your notes)"),
+) -> None:
+    root = _project_root()
+    gdir = root / "genome"
+    palette_dir = root / "outputs" / "palettes"
+    shortlist_add(gdir, palette_dir, palette_id, prompt=prompt)
+    console.print(
+        f"[green]Shortlisted[/green] {palette_id} — next [cyan]quick[/cyan] will bias variety/adherence from these picks."
+    )
+
+
+@shortlist_app.command("remove")
+def shortlist_remove_cmd(palette_id: str = typer.Argument(...)) -> None:
+    root = _project_root()
+    shortlist_remove(root / "genome", palette_id)
+    console.print(f"[green]Removed[/green] {palette_id} from shortlist")
+
+
+@shortlist_app.command("list")
+def shortlist_list_cmd() -> None:
+    root = _project_root()
+    data = load_roster(root / "genome")
+    ids = data.get("shortlist_ids") or []
+    if not ids:
+        console.print("Shortlist is empty.")
+        return
+    for pid in ids:
+        meta = data.get("shortlist_entries", {}).get(pid, {})
+        p = meta.get("prompt", "")
+        console.print(f"- [bold]{pid}[/bold]" + (f" — {p}" if p else ""))
+
+
+@shortlist_app.command("clear")
+def shortlist_clear_cmd() -> None:
+    root = _project_root()
+    shortlist_clear(root / "genome")
+    console.print("[green]Shortlist cleared.[/green]")
 
 
 @app.command()

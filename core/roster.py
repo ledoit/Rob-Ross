@@ -26,10 +26,12 @@ def roster_path(genome_dir: Path) -> Path:
 def load_roster(genome_dir: Path) -> dict[str, Any]:
     p = roster_path(genome_dir)
     if not p.exists():
-        return {"palette_ids": [], "entries": {}}
+        return {"palette_ids": [], "entries": {}, "shortlist_ids": [], "shortlist_entries": {}}
     data = json.loads(p.read_text(encoding="utf-8"))
     data.setdefault("palette_ids", [])
     data.setdefault("entries", {})
+    data.setdefault("shortlist_ids", [])
+    data.setdefault("shortlist_entries", {})
     return data
 
 
@@ -76,8 +78,84 @@ def roster_remove(genome_dir: Path, palette_id: str) -> dict[str, Any]:
     data = load_roster(genome_dir)
     data["palette_ids"] = [x for x in data["palette_ids"] if x != pid]
     data["entries"].pop(pid, None)
+    data["shortlist_ids"] = [x for x in data["shortlist_ids"] if x != pid]
+    data["shortlist_entries"].pop(pid, None)
     save_roster(genome_dir, data)
     return data
+
+
+def shortlist_add(
+    genome_dir: Path,
+    palette_dir: Path,
+    palette_id: str,
+    prompt: str | None = None,
+) -> dict[str, Any]:
+    """Intermediary pick: best-of-batch; biases the next quick() regen (not the VS Code export list)."""
+    pid = normalize_palette_id(palette_id)
+    pal_file = palette_dir / f"{pid}.json"
+    if not pal_file.exists():
+        raise FileNotFoundError(f"No palette file: {pal_file}")
+
+    data = load_roster(genome_dir)
+    if pid not in data["shortlist_ids"]:
+        data["shortlist_ids"].append(pid)
+    entry = data["shortlist_entries"].setdefault(pid, {})
+    entry["picked_at"] = _iso_now()
+    if prompt:
+        entry["prompt"] = prompt
+    save_roster(genome_dir, data)
+    return data
+
+
+def shortlist_remove(genome_dir: Path, palette_id: str) -> dict[str, Any]:
+    pid = normalize_palette_id(palette_id)
+    data = load_roster(genome_dir)
+    data["shortlist_ids"] = [x for x in data["shortlist_ids"] if x != pid]
+    data["shortlist_entries"].pop(pid, None)
+    save_roster(genome_dir, data)
+    return data
+
+
+def shortlist_clear(genome_dir: Path) -> dict[str, Any]:
+    data = load_roster(genome_dir)
+    data["shortlist_ids"] = []
+    data["shortlist_entries"] = {}
+    save_roster(genome_dir, data)
+    return data
+
+
+def apply_shortlist_bias_to_session(
+    genome: dict[str, Any],
+    roster: dict[str, Any],
+    palette_dir: Path,
+) -> dict[str, Any] | None:
+    """Tighten variety / raise adherence from shortlisted palettes; records breeder ids on prompt_session."""
+    ids = list(roster.get("shortlist_ids") or [])
+    if not ids:
+        return None
+    ps = genome.setdefault("prompt_session", {})
+    varieties: list[float] = []
+    adherences: list[float] = []
+    for pid in ids:
+        pal = palette_dir / f"{normalize_palette_id(pid)}.json"
+        if not pal.is_file():
+            continue
+        payload = json.loads(pal.read_text(encoding="utf-8"))
+        gc = payload.get("generation_controls") or {}
+        if "chromatic_variety" in gc:
+            varieties.append(float(gc["chromatic_variety"]))
+        if "prompt_adherence" in gc:
+            adherences.append(float(gc["prompt_adherence"]))
+    if varieties:
+        breeder_avg = sum(varieties) / len(varieties)
+        target_v = max(0.05, min(0.5, breeder_avg * 0.9 - 0.05))
+        ps["chromatic_variety"] = min(float(ps.get("chromatic_variety", 0.5)), target_v)
+    if adherences:
+        breeder_avg_a = sum(adherences) / len(adherences)
+        target_a = min(1.0, breeder_avg_a * 1.05 + 0.03)
+        ps["prompt_adherence"] = max(float(ps.get("prompt_adherence", 0.5)), target_a)
+    ps["shortlist_breeder_ids"] = list(ids)
+    return {"shortlist_biased": True, "ids": ids}
 
 
 def _archetype_from_palette(payload: dict[str, Any]) -> str | None:

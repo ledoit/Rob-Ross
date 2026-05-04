@@ -81,8 +81,8 @@ def genome_patch_from_prompt(text: str) -> dict[str, Any]:
         if len(accents) > 1:
             ps["accent_secondary_hue"] = accents[1][1]
         # Tight chroma + strong brief lock when user names explicit accent colors
-        ps["chromatic_variety"] = 0.22
-        ps["prompt_adherence"] = 0.9
+        ps["chromatic_variety"] = 0.12
+        ps["prompt_adherence"] = 0.92
 
     has_dark = bool(tokens & DARK_WORDS)
     has_light = bool(tokens & LIGHT_WORDS)
@@ -94,6 +94,10 @@ def genome_patch_from_prompt(text: str) -> dict[str, Any]:
         }
         patch["saturation_profile"] = {"base_saturation": [8, 22]}
         ps["prefer_dark_theme_archetypes"] = True
+        if accents:
+            # True black/near-black UI chrome; yellow (etc.) only on accents + syntax
+            ps["use_neutral_dark_background"] = True
+            ps["neutral_ui_hue"] = 235.0
     elif has_light and not has_dark:
         patch["lightness_profile"] = {
             "background_range": [92, 98],
