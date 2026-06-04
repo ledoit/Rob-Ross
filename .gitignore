@@ -13,3 +13,4 @@ build/
 
 # Generated local previews (regenerate with `python cli.py preview`)
 outputs/preview/
+genome/user_loop_state.json

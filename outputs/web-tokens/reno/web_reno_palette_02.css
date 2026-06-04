@@ -1,0 +1,17 @@
+/* Rob Ross web export — web_reno_palette_02 — site: reno */
+/* Harmony: analogous — Web pathway: Neighboring hues (~50° fan) — calm, cohesive UI chrome. Site profile: Reno Studios (editorial dark marketin */
+
+:root {
+  --palette-black: #000000;
+  --palette-white: #ffffff;
+  --palette-dark-900: #060607;
+  --palette-dark-800: #0a0b0d;
+  --palette-dark-700: #cdcdcd;
+  --palette-grey-18: #2e2e2e;
+  --palette-border-soft: rgba(255, 255, 255, 0.16);
+  --site-surface-bg: #060607;
+  --site-text: var(--palette-white);
+  --site-muted: #cdcdcd;
+  --site-accent-primary: #FBFEF3;
+  --site-accent-secondary: #E4DD3A;
+}

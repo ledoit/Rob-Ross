@@ -45,6 +45,8 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 6. **Palette Studio** (infinite select → regen loop in the browser):
    - `python -m studio`
    - Open [http://127.0.0.1:8765](http://127.0.0.1:8765) (override host/port with `ROB_ROSS_STUDIO_HOST` / `ROB_ROSS_STUDIO_PORT`; set `ROB_ROSS_STUDIO_RELOAD=true` for dev autoreload)
+   - **IDE Studio** `/` — shortlist + heart → VS Code export roster
+   - **Web Color Studio** `/web` — **Saved** panel (roster) loads params into **Generate**; scratch batch on the right; breed with `seed_from`
    - Check variants to set the **shortlist** for the next run, edit the brief, **Regenerate**. **Heart** adds a palette to the export roster (same as `roster add`).
 
 ## Commands
@@ -52,6 +54,12 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - `python cli.py ingest <source>`
 - `python cli.py build-genome`
 - `python cli.py generate --task "make 11 ide palettes and 5 web palettes then build a superset of 25"`
+- **Website pathway (primary for marketing sites):**
+  - `python cli.py web quick "editorial dark gold" --site reno -n 4` — Coolors-style harmonies + WCAG roles; **replaces** that site’s scratch batch each run (roster-pinned palettes are kept)
+  - `python cli.py roster add web_photoport_palette_01` — **save** a web palette before the next generate
+  - `python cli.py web preview --site reno` — landing mock gallery (`outputs/preview/web.html`)
+  - `python cli.py web export --all` — CSS partials → `outputs/web-tokens/{site}/`
+  - `python cli.py web harmonies` / `python cli.py web sites` — list modes and site profiles
 - `python cli.py quick "black and yellow"` — prompt-driven IDE batch (`--variety`, `--adherence`, `--fresh` to wipe `ide_palette_*.json` first)
 - Taste moods are **weighted-sampled** per batch when `genome/user_loop_state.json` exists (auto-created on first `quick`). Hearts / `roster add` / `roster shortlist add` bump weights. Optional reproducibility: `ROB_ROSS_SEED=12345`.
 - `python cli.py preview` — HTML mock-editor gallery
@@ -61,9 +69,22 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - `python cli.py feedback`
 - `python cli.py superset --input-palettes outputs/palettes --count 25`
 
+## Website pathway vs Coolors
+
+[Coolors](https://coolors.co/) does not publish its exact RNG. In practice it:
+
+1. Picks a **harmony rule** (analogous, complementary, triadic, …) — fixed hue angles on the wheel.
+2. Randomizes **saturation and lightness** within readable bands (spacebar = reroll unlocked slots).
+3. Lets you **lock** swatches and regenerate the rest.
+4. Checks **contrast** in the UI (we enforce WCAG in code via `web` pathway).
+
+Rob Ross `core/harmony.py` implements that geometry; `core/pathways/web.py` maps swatches → semantic roles (`background`, `accent_primary`, …) and site profiles (`reno`, `jobjeeves`, `photoport`).
+
 ## Layout
 
 - `genome/` genome JSON, `theme_roster.json` (export + shortlist), `user_loop_state.json` (taste mood weights + event tail), history snapshots
+- `core/pathways/` web (and future strobe/game) constraints
+- `outputs/web-tokens/` exported CSS for sites
 - `sources/` raw and processed extracted principles
 - `vector_store/` Chroma persistence (`rob_ross_principles` collection)
 - `outputs/palettes/` generated palettes JSON
@@ -72,4 +93,11 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 - `studio/` FastAPI app + templates + static CSS
 - `tests/` unit tests
 - `scripts/export_vscode_themes.py` — installable Cursor/VS Code themes (`rob-ross-ide-palettes`)
-- `vscode-themes/` local theme extension package
+- `vscode-themes/` local theme extension package (`rob-ross-ide-palettes`)
+
+## Development
+
+- **Tests:** `pytest` (from repo root with venv active)
+- **Typical workflow:** `ingest` → `quick` / Studio → `preview` → `export-themes` → package in `vscode-themes/`
+- **Studio dev reload:** `ROB_ROSS_STUDIO_RELOAD=true` when running `python -m studio`
+- **Menhir path:** `Menhir/Color/robross-palette-engine`
