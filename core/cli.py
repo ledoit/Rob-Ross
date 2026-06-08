@@ -27,10 +27,17 @@ from core.roster import (
     shortlist_clear,
     shortlist_remove,
 )
+from core.harmony import HARMONY_MODES, describe_harmony
+from core.export.css_site_tokens import export_all_web_palettes, export_palette_file
+from core.pathways.web_sites import SITE_PROFILES
+from core.preview_web_html import build_web_preview_page, load_web_palettes_from_dir
 from core.quick_session import run_quick
+from core.web_session import run_web_quick
 from core.user_loop import ensure_user_loop_state, state_path as user_loop_state_path
 
 app = typer.Typer(help="Rob Ross palette OS CLI")
+web_app = typer.Typer(help="Website palettes — Coolors-style harmonies + CSS export")
+app.add_typer(web_app, name="web")
 roster_app = typer.Typer(help="Final export list, shortlist, and genome learning from picks")
 app.add_typer(roster_app, name="roster")
 shortlist_app = typer.Typer(help="Best-of-batch: biases the next quick() only (not VS Code export)")
@@ -210,6 +217,121 @@ def quick(
     console.print("Shortlist (next regen): [cyan]python cli.py roster shortlist add ide_palette_02 --prompt \"...\"[/cyan]")
     if export:
         export_themes(all_palettes=False)
+
+
+@web_app.command("quick")
+def web_quick(
+    prompt: str = typer.Argument(..., help='Brief, e.g. "editorial dark minimal gold accent"'),
+    count: int = typer.Option(4, "--count", "-n", help="Palette variants"),
+    site: str = typer.Option(
+        "generic",
+        "--site",
+        "-s",
+        help="reno | jobjeeves | photoport | generic",
+    ),
+    harmony: str | None = typer.Option(
+        None,
+        "--harmony",
+        "-H",
+        help=f"Override site default harmony: {', '.join(HARMONY_MODES)}",
+    ),
+    variety: float | None = typer.Option(None, "--variety", min=0.0, max=1.0),
+    adherence: float | None = typer.Option(None, "--adherence", min=0.0, max=1.0),
+    seed_from: str | None = typer.Option(
+        None,
+        "--seed-from",
+        help="Roster palette id to breed from (e.g. web_photoport_palette_01)",
+    ),
+) -> None:
+    """Generate website palettes (WCAG roles + site profiles). IDE not touched."""
+    root = _project_root()
+    if harmony and harmony not in HARMONY_MODES:
+        typer.echo(f"Unknown harmony. Choose: {', '.join(HARMONY_MODES)}")
+        raise typer.Exit(code=1)
+    result = run_web_quick(
+        root,
+        prompt,
+        count=count,
+        site=site,
+        harmony=harmony,
+        variety=variety,
+        adherence=adherence,
+        seed_from=seed_from,
+    )
+    if result.get("scratch_kept"):
+        console.print(f"[cyan]Kept (roster):[/cyan] {', '.join(result['scratch_kept'])}")
+    if result.get("scratch_removed"):
+        console.print(f"[dim]Replaced scratch:[/dim] {', '.join(result['scratch_removed'])}")
+    console.print("[green]Web batch ready.[/green]")
+    console.print(f"Palettes: {root / 'outputs' / 'palettes'}")
+    console.print(f"Report: {result['report_path']}")
+    console.print("Preview: [cyan]python cli.py web preview --site " + site + "[/cyan]")
+    console.print("Export CSS: [cyan]python cli.py web export --all[/cyan]")
+
+
+@web_app.command("preview")
+def web_preview(
+    site: str | None = typer.Option(None, "--site", "-s", help="Filter by site profile"),
+    open_browser: bool = typer.Option(True, "--open/--no-open"),
+) -> None:
+    """Landing-page mock gallery for web_* palettes."""
+    root = _project_root()
+    palette_dir = root / "outputs" / "palettes"
+    palettes = load_web_palettes_from_dir(palette_dir, site)
+    if not palettes:
+        typer.echo(f"No web palettes under {palette_dir}. Run: python cli.py web quick \"…\"")
+        raise typer.Exit(code=1)
+    out = root / "outputs" / "preview" / "web.html"
+    build_web_preview_page(palettes, out)
+    console.print(f"[green]Web preview:[/green] {out}")
+    if open_browser:
+        webbrowser.open(out.resolve().as_uri())
+
+
+@web_app.command("export")
+def web_export(
+    palette_id: str | None = typer.Argument(None, help="e.g. web_reno_palette_01 (omit with --all)"),
+    site: str | None = typer.Option(None, "--site", "-s"),
+    all_palettes: bool = typer.Option(False, "--all", help="Export every web_*_palette_*.json"),
+) -> None:
+    """Write CSS partials to outputs/web-tokens/{site}/."""
+    root = _project_root()
+    palette_dir = root / "outputs" / "palettes"
+    out_dir = root / "outputs" / "web-tokens"
+    if all_palettes:
+        paths = export_all_web_palettes(palette_dir, out_dir)
+        if not paths:
+            typer.echo("No web_*_palette_*.json files found.")
+            raise typer.Exit(code=1)
+        for p in paths:
+            console.print(f"[green]Wrote[/green] {p}")
+        return
+    if not palette_id:
+        typer.echo("Provide palette_id or use --all")
+        raise typer.Exit(code=1)
+    src = palette_dir / f"{palette_id.replace('.json', '')}.json"
+    if not src.is_file():
+        typer.echo(f"Not found: {src}")
+        raise typer.Exit(code=1)
+    path = export_palette_file(src, out_dir, site=site)
+    console.print(f"[green]Wrote[/green] {path}")
+
+
+@web_app.command("sites")
+def web_sites() -> None:
+    """List website profiles (brand-lock, default harmony)."""
+    for key, prof in SITE_PROFILES.items():
+        console.print(
+            f"[bold]{key}[/bold] — {prof.get('label')} "
+            f"(harmony: {prof.get('harmony_default')}, brand_lock: {prof.get('brand_lock')})"
+        )
+
+
+@web_app.command("harmonies")
+def web_harmonies() -> None:
+    """Coolors-style harmony modes (hue geometry)."""
+    for mode in HARMONY_MODES:
+        console.print(f"[bold]{mode}[/bold] — {describe_harmony(mode)}")
 
 
 @app.command()

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Web Color Studio — Rob Ross</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="/static/studio.css"/>
+  <link rel="stylesheet" href="/static/web_studio.css"/>
+</head>
+<body>
+  <div class="app-shell" x-data="webStudio()" x-init="init()">
+    <div class="topbar">
+      <nav class="nav-tabs">
+        <a href="/">IDE</a>
+        <a href="/web" class="active">Web</a>
+      </nav>
+      <h1>Color Studio</h1>
+      <span class="status" :class="{ err: toastErr }" x-text="toast || 'Generate scratch · Save to pin · Load saved to breed'"></span>
+    </div>
+
+    <div class="studio-main">
+      <!-- LEFT: Generate + Saved -->
+      <div class="col-left">
+        <div class="panel">
+          <h2>Generate</h2>
+          <div class="seed-pill" x-show="seedFrom">
+            <span>From <strong x-text="seedFrom"></strong></span>
+            <button type="button" @click="clearSeed()">×</button>
+          </div>
+          <div class="gen-grid">
+            <div class="span2">
+              <label class="field tiny">Brief</label>
+              <textarea class="prompt compact" x-model="prompt" rows="1"></textarea>
+            </div>
+            <div>
+              <label class="field tiny">Site</label>
+              <select class="site-sel compact-in" x-model="site">
+                <template x-for="s in boot.sites" :key="s.id">
+                  <option :value="s.id" x-text="s.id"></option>
+                </template>
+              </select>
+            </div>
+            <div>
+              <label class="field tiny">Harmony</label>
+              <select class="harm-sel compact-in" x-model="harmony">
+                <option value="">default</option>
+                <template x-for="h in boot.harmonies" :key="h.id">
+                  <option :value="h.id" x-text="h.id"></option>
+                </template>
+              </select>
+            </div>
+            <div>
+              <label class="field tiny">Variants</label>
+              <input class="compact-in" type="number" min="1" max="8" x-model.number="count"/>
+            </div>
+            <div>
+              <label class="field tiny">Variety</label>
+              <input class="compact-in" type="text" placeholder="auto" x-model="varietyStr"/>
+            </div>
+            <div>
+              <label class="field tiny">Adherence</label>
+              <input class="compact-in" type="text" placeholder="auto" x-model="adherenceStr"/>
+            </div>
+          </div>
+          <div class="gen-actions">
+            <button type="button" class="btn btn-primary" @click="regenerate()" :disabled="busy || !prompt.trim()"
+              x-text="seedFrom ? 'Breed' : 'Generate'"></button>
+          </div>
+        </div>
+
+        <div class="panel panel-grow">
+          <h2>Saved <span style="font-weight:400;color:var(--muted)" x-text="'(' + savedList.length + ')'"></span></h2>
+          <div class="saved-scroll">
+            <template x-if="!savedList.length">
+              <p style="font-size:0.7rem;color:var(--muted);margin:0">No web palettes on disk yet.</p>
+            </template>
+            <template x-for="s in savedList" :key="s.id">
+              <div class="saved-row" :class="{ active: seedFrom === s.id }" @click="loadSavedIntoGenerate(s)">
+                <div class="swatches">
+                  <template x-for="(hx, i) in (s.swatches || []).slice(0, 5)" :key="i">
+                    <div class="sw" :style="'background:' + (hx || '#333')"></div>
+                  </template>
+                </div>
+                <div class="meta">
+                  <span class="id" x-text="s.id"></span>
+                  <span class="sub" x-text="(s.site || '') + ' · ' + (s.harmony || '')"></span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem">
+                  <span class="badge-pin" :class="s.pinned ? '' : 'badge-disk'" x-text="s.pinned ? 'pinned' : 'disk'"></span>
+                  <button type="button" class="btn btn-ghost btn-load" @click.stop="s.pinned ? loadSavedIntoGenerate(s) : pinPalette(s.id)"
+                    x-text="s.pinned ? 'Load' : 'Pin'"></button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Scratch strip -->
+      <div class="col-scratch">
+        <div class="scratch-head">
+          <h2>Scratch</h2>
+          <select class="site-sel compact-in" style="width:auto;margin:0" x-model="viewSite" @change="reloadList()">
+            <option value="">all sites</option>
+            <template x-for="s in boot.sites" :key="'v'+s.id">
+              <option :value="s.id" x-text="s.id"></option>
+            </template>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm" style="margin-left:auto;font-size:0.65rem" @click="exportAll()" :disabled="busy">Export CSS</button>
+        </div>
+
+        <template x-if="!palettes.length">
+          <div class="scratch-empty">Generate to fill scratch →</div>
+        </template>
+
+        <div class="scratch-track" x-show="palettes.length">
+          <template x-for="pal in palettes" :key="pal.id">
+            <article class="pal-card compact" :class="{ selected: focusId === pal.id }" @click="focusId = pal.id">
+              <header>
+                <h3 x-text="pal.id.replace('web_','').replace('_palette_',' #')"></h3>
+                <div class="tags">
+                  <span class="tag" x-text="pal.site"></span>
+                  <span class="tag" x-show="pal.pinned || savedIds.includes(pal.id)">★</span>
+                </div>
+              </header>
+              <div class="sw-row">
+                <template x-for="(hx, i) in (pal.swatches || [])" :key="i">
+                  <div class="sw" :style="'background:' + hx" @click.stop="copyHex(hx)"></div>
+                </template>
+              </div>
+              <div class="mock-mini" x-html="mockHtml(pal, true)"></div>
+
+              <template x-if="focusId === pal.id">
+                <div class="drawer" @click.stop>
+                  <template x-for="role in roleList(pal)" :key="role">
+                    <div class="role-row">
+                      <label x-text="role"></label>
+                      <input type="color" :value="hexForInput(pal.roles[role])" :disabled="!canEdit(pal, role)"
+                        @input="queueRole(pal.id, role, $event.target.value)"/>
+                      <span class="cr" :class="{ bad: contrastBad(pal, role) }" x-text="contrastLabel(pal, role)"></span>
+                    </div>
+                  </template>
+                  <div class="drawer-actions">
+                    <template x-if="pal.pinned || savedIds.includes(pal.id)">
+                      <button type="button" class="btn btn-primary btn-sm" @click="loadSavedIntoGenerate(pal); regenerate()" :disabled="busy">Breed batch</button>
+                      <button type="button" class="btn btn-ghost btn-sm" @click="tweak(pal.id, 'reroll')" :disabled="busy">New variant</button>
+                    </template>
+                    <template x-if="!(pal.pinned || savedIds.includes(pal.id))">
+                      <button type="button" class="btn btn-ghost btn-sm" @click="tweak(pal.id, 'reroll')" :disabled="busy">Reroll</button>
+                      <button type="button" class="btn btn-ghost btn-sm" @click="tweak(pal.id, 'hue_nudge', { hue_delta: -18 })" :disabled="busy">Hue −</button>
+                      <button type="button" class="btn btn-ghost btn-sm" @click="tweak(pal.id, 'hue_nudge', { hue_delta: 18 })" :disabled="busy">Hue +</button>
+                    </template>
+                    <button type="button" class="btn btn-heart btn-sm" @click="savePalette(pal.id)" :disabled="busy"
+                      x-text="(pal.pinned || savedIds.includes(pal.id)) ? 'Pinned' : 'Pin'"></button>
+                    <button type="button" class="btn btn-ghost btn-sm" @click="exportOne(pal.id)" :disabled="busy">CSS</button>
+                    <button type="button" class="btn btn-ghost btn-sm" @click="focusId = null">Close</button>
+                  </div>
+                </div>
+              </template>
+            </article>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="boot-data">{{ boot_json | safe }}</script>
+  <script>
+    function webStudio() {
+      return {
+        boot: { sites: [], harmonies: [], palettes: [], saved: [] },
+        palettes: [],
+        savedList: [],
+        prompt: 'editorial minimal warm gold accent',
+        site: 'photoport',
+        harmony: '',
+        varietyStr: '',
+        adherenceStr: '',
+        seedFrom: null,
+        count: 4,
+        savedIds: [],
+        viewSite: '',
+        focusId: null,
+        busy: false,
+        toast: '',
+        toastErr: false,
+        _roleTimer: null,
+
+        init() {
+          const el = document.getElementById('boot-data');
+          this.boot = JSON.parse(el.textContent);
+          this.palettes = (this.boot.palettes || []).map((p) => this._markPinned(p));
+          this.savedList = this.boot.saved || [];
+          this.savedIds = this.savedList.filter((s) => s.pinned).map((s) => s.id);
+          this.hydrateFull();
+        },
+
+        _markPinned(p) {
+          const row = this.savedList.find((s) => s.id === p.id);
+          p.pinned = row ? !!row.pinned : this.savedIds.includes(p.id);
+          return p;
+        },
+
+        _parseOptFloat(s) {
+          const t = String(s || '').trim();
+          if (!t) return null;
+          const n = Number(t);
+          return Number.isFinite(n) ? n : null;
+        },
+
+        clearSeed() {
+          this.seedFrom = null;
+          this.toast = '';
+          this.toastErr = false;
+        },
+
+        loadSavedIntoGenerate(s) {
+          const id = typeof s === 'string' ? s : s.id;
+          const row = this.savedList.find((x) => x.id === id) || s;
+          if (row.missing) { this.toastErr = true; this.toast = 'File missing.'; return; }
+          this.prompt = row.prompt || row.roster_prompt || row.user_prompt || this.prompt;
+          this.site = row.site || this.site;
+          this.harmony = row.harmony || row.harmony_mode || '';
+          this.varietyStr = row.variety != null ? String(row.variety) : '';
+          this.adherenceStr = row.adherence != null ? String(row.adherence) : '';
+          this.seedFrom = id;
+          this.toastErr = false;
+          this.toast = `Loaded ${id} → Generate`;
+        },
+
+        async loadSaved() {
+          const res = await fetch('/api/web/saved');
+          if (!res.ok) return;
+          const data = await res.json();
+          this.savedList = data.saved || [];
+          this.savedIds = this.savedList.filter((s) => s.pinned).map((s) => s.id);
+          this.palettes = this.palettes.map((p) => this._markPinned(p));
+        },
+
+        async pinPalette(id) {
+          await this.savePalette(id);
+        },
+
+        roleList(pal) { return Object.keys(pal.roles || {}).sort(); },
+
+        canEdit(pal, role) {
+          const site = (this.boot.sites || []).find((s) => s.id === pal.site);
+          if (site && site.brand_lock) return role.startsWith('accent_');
+          return true;
+        },
+
+        hexForInput(hx) {
+          if (!hx || !String(hx).startsWith('#') || String(hx).length !== 7) return '#888888';
+          return hx;
+        },
+
+        contrastLabel(pal, role) {
+          const c = pal._full?.colors?.find((x) => x.role === role);
+          return c?.contrast_with_background != null ? c.contrast_with_background.toFixed(1) : '—';
+        },
+
+        contrastBad(pal, role) {
+          const n = parseFloat(this.contrastLabel(pal, role));
+          return !isNaN(n) && n < 3;
+        },
+
+        mockHtml(pal, mini) {
+          const r = pal.roles || {};
+          const bg = r.background || '#141719';
+          const fg = r.foreground || '#fafafa';
+          const muted = r.muted || '#6e8294';
+          const acc = r.accent_secondary || r.accent_primary || '#ea9947';
+          const pad = mini ? '10px 12px' : '16px 18px';
+          const fs = mini ? '0.65rem' : '0.82rem';
+          return `<div style="background:${bg};color:${fg};padding:${pad};font-family:system-ui,sans-serif;height:100%;box-sizing:border-box">
+            <div style="font-size:0.55rem;color:${muted};text-transform:uppercase;letter-spacing:0.08em">Preview</div>
+            <div style="font-size:${fs};font-weight:600;margin:0.35rem 0">Headline</div>
+            <span style="display:inline-block;padding:4px 8px;border-radius:4px;background:${acc};color:${bg};font-size:0.6rem;font-weight:600">CTA</span>
+          </div>`;
+        },
+
+        async reloadList() {
+          const q = this.viewSite ? `?site=${encodeURIComponent(this.viewSite)}` : '';
+          const res = await fetch('/api/web/palettes' + q);
+          const data = await res.json();
+          this.palettes = (data.palettes || []).map((p) => this._markPinned(p));
+          await this.hydrateFull();
+        },
+
+        async hydrateFull() {
+          await Promise.all(this.palettes.map(async (p) => {
+            try {
+              const res = await fetch('/api/web/palette/' + encodeURIComponent(p.id));
+              if (res.ok) p._full = await res.json();
+            } catch (_) {}
+          }));
+        },
+
+        async regenerate() {
+          this.busy = true;
+          this.toastErr = false;
+          try {
+            const res = await fetch('/api/web/regenerate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: this.prompt.trim(),
+                count: this.count,
+                site: this.site,
+                harmony: this.harmony || null,
+                variety: this._parseOptFloat(this.varietyStr),
+                adherence: this._parseOptFloat(this.adherenceStr),
+                seed_from: this.seedFrom || null,
+              }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.palettes = (data.palettes || []).map((p) => this._markPinned(p));
+            await this.hydrateFull();
+            await this.loadSaved();
+            this.toast = `+${data.generated_count} scratch` + (data.seed_from ? ` (from ${data.seed_from})` : '');
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        queueRole(id, role, hex) {
+          clearTimeout(this._roleTimer);
+          this._roleTimer = setTimeout(() => this.applyRole(id, role, hex), 280);
+        },
+
+        async applyRole(id, role, hex) {
+          this.busy = true;
+          try {
+            const res = await fetch('/api/web/role', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ palette_id: id, role, hex }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.mergePalette(data.palette);
+            await this.loadSaved();
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        async tweak(id, action, extra = {}) {
+          this.busy = true;
+          try {
+            const res = await fetch('/api/web/tweak', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ palette_id: id, action, ...extra }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.mergePalette(data.palette);
+            if (data.bred_new) {
+              this.toast = `New scratch ${data.palette.id} — ${data.source_id} unchanged`;
+              this.focusId = data.palette.id;
+            } else {
+              this.toast = action === 'reroll' ? 'Rerolled scratch.' : 'Updated.';
+            }
+            await this.loadSaved();
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        mergePalette(full) {
+          const meta = {
+            id: full.id,
+            site: full.site,
+            harmony_mode: full.harmony_mode,
+            roles: {},
+            swatches: full.harmony_swatches || [],
+          };
+          for (const c of full.colors || []) {
+            if (c.role && c.hex) meta.roles[c.role] = c.hex;
+          }
+          meta._full = full;
+          this._markPinned(meta);
+          const idx = this.palettes.findIndex((p) => p.id === full.id);
+          if (idx >= 0) this.palettes[idx] = meta;
+          else this.palettes.unshift(meta);
+          this.focusId = full.id;
+        },
+
+        async savePalette(id) {
+          this.busy = true;
+          try {
+            const res = await fetch('/api/web/save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ palette_id: id, prompt: this.prompt.trim() || null, learn: false }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.savedIds = (data.export_ids || []).filter((x) => x.startsWith('web_'));
+            await this.loadSaved();
+            this.toast = `Pinned ${id}`;
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        async exportOne(id) {
+          this.busy = true;
+          try {
+            const res = await fetch('/api/web/export', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ palette_id: id }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.toast = 'CSS exported';
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        async exportAll() {
+          this.busy = true;
+          try {
+            const res = await fetch('/api/web/export', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ all: true }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || res.statusText);
+            this.toast = `Exported ${(data.paths || []).length}`;
+          } catch (e) {
+            this.toastErr = true;
+            this.toast = String(e.message || e);
+          } finally {
+            this.busy = false;
+          }
+        },
+
+        copyHex(hx) {
+          navigator.clipboard.writeText(hx);
+          this.toast = hx;
+        },
+      };
+    }
+  </script>
+</body>
+</html>

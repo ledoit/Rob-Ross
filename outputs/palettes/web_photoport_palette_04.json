@@ -1,0 +1,166 @@
+{
+  "id": "web_photoport_palette_04",
+  "context": "web",
+  "site": "photoport",
+  "hue_family": "violet",
+  "harmony_mode": "triadic",
+  "taste_context": "photoport:triadic:dark",
+  "design_paradigms_applied": [
+    "readability_first",
+    "semantic_separation",
+    "accent_as_wayfinding"
+  ],
+  "techniques_applied": [
+    "harmony_triadic",
+    "wcag_contrast_repair",
+    "site_profile_photoport"
+  ],
+  "genome_version": "1.1.0",
+  "generated": "2026-05-26T11:14:25.580829+00:00",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#171418",
+      "hsl": [
+        285,
+        9,
+        9
+      ],
+      "contrast_with_foreground": 17.19,
+      "contrast_with_background": 1.0,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "background via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "surface",
+      "hex": "#8B856F",
+      "hsl": [
+        47,
+        11,
+        49
+      ],
+      "contrast_with_foreground": 3.48,
+      "contrast_with_background": 4.94,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "surface via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "muted",
+      "hex": "#6B9387",
+      "hsl": [
+        162,
+        16,
+        50
+      ],
+      "contrast_with_foreground": 3.22,
+      "contrast_with_background": 5.35,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "muted via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "foreground",
+      "hex": "#FDF8E8",
+      "hsl": [
+        46,
+        84,
+        95
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 17.19,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "foreground via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "border",
+      "hex": "#6B9387",
+      "hsl": [
+        162,
+        16,
+        50
+      ],
+      "contrast_with_foreground": 3.22,
+      "contrast_with_background": 5.35,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "border via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#FDF8E8",
+      "hsl": [
+        46,
+        84,
+        95
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 17.19,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "accent_primary via triadic harmony for PhotoPort (portfolio / image-forward)."
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#BA33E3",
+      "hsl": [
+        286,
+        76,
+        55
+      ],
+      "contrast_with_foreground": 4.23,
+      "contrast_with_background": 4.06,
+      "genome_principles_applied": [
+        "web_pathway",
+        "harmony_triadic",
+        "site_photoport",
+        "hue_family_violet"
+      ],
+      "rationale": "accent_secondary via triadic harmony for PhotoPort (portfolio / image-forward)."
+    }
+  ],
+  "harmony_swatches": [
+    "#171418",
+    "#8B856F",
+    "#6B9387",
+    "#BA33E3",
+    "#FDF8E8"
+  ],
+  "palette_rationale": "Web pathway: Three hues 120\u00b0 apart \u2014 vibrant, game/marketing friendly. Site profile: PhotoPort (portfolio / image-forward).",
+  "conflicts_flagged": [],
+  "user_prompt": "professional stylish cinematic purple",
+  "generation_controls": {
+    "harmony_mode": "triadic",
+    "site": "photoport",
+    "theme_mode": "dark",
+    "brand_lock": false,
+    "chromatic_variety": 0.12,
+    "prompt_adherence": 0.92
+  }
+}

@@ -1,0 +1,12 @@
+/* Rob Ross web export — web_photoport_palette_01 — site: photoport */
+/* Harmony: complementary — Web pathway: Base hue + opposite (180°) — high punch, use sparingly on accents. Site profile: PhotoPort (portfolio / ima */
+
+:root {
+  --pp-background: #141719;
+  --pp-surface: #847568;
+  --pp-foreground: #EAF4FD;
+  --pp-muted: #6E8294;
+  --pp-border: #6E8294;
+  --pp-accent-primary: #EAF4FD;
+  --pp-accent-secondary: #EA9947;
+}

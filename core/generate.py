@@ -535,11 +535,20 @@ def _build_palette_colors(
             )
         return colors, family_name, f"{taste_mood}:{archetype_name}:{theme_mode}"
 
+    if context == "web":
+        from core.pathways.web import build_web_palette
+
+        pal = build_web_palette(
+            genome,
+            variant_index=variant_index,
+            site=genome.get("prompt_session", {}).get("web_site"),
+            harmony_mode=genome.get("prompt_session", {}).get("harmony_mode"),
+            user_prompt=genome.get("prompt_session", {}).get("source_text"),
+        )
+        return pal["colors"], pal["hue_family"], pal["taste_context"]
+
     base_hue = default_base_hue + (variant_index * 11)
     hue_series = golden_ratio_hue_series(base_hue, palette_size)
-    if context == "web":
-        accent_range = hue_cfg.get("accent_hue_range", [280, 320])
-        hue_series = analogous_split((accent_range[0] + accent_range[1]) / 2, 60, palette_size)
 
     light_series = fibonacci_lightness_series((light_cfg.get("midtone_range", [40, 60])[0] + light_cfg.get("midtone_range", [40, 60])[1]) / 2, palette_size)
     base_sat = sat_cfg.get("base_saturation", [10, 25])

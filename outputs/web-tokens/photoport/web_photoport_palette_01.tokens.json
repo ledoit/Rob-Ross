@@ -1,0 +1,13 @@
+{
+  "site": "photoport",
+  "roles": {
+    "background": "#141719",
+    "surface": "#847568",
+    "muted": "#6E8294",
+    "foreground": "#EAF4FD",
+    "border": "#6E8294",
+    "accent_primary": "#EAF4FD",
+    "accent_secondary": "#EA9947"
+  },
+  "palette_id": "web_photoport_palette_01"
+}

@@ -1,0 +1,13 @@
+{
+  "site": "reno",
+  "roles": {
+    "background": "#060607",
+    "surface": "#0a0b0d",
+    "foreground": "#ffffff",
+    "muted": "#cdcdcd",
+    "border": "#2e2e2e",
+    "accent_primary": "#FBFEF3",
+    "accent_secondary": "#E4DD3A"
+  },
+  "palette_id": "web_reno_palette_02"
+}
