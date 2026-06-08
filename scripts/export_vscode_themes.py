@@ -50,6 +50,21 @@ def _style_name(palette: dict) -> str:
     return "core"
 
 
+def _theme_label(palette: dict) -> str:
+    display = str(palette.get("theme_display_name", "")).strip()
+    if display:
+        return display if display.lower().startswith("rob ross") else f"Rob Ross {display}"
+    style = _style_name(palette)
+    style_label = style.replace("_", " ").title()
+    prompt = str(palette.get("user_prompt", "")).strip()
+    if prompt and style == "lemon_paper":
+        return f"Rob Ross {' '.join(word.capitalize() for word in prompt.split())}"
+    if prompt:
+        brief = " ".join(word.capitalize() for word in prompt.split())
+        return f"Rob Ross {brief} — {style_label}"
+    return f"Rob Ross {style_label}"
+
+
 def _theme_mode(palette: dict) -> str:
     taste_context = str(palette.get("taste_context", ""))
     parts = taste_context.split(":")
@@ -67,6 +82,8 @@ STYLE_CHROME_PROFILES = {
     "forest_canopy": {"bar_lift": 2, "selection_alpha": "56", "focus": "accent2"},
     "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
     "bonfire_gold": {"bar_lift": 4, "selection_alpha": "68", "focus": "accent2"},
+    "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
+    "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
     "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},
@@ -93,15 +110,15 @@ def _theme_json(palette: dict) -> dict:
     function_color = syntax[4]
     invalid_color = syntax[5]
 
-    family = palette.get("hue_family", "core").title()
     style = _style_name(palette)
     theme_mode = _theme_mode(palette)
-    style_label = style.replace("_", " ").title() if style else family
-    name = f"Rob Ross {style_label}"
+    name = _theme_label(palette)
     chrome = STYLE_CHROME_PROFILES.get(style, {"bar_lift": 2, "selection_alpha": "55", "focus": "accent"})
+    focus_border = accent1 if chrome["focus"] == "accent" else accent2 if chrome["focus"] == "accent2" else muted
+    selection_color = accent2 if chrome.get("selection") == "accent2" else accent1
+
     panel_bg = _tone(surface, l_shift=chrome["bar_lift"])
     bar_bg = _tone(bg, l_shift=max(0, chrome["bar_lift"] - 1))
-    focus_border = accent1 if chrome["focus"] == "accent" else accent2 if chrome["focus"] == "accent2" else muted
     return {
         "name": name,
         "type": theme_mode,
@@ -110,7 +127,7 @@ def _theme_json(palette: dict) -> dict:
             "editor.foreground": fg,
             "editorCursor.foreground": accent1,
             "editor.lineHighlightBackground": surface + "40",
-            "editor.selectionBackground": accent1 + chrome["selection_alpha"],
+            "editor.selectionBackground": selection_color + chrome["selection_alpha"],
             "editor.inactiveSelectionBackground": muted + "66",
             "editorIndentGuide.background1": muted + "66",
             "editorIndentGuide.activeBackground1": accent1 + "88",
@@ -204,6 +221,11 @@ def main() -> None:
         ide_palettes = sorted(palettes_dir.glob("ide_palette_*.json"))
     if not ide_palettes:
         raise SystemExit("No IDE palette files found. Generate first.")
+
+    active_stems = {p.stem for p in ide_palettes}
+    for stale in themes_dir.glob("ide_palette_*.json"):
+        if stale.stem not in active_stems:
+            stale.unlink()
 
     contributes = []
     for p in ide_palettes:

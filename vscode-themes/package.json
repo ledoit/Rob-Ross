@@ -2,7 +2,7 @@
   "name": "rob-ross-ide-palettes",
   "displayName": "Rob Ross IDE Palettes",
   "description": "Generated IDE themes from Rob Ross palette engine",
-  "version": "0.0.19",
+  "version": "0.0.27",
   "publisher": "local",
   "engines": {
     "vscode": "^1.85.0"
@@ -66,6 +66,16 @@
         "label": "Rob Ross High Contrast Signal",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_11.json"
+      },
+      {
+        "label": "Rob Ross Lemon Haze",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_12.json"
+      },
+      {
+        "label": "Rob Ross Lemon Custard",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_14.json"
       }
     ]
   }

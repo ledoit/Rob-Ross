@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "use_weighted_taste_moods": true,
+  "mood_weights": {
+    "nocturne_labs": 1.0,
+    "fjord_ink": 1.0,
+    "retro_terminal": 1.0,
+    "studio_neon": 1.0,
+    "forest_console": 1.0
+  },
+  "archetype_weights": {},
+  "events_tail": []
+}

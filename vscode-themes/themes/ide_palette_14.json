@@ -1,0 +1,198 @@
+{
+  "name": "Rob Ross Lemon Custard",
+  "type": "light",
+  "colors": {
+    "editor.background": "#FFFACD",
+    "editor.foreground": "#361F4F",
+    "editorCursor.foreground": "#FFD700",
+    "editor.lineHighlightBackground": "#FFF8DC40",
+    "editor.selectionBackground": "#8B691450",
+    "editor.inactiveSelectionBackground": "#7A6A1E66",
+    "editorIndentGuide.background1": "#7A6A1E66",
+    "editorIndentGuide.activeBackground1": "#FFD70088",
+    "editorWhitespace.foreground": "#7A6A1E88",
+    "sideBar.background": "#FFFAE5",
+    "sideBar.foreground": "#361F4F",
+    "activityBar.background": "#FFFAD1",
+    "activityBar.foreground": "#361F4F",
+    "statusBar.background": "#FFFAE5",
+    "statusBar.foreground": "#361F4F",
+    "titleBar.activeBackground": "#FFFAD1",
+    "titleBar.activeForeground": "#361F4F",
+    "panel.background": "#FFFAE5",
+    "panel.border": "#7A6A1E",
+    "terminal.background": "#FFFACD",
+    "terminal.foreground": "#361F4F",
+    "terminal.ansiBlue": "#FFD700",
+    "terminal.ansiMagenta": "#8B6914",
+    "terminal.ansiGreen": "#00695C",
+    "terminal.ansiRed": "#B71C1C",
+    "terminal.ansiYellow": "#7B4FAD",
+    "focusBorder": "#FFD700",
+    "button.background": "#FFD700",
+    "button.foreground": "#FFFACD",
+    "button.hoverBackground": "#8B6914"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#7A6A1E"
+      }
+    },
+    {
+      "scope": [
+        "keyword",
+        "storage",
+        "storage.type"
+      ],
+      "settings": {
+        "foreground": "#5E35B1"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#8B6914"
+      }
+    },
+    {
+      "scope": [
+        "string",
+        "constant.other.symbol"
+      ],
+      "settings": {
+        "foreground": "#00695C"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
+      "settings": {
+        "foreground": "#7B4FAD"
+      }
+    },
+    {
+      "scope": [
+        "variable",
+        "meta.definition.variable.name"
+      ],
+      "settings": {
+        "foreground": "#361F4F"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type",
+        "support.type"
+      ],
+      "settings": {
+        "foreground": "#6A1B9A"
+      }
+    },
+    {
+      "scope": [
+        "invalid",
+        "invalid.illegal"
+      ],
+      "settings": {
+        "foreground": "#B71C1C"
+      }
+    },
+    {
+      "scope": [
+        "support.class.component.js",
+        "entity.name.type.class.ts"
+      ],
+      "settings": {
+        "foreground": "#6A1B9A"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type.module.js",
+        "support.type.primitive.ts"
+      ],
+      "settings": {
+        "foreground": "#5E35B1"
+      }
+    },
+    {
+      "scope": [
+        "storage.type.function.python",
+        "entity.name.function.decorator.python"
+      ],
+      "settings": {
+        "foreground": "#8B6914"
+      }
+    },
+    {
+      "scope": [
+        "support.type.python",
+        "entity.name.class.python"
+      ],
+      "settings": {
+        "foreground": "#6A1B9A"
+      }
+    },
+    {
+      "scope": [
+        "support.type.property-name.json"
+      ],
+      "settings": {
+        "foreground": "#8B6914"
+      }
+    },
+    {
+      "scope": [
+        "constant.language.json"
+      ],
+      "settings": {
+        "foreground": "#5E35B1"
+      }
+    },
+    {
+      "scope": [
+        "markup.heading.markdown",
+        "markup.bold.markdown"
+      ],
+      "settings": {
+        "foreground": "#FFD700"
+      }
+    },
+    {
+      "scope": [
+        "markup.italic.markdown",
+        "markup.inline.raw.string.markdown"
+      ],
+      "settings": {
+        "foreground": "#00695C"
+      }
+    },
+    {
+      "scope": [
+        "support.function.builtin.shell",
+        "keyword.operator.pipe.shell"
+      ],
+      "settings": {
+        "foreground": "#8B6914"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.normal.shell"
+      ],
+      "settings": {
+        "foreground": "#6A1B9A"
+      }
+    }
+  ]
+}
