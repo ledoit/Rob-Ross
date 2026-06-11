@@ -13,36 +13,29 @@ from rich.console import Console
 from rich.pretty import pprint
 
 from core.feedback import collect_feedback, maybe_apply_feedback_to_genome
-from core.generate import build_superset_from_palettes, generate_palettes
+from core.generate import build_superset_from_palettes
 from core.genome import default_genome, ensure_genome_dir, load_genome, merge_genomes, save_genome
 from core.ingest import ingest_source
-from core.preview_html import build_preview_page, load_ide_palettes_from_dir
 from core.roster import (
     apply_roster_learning_to_disk,
     load_roster,
     roster_add,
     roster_path,
     roster_remove,
-    shortlist_add,
-    shortlist_clear,
-    shortlist_remove,
 )
 from core.harmony import HARMONY_MODES, describe_harmony
 from core.export.css_site_tokens import export_all_web_palettes, export_palette_file
+from core.export.consumer_sync import load_consumers, sync_consumer
 from core.pathways.web_sites import SITE_PROFILES
 from core.preview_web_html import build_web_preview_page, load_web_palettes_from_dir
 from core.ide_theme import run_theme_export
-from core.quick_session import run_quick
 from core.web_session import run_web_quick
-from core.user_loop import ensure_user_loop_state, state_path as user_loop_state_path
 
 app = typer.Typer(help="Rob Ross palette OS CLI")
-web_app = typer.Typer(help="Website palettes — Coolors-style harmonies + CSS export")
+web_app = typer.Typer(help="Website palettes — harmonies, CSS export, consumer sync")
 app.add_typer(web_app, name="web")
-roster_app = typer.Typer(help="Final export list, shortlist, and genome learning from picks")
+roster_app = typer.Typer(help="IDE export roster (prefer keep_ide_palette in chat)")
 app.add_typer(roster_app, name="roster")
-shortlist_app = typer.Typer(help="Best-of-batch: biases the next quick() only (not VS Code export)")
-roster_app.add_typer(shortlist_app, name="shortlist")
 console = Console()
 
 
@@ -100,40 +93,6 @@ def build_genome() -> None:
 
 
 @app.command()
-def generate(task: str = typer.Option(..., "--task", help="Natural language generation task")) -> None:
-    """Generate palettes from the current genome."""
-    root = _project_root()
-    gpath = _genome_path()
-    if not gpath.exists():
-        typer.echo("Genome not found. Run build-genome first.")
-        raise typer.Exit(code=1)
-    genome = load_genome(gpath)
-    result = generate_palettes(task, genome, root / "outputs" / "palettes")
-
-    report_path = root / "outputs" / "reports" / f"generation_report_{result['generated_count']}.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_lines = [
-        "# Generation Report",
-        "",
-        f"- Generated count: {result['generated_count']}",
-        f"- Task plan: `{result['task_plan']}`",
-        "",
-    ]
-    for p in result["palettes"]:
-        report_lines.append(f"## {p['id']}")
-        report_lines.append(p["palette_rationale"])
-        report_lines.append("")
-    report_path.write_text("\n".join(report_lines), encoding="utf-8")
-
-    run_theme_export(root, all_palettes=True)
-
-    console.print("[green]Generation complete.[/green]")
-    console.print(f"Palettes dir: {root / 'outputs' / 'palettes'}")
-    console.print(f"Report: {report_path}")
-    console.print(f"VSIX dir: {root / 'vscode-themes'}")
-
-
-@app.command()
 def feedback() -> None:
     """Collect ratings and optionally update genome."""
     root = _project_root()
@@ -160,66 +119,6 @@ def feedback() -> None:
         console.print("[yellow]Genome unchanged.[/yellow]")
 
 
-@app.command()
-def quick(
-    prompt: str = typer.Argument(..., help='Short color brief, e.g. "black and yellow"'),
-    count: int = typer.Option(4, "--count", "-n", help="How many IDE palette variants"),
-    variety: float | None = typer.Option(
-        None,
-        "--variety",
-        min=0.0,
-        max=1.0,
-        help="Chromatic variety: 0 tight (near prompt hues), 1 wide (rainbow-ish syntax)",
-    ),
-    adherence: float | None = typer.Option(
-        None,
-        "--adherence",
-        min=0.0,
-        max=1.0,
-        help="Prompt lock: 1 obey brief, 0 more archetype/creative drift",
-    ),
-    export: bool = typer.Option(False, "--export", help="Run export-themes after generation"),
-    fresh: bool = typer.Option(
-        False,
-        "--fresh",
-        help="Delete outputs/palettes/ide_palette_*.json before generating (clean batch)",
-    ),
-) -> None:
-    """Generate a few IDE themes from a plain-language color prompt (session-only genome tweaks)."""
-    root = _project_root()
-    gpath = _genome_path()
-    gdir = gpath.parent
-    if not gpath.exists():
-        typer.echo("Genome not found. Copy or create genome/genome_v1.json first.")
-        raise typer.Exit(code=1)
-    base = load_genome(gpath)
-    ensure_user_loop_state(user_loop_state_path(gdir), base)
-
-    result = run_quick(
-        root,
-        prompt,
-        count=count,
-        variety=variety,
-        adherence=adherence,
-        export_themes=export,
-        fresh=fresh,
-        shortlist_palette_ids=None,
-    )
-    if result.get("shortlist_bias"):
-        console.print(f"[cyan]Shortlist breeders applied:[/cyan] {result['shortlist_bias'].get('ids')}")
-    if fresh and result.get("fresh_removed"):
-        console.print(f"[yellow]--fresh:[/yellow] removed {result['fresh_removed']} ide_palette_*.json (after shortlist bias).")
-
-    console.print("[green]Quick batch ready.[/green]")
-    console.print(f"Palettes: {root / 'outputs' / 'palettes'}")
-    console.print(f"Report: {result['report_path']}")
-    console.print("Preview in browser: [cyan]python cli.py preview[/cyan]")
-    console.print("Final export pick: [cyan]python cli.py roster add ide_palette_02 --prompt \"...\"[/cyan]")
-    console.print("Shortlist (next regen): [cyan]python cli.py roster shortlist add ide_palette_02 --prompt \"...\"[/cyan]")
-    if export:
-        export_themes(all_palettes=False)
-
-
 @web_app.command("quick")
 def web_quick(
     prompt: str = typer.Argument(..., help='Brief, e.g. "editorial dark minimal gold accent"'),
@@ -228,7 +127,7 @@ def web_quick(
         "generic",
         "--site",
         "-s",
-        help="reno | jobjeeves | photoport | generic",
+        help="reno | jobjeeves | photoport | paid | generic",
     ),
     harmony: str | None = typer.Option(
         None,
@@ -335,38 +234,33 @@ def web_harmonies() -> None:
         console.print(f"[bold]{mode}[/bold] — {describe_harmony(mode)}")
 
 
-@app.command()
-def preview(
-    roster_only: bool = typer.Option(
+@web_app.command("consumers")
+def web_consumers() -> None:
+    """List registered downstream sites (genome/web_consumers.json)."""
+    root = _project_root()
+    reg = load_consumers(root / "genome")
+    for key, spec in sorted((reg.get("consumers") or {}).items()):
+        console.print(f"[bold]{key}[/bold] — {spec.get('label', '')} → {spec.get('path')}")
+
+
+@web_app.command("sync")
+def web_sync(
+    consumer: str = typer.Argument(..., help="Consumer id from web consumers registry (e.g. paid)"),
+    all_palettes: bool = typer.Option(
         False,
-        "--roster-only",
-        help="Only palettes listed in genome/theme_roster.json (if non-empty)",
-    ),
-    open_browser: bool = typer.Option(
-        True,
-        "--open/--no-open",
-        help="Open the HTML file in your default browser",
+        "--all",
+        help="Sync every ide_palette_*.json on disk (ignore roster)",
     ),
 ) -> None:
-    """Generate a browser preview gallery of IDE palettes (mock editor + syntax colors)."""
+    """Push kept IDE palettes into a registered website consumer (TypeScript, etc.)."""
     root = _project_root()
-    palette_dir = root / "outputs" / "palettes"
-    ids: list[str] | None = None
-    if roster_only:
-        data = load_roster(root / "genome")
-        ids = list(data.get("palette_ids") or [])
-        if not ids:
-            console.print("[yellow]Roster empty; showing all ide_palette_*.json instead.[/yellow]")
-            ids = None
-    palettes = load_ide_palettes_from_dir(palette_dir, ids)
-    if not palettes:
-        typer.echo(f"No IDE palettes found under {palette_dir}")
-        raise typer.Exit(code=1)
-    out = root / "outputs" / "preview" / "index.html"
-    build_preview_page(palettes, out)
-    console.print(f"[green]Preview written:[/green] {out}")
-    if open_browser:
-        webbrowser.open(out.resolve().as_uri())
+    try:
+        result = sync_consumer(root, consumer, roster_only=not all_palettes)
+    except (KeyError, FileNotFoundError, ValueError) as e:
+        typer.echo(str(e))
+        raise typer.Exit(code=1) from e
+    console.print(f"[green]Synced[/green] {result['theme_count']} themes -> {result['path']}")
+    console.print(f"Palette ids: {', '.join(result['palette_ids'])}")
 
 
 @app.command("export-themes")
@@ -439,50 +333,6 @@ def roster_learn_cmd() -> None:
         root / "outputs" / "palettes",
     )
     console.print(stats)
-
-
-@shortlist_app.command("add")
-def shortlist_add_cmd(
-    palette_id: str = typer.Argument(..., help="e.g. ide_palette_03"),
-    prompt: str | None = typer.Option(None, "--prompt", "-p", help="Brief you used (stored for your notes)"),
-) -> None:
-    root = _project_root()
-    gdir = root / "genome"
-    palette_dir = root / "outputs" / "palettes"
-    _data, bump = shortlist_add(gdir, palette_dir, palette_id, prompt=prompt)
-    console.print(
-        f"[green]Shortlisted[/green] {palette_id} — next [cyan]quick[/cyan] will bias variety/adherence from these picks."
-    )
-    if bump:
-        console.print(f"[dim]Taste weights: {bump}[/dim]")
-
-
-@shortlist_app.command("remove")
-def shortlist_remove_cmd(palette_id: str = typer.Argument(...)) -> None:
-    root = _project_root()
-    shortlist_remove(root / "genome", palette_id)
-    console.print(f"[green]Removed[/green] {palette_id} from shortlist")
-
-
-@shortlist_app.command("list")
-def shortlist_list_cmd() -> None:
-    root = _project_root()
-    data = load_roster(root / "genome")
-    ids = data.get("shortlist_ids") or []
-    if not ids:
-        console.print("Shortlist is empty.")
-        return
-    for pid in ids:
-        meta = data.get("shortlist_entries", {}).get(pid, {})
-        p = meta.get("prompt", "")
-        console.print(f"- [bold]{pid}[/bold]" + (f" — {p}" if p else ""))
-
-
-@shortlist_app.command("clear")
-def shortlist_clear_cmd() -> None:
-    root = _project_root()
-    shortlist_clear(root / "genome")
-    console.print("[green]Shortlist cleared.[/green]")
 
 
 @app.command()

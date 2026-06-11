@@ -1,0 +1,10 @@
+{
+  "consumers": {
+    "paid": {
+      "label": "Paid planner (Next.js)",
+      "format": "typescript_paid",
+      "path": "../../Employment/Paid/src/lib/themes.ts",
+      "source_note": "Rob Ross IDE palettes — auto-synced from Menhir Holdings/Color/Rob-Ross (github.com/ledoit/Rob-Ross)"
+    }
+  }
+}

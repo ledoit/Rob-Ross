@@ -11,7 +11,6 @@ STATE_FILENAME = "user_loop_state.json"
 MIN_W = 0.08
 MAX_W = 3.5
 BUMP_EXPORT = 0.14
-BUMP_SHORTLIST = 0.08
 
 
 def default_state(ide_moods: list[str]) -> dict[str, Any]:
@@ -109,7 +108,9 @@ def bump_weights_from_palette_json(
     data = json.loads(state_path.read_text(encoding="utf-8"))
     mw = data.setdefault("mood_weights", {})
     aw = data.setdefault("archetype_weights", {})
-    delta = BUMP_EXPORT if export_pick else BUMP_SHORTLIST
+    if not export_pick:
+        return None
+    delta = BUMP_EXPORT
     stats: dict[str, Any] = {"delta": delta}
     if mood and mood in mw:
         mw[mood] = min(MAX_W, float(mw[mood]) + delta)
@@ -133,12 +134,3 @@ def bump_weights_from_palette_json(
     data["events_tail"] = tail[-200:]
     save_user_loop_state(state_path, data)
     return stats
-
-
-def delete_ide_palette_outputs(palette_dir: Path) -> int:
-    """Remove ide_palette_*.json for a clean quick batch."""
-    n = 0
-    for p in palette_dir.glob("ide_palette_*.json"):
-        p.unlink()
-        n += 1
-    return n

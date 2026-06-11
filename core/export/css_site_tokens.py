@@ -59,6 +59,14 @@ def palette_to_css(
         lines.append(f"  --site-muted: {roles.get('muted', '#cdcdcd')};")
         lines.append(f"  --site-accent-primary: {roles.get('accent_primary', '#edd750')};")
         lines.append(f"  --site-accent-secondary: {roles.get('accent_secondary', roles.get('accent_primary', '#edd750'))};")
+    elif site_key == "paid":
+        lines.append(f"  --paid-bg: {roles.get('background', '#0f0f12')};")
+        lines.append(f"  --paid-fg: {roles.get('foreground', '#fafafa')};")
+        lines.append(f"  --paid-surface: {roles.get('surface', '#18181b')};")
+        lines.append(f"  --paid-border: {roles.get('border', '#27272a')};")
+        lines.append(f"  --paid-muted: {roles.get('muted', '#a1a1aa')};")
+        lines.append(f"  --paid-accent: {roles.get('accent_primary', '#3b82f6')};")
+        lines.append(f"  --paid-accent-hover: {roles.get('accent_secondary', roles.get('accent_primary', '#3b82f6'))};")
     else:
         lines.append(f"  --{prefix}-background: {roles.get('background', '#0f0f12')};")
         lines.append(f"  --{prefix}-surface: {roles.get('surface', '#18181b')};")

@@ -1,101 +1,71 @@
-# Rob Ross palette OS (phase 1 MVP)
+# Rob Ross palette OS
 
-Local-first palette generation engine that learns a user's aesthetic from heterogeneous taste sources and compiles it into a versioned design genome.
+Local-first palette generation: taste sources → versioned genome → IDE themes and website tokens.
 
-Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross) — single canonical repo. Local checkout: `Menhir Holdings/Color/robross-palette-engine` (ignore any stale `robross-palette-gen` folder; it was a duplicate name, not a second project).
+Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross)  
+Local checkout: `Menhir Holdings/Color/Rob-Ross` (rename from `robross-palette-engine` when editors are closed if the folder still uses the old name)
 
 ## Core principles
 
 - 100% local execution
-- No paid APIs
-- No cloud dependencies at runtime
-- Deterministic color math done in code (not by LLM)
+- No paid APIs at runtime
+- Deterministic color math in code (not LLM)
 
 ## Stack
 
-- Python 3.11+
-- Ollama (`mistral` or `llama3`)
-- LlamaIndex
-- ChromaDB
-- sentence-transformers
-- colormath
-- Rich
-- Typer
-- **Palette Studio** (optional): [FastAPI](https://fastapi.tiangolo.com/) + [Alpine.js](https://alpinejs.dev/) — local UI on `127.0.0.1:8765`, animated CSS mesh background, no separate frontend build step
+Python 3.11+, Ollama, Typer, FastAPI + Alpine.js (Web Color Studio)
 
 ## Quick start
 
-1. Create environment:
-   - `python -m venv .venv`
-   - Windows Bash: `source .venv/Scripts/activate`
-2. Install dependencies:
-   - `pip install -r requirements.txt`
-3. Install Ollama and pull a local model:
-   - Install from [https://ollama.com/download](https://ollama.com/download)
-   - Run:
-     - `ollama pull mistral`
-     - or `ollama pull llama3`
-4. Optional environment variables (prefer `ROB_ROSS_*`; legacy `ROBROSS_*` still works):
-   - `setx ROB_ROSS_OLLAMA_MODEL mistral` (PowerShell: `$env:ROB_ROSS_OLLAMA_MODEL="mistral"` for session only)
-   - `setx ROB_ROSS_EMBED_MODEL sentence-transformers/all-MiniLM-L6-v2`
-5. Run CLI:
-   - `python cli.py --help`
-6. **Palette Studio** (infinite select → regen loop in the browser):
-   - `python -m studio`
-   - Open [http://127.0.0.1:8765](http://127.0.0.1:8765) (override host/port with `ROB_ROSS_STUDIO_HOST` / `ROB_ROSS_STUDIO_PORT`; set `ROB_ROSS_STUDIO_RELOAD=true` for dev autoreload)
-   - **IDE Studio** `/` — optional browser UI (batch regen); **chat agents** use `core/ide_theme.py` instead (see `AGENTS.md`).
-   - **Web pathway** `/web` — compile the same genome into site CSS (e.g. [Paid](../../Employment/Paid/) marketing tokens).
+```bash
+python -m venv .venv
+source .venv/Scripts/activate   # Windows Bash
+pip install -r requirements.txt
+python cli.py --help
+```
+
+**IDE themes (chat agents)** — see `AGENTS.md`:
+
+```python
+from core.ide_theme import make_ide_palette, iterate_ide_palette, keep_ide_palette
+```
+
+**Web Color Studio** (optional browser UI):
+
+```bash
+python -m studio
+# http://127.0.0.1:8765/web
+```
 
 ## Commands
 
-- `python cli.py ingest <source>`
-- `python cli.py build-genome`
-- `python cli.py generate --task "make 11 ide palettes and 5 web palettes then build a superset of 25"`
-- **Website pathway (primary for marketing sites):**
-  - `python cli.py web quick "editorial dark gold" --site reno -n 4` — Coolors-style harmonies + WCAG roles; **replaces** that site’s scratch batch each run (roster-pinned palettes are kept)
-  - `python cli.py roster add web_photoport_palette_01` — **save** a web palette before the next generate
-  - `python cli.py web preview --site reno` — landing mock gallery (`outputs/preview/web.html`)
-  - `python cli.py web export --all` — CSS partials → `outputs/web-tokens/{site}/`
-  - `python cli.py web harmonies` / `python cli.py web sites` — list modes and site profiles
-- `python cli.py quick "black and yellow"` — prompt-driven IDE batch (`--variety`, `--adherence`, `--fresh` to wipe `ide_palette_*.json` first)
-- Taste moods are **weighted-sampled** per batch when `genome/user_loop_state.json` exists (auto-created on first `quick`). Hearts / `roster add` / `roster shortlist add` bump weights. Optional reproducibility: `ROB_ROSS_SEED=12345`.
-- `python cli.py preview` — HTML mock-editor gallery
-- `python cli.py roster add ide_palette_02` — **final** pick (VS Code export list); alias `roster export-add`
-- `python cli.py roster shortlist add ide_palette_02` — **shortlist** (best-of-batch; biases the next `quick` only)
-- `python cli.py export-themes`
-- `python cli.py feedback`
-- `python cli.py superset --input-palettes outputs/palettes --count 25`
+| Area | Command |
+|------|---------|
+| Genome | `ingest`, `build-genome`, `feedback`, `superset` |
+| IDE export | `export-themes` (repair); agents use `keep_ide_palette` |
+| Web palettes | `web quick`, `web preview`, `web export`, `web sites` |
+| Site sync | `web sync paid` — push kept IDE palettes → registered consumers |
+| Consumers | `web consumers` — list `genome/web_consumers.json` |
 
-## Website pathway vs Coolors
-
-[Coolors](https://coolors.co/) does not publish its exact RNG. In practice it:
-
-1. Picks a **harmony rule** (analogous, complementary, triadic, …) — fixed hue angles on the wheel.
-2. Randomizes **saturation and lightness** within readable bands (spacebar = reroll unlocked slots).
-3. Lets you **lock** swatches and regenerate the rest.
-4. Checks **contrast** in the UI (we enforce WCAG in code via `web` pathway).
-
-Rob Ross `core/harmony.py` implements that geometry; `core/pathways/web.py` maps swatches → semantic roles (`background`, `accent_primary`, …) and site profiles (`reno`, `jobjeeves`, `photoport`).
+Register any site in `genome/web_consumers.json` (path + format). Built-in site profiles: `reno`, `jobjeeves`, `photoport`, `paid`, `generic`.
 
 ## Layout
 
-- `genome/` genome JSON, `theme_roster.json` (export + shortlist), `user_loop_state.json` (taste mood weights + event tail), history snapshots
-- `core/pathways/` web (and future strobe/game) constraints
-- `outputs/web-tokens/` exported CSS for sites
-- `sources/` raw and processed extracted principles
-- `vector_store/` Chroma persistence (`rob_ross_principles` collection)
-- `outputs/palettes/` generated palettes JSON
-- `outputs/reports/` rationale markdown reports
-- `core/` implementation modules (`quick_session.py` is shared by CLI **quick** and Studio)
-- `studio/` FastAPI app + templates + static CSS
-- `tests/` unit tests
-- `scripts/export_vscode_themes.py` — installable Cursor/VS Code themes (`rob-ross-ide-palettes`)
-- `vscode-themes/` local theme extension package (`rob-ross-ide-palettes`)
+```
+genome/           genome_v1.json, theme_roster.json, web_consumers.json
+core/             ide_theme, ide_iteration, pathways/web, export/
+outputs/palettes/ ide_palette_*.json, web_{site}_palette_*.json
+outputs/web-tokens/  CSS per site
+vscode-themes/    Cursor/VS Code extension (robross-ide-palettes)
+studio/           Web Color Studio only (/web)
+AGENTS.md         Chat agent instructions
+```
 
 ## Development
 
-- **Tests:** `pytest` (from repo root with venv active)
-- **Typical workflow (agents):** `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette` — auto export + VSIX install (see `AGENTS.md`).
-- **Typical workflow (CLI/studio):** `ingest` → `quick` / Studio → `export-themes` — legacy batch path; do not use `quick` for chat iteration.
-- **Studio dev reload:** `ROB_ROSS_STUDIO_RELOAD=true` when running `python -m studio`
-- **Menhir path:** `Menhir/Color/robross-palette-engine`
+```bash
+pytest
+```
+
+Typical agent flow: `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette` → auto VSIX.  
+After keeping themes: `python cli.py web sync paid` (or your consumer id).

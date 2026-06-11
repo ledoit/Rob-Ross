@@ -1,4 +1,4 @@
-"""Run: python -m studio  (from robross-palette-engine root)."""
+"""Run: python -m studio  (from Rob-Ross repo root)."""
 
 from __future__ import annotations
 

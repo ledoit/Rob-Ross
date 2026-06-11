@@ -8,15 +8,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@500;700;800&display=swap" rel="stylesheet"/>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
-  <link rel="stylesheet" href="/static/studio.css"/>
   <link rel="stylesheet" href="/static/web_studio.css"/>
 </head>
 <body>
   <div class="app-shell" x-data="webStudio()" x-init="init()">
     <div class="topbar">
       <nav class="nav-tabs">
-        <a href="/">IDE</a>
-        <a href="/web" class="active">Web</a>
+        <a href="/web" class="active">Web Color Studio</a>
       </nav>
       <h1>Color Studio</h1>
       <span class="status" :class="{ err: toastErr }" x-text="toast || 'Generate scratch · Save to pin · Load saved to breed'"></span>

@@ -28,7 +28,7 @@ flowchart TB
   R --> V
 ```
 
-**Web reuse:** same genes → `core/pathways/web.py` → site CSS (see [Paid](../../Employment/Paid/)). Not part of the IDE chat loop.
+**Web reuse:** same genes → `web sync <consumer>` or `core/pathways/web.py` for site-specific CSS. Register consumers in `genome/web_consumers.json`. Not part of the IDE chat loop.
 
 ## Primary flow (chat iteration)
 
@@ -38,7 +38,7 @@ flowchart TB
 from pathlib import Path
 from core.ide_theme import make_ide_palette
 
-root = Path("Menhir Holdings/Color/robross-palette-engine")
+root = Path("Menhir Holdings/Color/Rob-Ross")
 make_ide_palette(root, "lemon yellow light theme")
 ```
 
@@ -69,7 +69,6 @@ discard_ide_palette(root, "ide_palette_08")
 
 ## Rules
 
-- **Never use `quick`** for chat iteration — it overwrites `ide_palette_01..04`.
 - **Always use** `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette`.
 - Style is **inferred from prompt** when omitted (lemon → lemon_paper/cream, ocean → ion_storm, etc.).
 - Each attempt gets a **new palette id** (append, not overwrite).
@@ -77,6 +76,7 @@ discard_ide_palette(root, "ide_palette_08")
 - Naming: `theme_name` and `theme_display_name` are both `RR Word1 Word2`.
 - `is_light` is a boolean on the palette JSON.
 - Export + Cursor install are **automatic** on make/iterate/keep.
+- After keeping themes for a website: `python cli.py web sync paid` (or add a consumer in `genome/web_consumers.json`).
 
 Skip install (rare): `make_ide_palette(..., export=False, install=False)`.
 

@@ -52,8 +52,20 @@ SITE_PROFILES: dict[str, dict[str, Any]] = {
         "export_prefix": "pp",
         "notes": "Near-neutral chrome so photography stays hero; accents minimal.",
     },
+    "paid": {
+        "label": "Paid planner (local product UI)",
+        "theme_mode": "dark",
+        "harmony_default": "split_complementary",
+        "brand_lock": False,
+        "locked_roles": {},
+        "accent_roles": ("accent_primary", "accent_secondary"),
+        "ui_min_contrast": 4.5,
+        "token_min_contrast": 3.0,
+        "export_prefix": "paid",
+        "notes": "Site tokens for Employment/Paid; IDE palettes sync via web sync paid.",
+    },
     "generic": {
-        "label": "Generic marketing site",
+        "label": "Any marketing / product site",
         "theme_mode": "dark",
         "harmony_default": "analogous",
         "brand_lock": False,
@@ -62,7 +74,7 @@ SITE_PROFILES: dict[str, dict[str, Any]] = {
         "ui_min_contrast": 4.5,
         "token_min_contrast": 3.0,
         "export_prefix": "web",
-        "notes": "Full semantic role set from harmony swatches.",
+        "notes": "Default profile for new sites; add a profile here or in genome/web_consumers.json.",
     },
 }
 
