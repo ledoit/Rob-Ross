@@ -580,7 +580,9 @@ def generate_palettes(
     out.mkdir(parents=True, exist_ok=True)
 
     root = out.resolve().parents[1]
-    state_p = root / "genome" / "user_loop_state.json"
+    from core.layout import registry_dir
+
+    state_p = registry_dir(root) / "user_loop_state.json"
     if "user_loop_state" not in genome and state_p.is_file():
         loaded = load_user_loop_state(state_p)
         if loaded:

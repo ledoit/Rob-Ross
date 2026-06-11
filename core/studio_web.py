@@ -351,7 +351,9 @@ def list_saved_web_palettes(genome_dir: Path, palette_dir: Path) -> list[dict[st
 
 def studio_boot_payload(root: Path, site: str | None = None) -> dict[str, Any]:
     palette_dir = root / "outputs" / "palettes"
-    gdir = root / "genome"
+    from core.layout import registry_dir
+
+    gdir = registry_dir(root)
     saved: list[dict[str, Any]] = []
     roster_ids: list[str] = []
     if gdir.is_dir():

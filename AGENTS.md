@@ -2,115 +2,83 @@
 
 Users prompt you in chat. **Do not tell them to run CLI commands** unless they explicitly ask.
 
-## Architecture (agent path only)
+## Architecture
 
 ```mermaid
 flowchart TB
-  subgraph DNA["Genome"]
-    G["genome/*.json<br/>archetypes, roster, session"]
+  subgraph DNA["Genome (taste DNA)"]
+    G["genome/genome_v1.json<br/>static principles"]
+    L["live layer in memory<br/>roster color graph"]
   end
-  subgraph CORE["Iteration"]
+  subgraph REG["Registry (state)"]
+    R["theme_roster.json"]
+    S["ide_iteration_session.json"]
+  end
+  subgraph AGENT["Chat agents"]
     M["make_ide_palette"]
     I["iterate_ide_palette"]
     K["keep_ide_palette"]
-    D["discard_ide_palette"]
   end
   subgraph OUT["Output"]
-    P["outputs/palettes/ide_palette_*.json"]
-    R["genome/theme_roster.json"]
-    V["vscode-themes → VSIX → Cursor"]
+    P["ide_palette_*.json"]
+    V["VSIX → Cursor"]
   end
-  G --> M & I
+  subgraph SITES["Sites (consumers)"]
+    C["sites/consumers.json"]
+    W["web sync"]
+  end
+
+  R --> L
+  P --> L
+  G --> L
+  L --> M & I
   M & I --> P
   K --> R
-  D --> R
-  P --> V
-  R --> V
+  P & R --> V
+  P --> W
+  C --> W
 ```
 
-**Web reuse:** same genes → `web sync <consumer>` or `core/pathways/web.py` for site-specific CSS. Register consumers in `genome/web_consumers.json`. Not part of the IDE chat loop.
+**Genome** = static taste DNA + **dynamic live layer** derived from roster palette colors (features, hue relationships, synthesis). The live layer is never written to disk.
+
+**Registry** = kept ids + draft session. **Sites** = downstream app paths (`sites/consumers.json`). Neither is genome.
 
 ## Primary flow (chat iteration)
 
-**First attempt** — user says e.g. "make me a lemon palette":
-
 ```python
 from pathlib import Path
-from core.ide_theme import make_ide_palette
+from core.ide_theme import make_ide_palette, iterate_ide_palette, keep_ide_palette
 
 root = Path("Menhir Holdings/Color/Rob-Ross")
 make_ide_palette(root, "lemon yellow light theme")
-```
-
-**Not happy yet** — user gives feedback ("warmer", "more lemon", "try cream"):
-
-```python
-from core.ide_theme import iterate_ide_palette
-
-iterate_ide_palette(root, "lemon cream brighter, more chiffon")
-# inherits style/light from last draft, new palette id, auto export + install
-```
-
-**User likes one** — "keep that one" / "save the lemon haze too":
-
-```python
-from core.ide_theme import keep_ide_palette
-
+iterate_ide_palette(root, "lemon cream brighter")
 keep_ide_palette(root, "ide_palette_12")
 ```
 
-**Drop one** — "remove bonfire" / "don't ship that":
-
-```python
-from core.ide_theme import discard_ide_palette
-
-discard_ide_palette(root, "ide_palette_08")
-```
+**Drop:** `discard_ide_palette(root, "ide_palette_08")`
 
 ## Rules
 
 - **Always use** `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette`.
-- Style is **inferred from prompt** when omitted (lemon → lemon_paper/cream, ocean → ion_storm, etc.).
-- Each attempt gets a **new palette id** (append, not overwrite).
-- Export ships **kept roster + current draft** only. Roster is empty until user says keep. Unwanted = never kept or `discard_ide_palette`. Files on disk outside roster are ignored by export.
+- Export ships **kept roster + current draft** only.
 - Naming: `theme_name` and `theme_display_name` are both `RR Word1 Word2`.
-- `is_light` is a boolean on the palette JSON.
-- Export + Cursor install are **automatic** on make/iterate/keep.
-- After keeping themes for a website: `python cli.py web sync paid` (or add a consumer in `genome/web_consumers.json`).
+- Export + Cursor install are automatic on make/iterate/keep.
+- Website tokens: `python cli.py web sync paid` after keep (see `sites/README.md`).
 
-Skip install (rare): `make_ide_palette(..., export=False, install=False)`.
+## Key paths
 
-## Style archetypes
-
-`dracula_punch`, `fjord_hammer`, `alpenglow_paper`, `kimbie_warm`, `ion_storm`, `forest_canopy`, `void_forge`, `candy_voltage`, `night_siren`, `high_contrast_signal`, `lemon_paper`, `lemon_cream`
-
-**Removed:** `bonfire_gold` — do not recreate.
-
-## Key files
-
-- `outputs/palettes/ide_palette_*.json` — source colors
-- `genome/theme_roster.json` — kept themes (export list)
-- `genome/ide_iteration_session.json` — current draft + iteration chain
-- `vscode-themes/` — generated extension (`robross-ide-palettes`)
-
-## Palette schema
-
-```json
-{
-  "style_archetype": "lemon_cream",
-  "is_light": true,
-  "theme_name": "RR Lemon Custard",
-  "theme_display_name": "RR Lemon Custard",
-  "derived_from": "ide_palette_12",
-  "iteration_index": 2
-}
-```
+| Path | Role |
+|------|------|
+| `genome/genome_v1.json` | Static taste DNA |
+| `registry/theme_roster.json` | Kept palette ids |
+| `outputs/palettes/` | Palette JSON source of truth |
+| `sites/consumers.json` | Where to push site tokens |
 
 ## Repair
 
 ```python
 from core.ide_theme import finalize_ide_themes
-finalize_ide_themes(root)  # roster + draft → VSIX + install
+finalize_ide_themes(root)
 ```
 
 Only one extension: `local.robross-ide-palettes`.

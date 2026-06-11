@@ -10,7 +10,7 @@ from typing import Any
 from core.ide_iteration import kept_palette_ids, ship_palette_ids
 from core.ide_schema import enrich_legacy_palette, palette_meta, resolve_branded_name, strip_theme_prefix
 from core.math_engine import hex_to_hsl, hsl_to_hex
-from core.roster import load_roster
+from core.layout import consumers_path, registry_dir, sites_dir
 
 # Reuse VS Code chrome tuning for bar/panel/selection in site tokens.
 STYLE_CHROME_PROFILES: dict[str, dict[str, Any]] = {
@@ -27,9 +27,6 @@ STYLE_CHROME_PROFILES: dict[str, dict[str, Any]] = {
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},
 }
-
-CONSUMERS_FILENAME = "web_consumers.json"
-
 
 def _role_map(palette: dict[str, Any]) -> dict[str, str]:
     out: dict[str, str] = {}
@@ -95,12 +92,9 @@ def ide_palette_to_site_theme(palette: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def consumers_path(genome_dir: Path) -> Path:
-    return genome_dir / CONSUMERS_FILENAME
-
-
-def load_consumers(genome_dir: Path) -> dict[str, Any]:
-    p = consumers_path(genome_dir)
+def load_consumers(root: Path) -> dict[str, Any]:
+    sites_dir(root)
+    p = consumers_path(root)
     if not p.is_file():
         return {"consumers": {}}
     data = json.loads(p.read_text(encoding="utf-8"))
@@ -110,13 +104,13 @@ def load_consumers(genome_dir: Path) -> dict[str, Any]:
 
 def resolve_palette_ids(root: Path, *, roster_only: bool = True, extra_ids: list[str] | None = None) -> list[str]:
     """IDE palette ids to sync — kept roster + draft, or every ide_palette_* on disk."""
-    gdir = root / "genome"
+    reg = registry_dir(root)
     palette_dir = root / "outputs" / "palettes"
     if roster_only:
         ids = ship_palette_ids(root)
         if ids:
             return sorted(ids)
-        kept = kept_palette_ids(gdir)
+        kept = kept_palette_ids(reg)
         if kept:
             return sorted(kept)
     stems = sorted(p.stem for p in palette_dir.glob("ide_palette_*.json"))
@@ -235,8 +229,7 @@ def sync_consumer(
     roster_only: bool = True,
     palette_ids: list[str] | None = None,
 ) -> dict[str, Any]:
-    gdir = root / "genome"
-    registry = load_consumers(gdir)
+    registry = load_consumers(root)
     spec = (registry.get("consumers") or {}).get(consumer_id)
     if not spec:
         known = ", ".join(sorted((registry.get("consumers") or {}).keys())) or "(none)"

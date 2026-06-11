@@ -7,7 +7,7 @@ import random
 from pathlib import Path
 from typing import Any
 
-STATE_FILENAME = "user_loop_state.json"
+from core.layout import USER_LOOP_FILENAME as STATE_FILENAME
 MIN_W = 0.08
 MAX_W = 3.5
 BUMP_EXPORT = 0.14

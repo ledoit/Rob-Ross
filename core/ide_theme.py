@@ -16,6 +16,8 @@ from core.generate import (
     _llm_palette_rationale,
 )
 from core.genome import load_genome, merge_genomes
+from core.layout import genome_path, registry_dir
+from core.live_genome import apply_live_genome
 from core.ide_schema import (
     build_ide_palette_payload,
     enrich_legacy_palette,
@@ -74,9 +76,9 @@ def _prepare_genome(
     variety: float,
     adherence: float,
 ) -> dict[str, Any]:
-    gpath = root / "genome" / "genome_v1.json"
-    base = load_genome(gpath)
+    base = load_genome(genome_path(root))
     merged, _ = merge_genomes(base, genome_patch_from_prompt(prompt))
+    merged = apply_live_genome(merged, root)
     ps = merged.setdefault("prompt_session", {})
     ps["chromatic_variety"] = max(0.0, min(1.0, variety))
     ps["prompt_adherence"] = max(0.0, min(1.0, adherence))
@@ -180,7 +182,7 @@ def make_ide_palette(
     if add_to_roster:
         from core.roster import roster_add
 
-        roster_add(root / "genome", palette_dir, pid, prompt=prompt)
+        roster_add(registry_dir(root), palette_dir, pid, prompt=prompt)
         result["roster_added"] = True
     if export or install:
         export_result = finalize_ide_themes(root) if install else run_theme_export(

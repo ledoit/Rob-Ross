@@ -13,6 +13,7 @@ from core.ide_iteration import (
     record_draft,
     ship_palette_ids,
 )
+from core.layout import registry_dir
 from core.roster import roster_add, roster_remove
 
 
@@ -32,14 +33,12 @@ def test_tweak_controls_brighter() -> None:
 
 
 def test_kept_palette_ids_empty_by_default(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
-    assert kept_palette_ids(gdir) == []
+    reg = registry_dir(tmp_path)
+    assert kept_palette_ids(reg) == []
 
 
 def test_ship_palette_ids_kept_plus_draft(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
+    reg = registry_dir(tmp_path)
     palette_dir = tmp_path / "outputs" / "palettes"
     palette_dir.mkdir(parents=True)
     for pid in ("ide_palette_01", "ide_palette_99"):
@@ -47,46 +46,43 @@ def test_ship_palette_ids_kept_plus_draft(tmp_path: Path) -> None:
             json.dumps({"id": pid, "context": "ide", "colors": []}),
             encoding="utf-8",
         )
-    roster_add(gdir, palette_dir, "ide_palette_01")
+    roster_add(reg, palette_dir, "ide_palette_01")
     record_draft(tmp_path, "ide_palette_99", "test draft", derived_from=None)
     ids = ship_palette_ids(tmp_path)
     assert ids == ["ide_palette_01", "ide_palette_99"]
 
 
 def test_ship_palette_ids_draft_not_duplicated_when_kept(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
+    reg = registry_dir(tmp_path)
     palette_dir = tmp_path / "outputs" / "palettes"
     palette_dir.mkdir(parents=True)
     (palette_dir / "ide_palette_12.json").write_text(
         json.dumps({"id": "ide_palette_12", "context": "ide", "colors": []}),
         encoding="utf-8",
     )
-    roster_add(gdir, palette_dir, "ide_palette_12")
+    roster_add(reg, palette_dir, "ide_palette_12")
     record_draft(tmp_path, "ide_palette_12", "lemon", derived_from=None)
     assert ship_palette_ids(tmp_path) == ["ide_palette_12"]
 
 
 def test_discard_removes_from_kept(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
+    reg = registry_dir(tmp_path)
     palette_dir = tmp_path / "outputs" / "palettes"
     palette_dir.mkdir(parents=True)
     (palette_dir / "ide_palette_08.json").write_text(
         json.dumps({"id": "ide_palette_08", "context": "ide", "colors": []}),
         encoding="utf-8",
     )
-    roster_add(gdir, palette_dir, "ide_palette_08")
-    roster_remove(gdir, "ide_palette_08")
-    assert kept_palette_ids(gdir) == []
+    roster_add(reg, palette_dir, "ide_palette_08")
+    roster_remove(reg, "ide_palette_08")
+    assert kept_palette_ids(reg) == []
 
 
 def test_session_chain(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
+    reg = registry_dir(tmp_path)
     record_draft(tmp_path, "ide_palette_12", "lemon", derived_from=None)
     record_draft(tmp_path, "ide_palette_14", "lemon cream", derived_from="ide_palette_12")
-    session = load_iteration_session(gdir)
+    session = load_iteration_session(reg)
     assert session["draft_palette_id"] == "ide_palette_14"
     assert "ide_palette_12" in session["chain"]
     assert "ide_palette_14" in session["chain"]

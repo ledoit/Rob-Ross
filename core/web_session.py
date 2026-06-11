@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from core.genome import load_genome, merge_genomes
+from core.live_genome import apply_live_genome
 from core.pathways.web import generate_web_batch
 from core.pathways.web_sites import normalize_site_id
 from core.prompt_brief import genome_patch_from_prompt
@@ -50,14 +51,16 @@ def run_web_quick(
     adherence: float | None = None,
     seed_from: str | None = None,
 ) -> dict[str, Any]:
-    gpath = root / "genome" / "genome_v1.json"
+    from core.layout import genome_path, registry_dir
+
+    gpath = genome_path(root)
     if not gpath.exists():
         raise FileNotFoundError(f"Genome not found: {gpath}")
 
     base = load_genome(gpath)
-    merged = dict(base)
+    merged = apply_live_genome(dict(base), root)
     palette_dir = root / "outputs" / "palettes"
-    gdir = gpath.parent
+    reg = registry_dir(root)
 
     seed_palette_id: str | None = None
     if seed_from:
@@ -81,7 +84,7 @@ def run_web_quick(
 
     effective_harmony = harmony or ps.get("harmony_mode")
 
-    removed, kept = scratch_unsaved_web_palettes(palette_dir, gdir, site)
+    removed, kept = scratch_unsaved_web_palettes(palette_dir, reg, site)
 
     palettes = generate_web_batch(
         merged,

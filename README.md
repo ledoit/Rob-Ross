@@ -45,14 +45,16 @@ python -m studio
 | IDE export | `export-themes` (repair); agents use `keep_ide_palette` |
 | Web palettes | `web quick`, `web preview`, `web export`, `web sites` |
 | Site sync | `web sync paid` — push kept IDE palettes → registered consumers |
-| Consumers | `web consumers` — list `genome/web_consumers.json` |
+| Consumers | `web consumers` — list `sites/consumers.json` |
 
-Register any site in `genome/web_consumers.json` (path + format). Built-in site profiles: `reno`, `jobjeeves`, `photoport`, `paid`, `generic`.
+Register any site in `sites/consumers.json`. See `sites/README.md` for moving apps (e.g. Paid → Sync).
 
 ## Layout
 
 ```
-genome/           genome_v1.json, theme_roster.json, web_consumers.json
+genome/           genome_v1.json + history (taste DNA only)
+registry/         theme_roster, iteration session, user_loop state
+sites/            consumers.json (downstream app paths)
 core/             ide_theme, ide_iteration, pathways/web, export/
 outputs/palettes/ ide_palette_*.json, web_{site}_palette_*.json
 outputs/web-tokens/  CSS per site

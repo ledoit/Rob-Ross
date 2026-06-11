@@ -11,25 +11,24 @@ from typing import Any
 
 from core.genome import load_genome, merge_genomes, save_genome
 from core.generate import IDE_STYLE_ARCHETYPES
+from core.layout import ROSTER_FILENAME, genome_path
 from core.user_loop import (
     bump_weights_from_palette_json,
     ensure_user_loop_state,
     state_path as user_loop_state_path,
 )
 
-ROSTER_FILENAME = "theme_roster.json"
-
 
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def roster_path(genome_dir: Path) -> Path:
-    return genome_dir / ROSTER_FILENAME
+def roster_path(registry: Path) -> Path:
+    return registry / ROSTER_FILENAME
 
 
-def load_roster(genome_dir: Path) -> dict[str, Any]:
-    p = roster_path(genome_dir)
+def load_roster(registry: Path) -> dict[str, Any]:
+    p = roster_path(registry)
     if not p.exists():
         return {"palette_ids": [], "entries": {}, "shortlist_ids": [], "shortlist_entries": {}}
     data = json.loads(p.read_text(encoding="utf-8"))
@@ -40,8 +39,8 @@ def load_roster(genome_dir: Path) -> dict[str, Any]:
     return data
 
 
-def save_roster(genome_dir: Path, data: dict[str, Any]) -> Path:
-    p = roster_path(genome_dir)
+def save_roster(registry: Path, data: dict[str, Any]) -> Path:
+    p = roster_path(registry)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(data, indent=2), encoding="utf-8")
     return p
@@ -57,7 +56,7 @@ def normalize_palette_id(raw: str) -> str:
 
 
 def roster_add(
-    genome_dir: Path,
+    registry: Path,
     palette_dir: Path,
     palette_id: str,
     prompt: str | None = None,
@@ -67,32 +66,33 @@ def roster_add(
     if not pal_file.exists():
         raise FileNotFoundError(f"No palette file: {pal_file}")
 
-    gpath = genome_dir / "genome_v1.json"
+    root = registry.parent
+    gpath = genome_path(root)
     if gpath.is_file():
-        ensure_user_loop_state(user_loop_state_path(genome_dir), load_genome(gpath))
+        ensure_user_loop_state(user_loop_state_path(registry), load_genome(gpath))
 
-    data = load_roster(genome_dir)
+    data = load_roster(registry)
     if pid not in data["palette_ids"]:
         data["palette_ids"].append(pid)
     entry = data["entries"].setdefault(pid, {})
     entry["added_at"] = _iso_now()
     if prompt:
         entry["prompt"] = prompt
-    save_roster(genome_dir, data)
+    save_roster(registry, data)
     bump_stats = bump_weights_from_palette_json(
-        user_loop_state_path(genome_dir),
+        user_loop_state_path(registry),
         palette_dir / f"{pid}.json",
         export_pick=True,
     )
     return data, bump_stats
 
 
-def roster_remove(genome_dir: Path, palette_id: str) -> dict[str, Any]:
+def roster_remove(registry: Path, palette_id: str) -> dict[str, Any]:
     pid = normalize_palette_id(palette_id)
-    data = load_roster(genome_dir)
+    data = load_roster(registry)
     data["palette_ids"] = [x for x in data["palette_ids"] if x != pid]
     data["entries"].pop(pid, None)
-    save_roster(genome_dir, data)
+    save_roster(registry, data)
     return data
 
 

@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field
 
 from core.export.css_site_tokens import export_all_web_palettes, export_palette_file, palette_to_css
 from core.genome import load_genome
+from core.layout import genome_path, registry_dir
 from core.roster import load_roster, roster_add
 from core.studio_web import (
     editable_roles_for_site,
@@ -40,8 +41,12 @@ app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES))
 
 
-def _genome_dir() -> Path:
-    return ROOT / "genome"
+def _registry() -> Path:
+    return registry_dir(ROOT)
+
+
+def _genome_file() -> Path:
+    return genome_path(ROOT)
 
 
 def _palette_dir() -> Path:
@@ -49,7 +54,7 @@ def _palette_dir() -> Path:
 
 
 def _ensure_genome() -> None:
-    g = _genome_dir() / "genome_v1.json"
+    g = _genome_file()
     if not g.is_file():
         raise HTTPException(status_code=503, detail=f"Missing genome: {g}")
 
@@ -106,14 +111,14 @@ def web_studio_home(request: Request, site: str | None = None) -> HTMLResponse:
 @app.get("/api/web/saved")
 def api_web_saved() -> JSONResponse:
     _ensure_genome()
-    return JSONResponse({"saved": list_saved_web_palettes(_genome_dir(), _palette_dir())})
+    return JSONResponse({"saved": list_saved_web_palettes(_registry(), _palette_dir())})
 
 
 @app.get("/api/web/saved/{palette_id}/params")
 def api_web_saved_params(palette_id: str) -> JSONResponse:
     _ensure_genome()
-    gdir = _genome_dir()
-    roster = load_roster(gdir)
+    reg = _registry()
+    roster = load_roster(reg)
     if palette_id not in (roster.get("palette_ids") or []):
         raise HTTPException(status_code=404, detail="Palette not saved (pin it first)")
     try:
@@ -185,12 +190,12 @@ def api_web_tweak(body: WebTweakBody) -> JSONResponse:
     try:
         pal = tweak_palette(
             _palette_dir(),
-            _genome_dir() / "genome_v1.json",
+            _genome_file(),
             body.palette_id,
             action=body.action,
             harmony=body.harmony,
             hue_delta=body.hue_delta,
-            genome_dir=_genome_dir(),
+            genome_dir=_registry(),
         )
     except (FileNotFoundError, ValueError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
@@ -208,7 +213,7 @@ def api_web_role(body: WebRoleBody) -> JSONResponse:
             body.palette_id,
             body.role,
             body.hex,
-            genome_dir=_genome_dir(),
+            genome_dir=_registry(),
         )
     except (FileNotFoundError, ValueError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
@@ -219,12 +224,12 @@ def api_web_role(body: WebRoleBody) -> JSONResponse:
 def api_web_save(body: WebSaveBody) -> JSONResponse:
     """Pin a web palette so the next generate keeps it."""
     _ensure_genome()
-    gdir = _genome_dir()
+    reg = _registry()
     try:
-        _data, bump = roster_add(gdir, _palette_dir(), body.palette_id, prompt=body.prompt)
+        _data, bump = roster_add(reg, _palette_dir(), body.palette_id, prompt=body.prompt)
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
-    r = load_roster(gdir)
+    r = load_roster(reg)
     return JSONResponse(
         {
             "ok": True,

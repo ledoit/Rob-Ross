@@ -8,9 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from core.ide_schema import enrich_legacy_palette, normalize_style, palette_meta
+from core.layout import SESSION_FILENAME, registry_dir
 from core.roster import load_roster, roster_add, roster_remove
-
-SESSION_FILENAME = "ide_iteration_session.json"
 
 STYLE_HINTS: list[tuple[tuple[str, ...], str]] = [
     (("custard", "chiffon", "cream", "lemon cream"), "lemon_cream"),
@@ -59,12 +58,12 @@ def _tweak_controls_from_feedback(prompt: str, variety: float, adherence: float)
     return v, a
 
 
-def session_path(genome_dir: Path) -> Path:
-    return genome_dir / SESSION_FILENAME
+def session_path(registry: Path) -> Path:
+    return registry / SESSION_FILENAME
 
 
-def load_iteration_session(genome_dir: Path) -> dict[str, Any]:
-    p = session_path(genome_dir)
+def load_iteration_session(registry: Path) -> dict[str, Any]:
+    p = session_path(registry)
     if not p.is_file():
         return {"version": 1, "draft_palette_id": None, "chain": [], "last_prompt": None}
     data = json.loads(p.read_text(encoding="utf-8"))
@@ -75,30 +74,30 @@ def load_iteration_session(genome_dir: Path) -> dict[str, Any]:
     return data
 
 
-def save_iteration_session(genome_dir: Path, data: dict[str, Any]) -> None:
-    p = session_path(genome_dir)
+def save_iteration_session(registry: Path, data: dict[str, Any]) -> None:
+    p = session_path(registry)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def kept_palette_ids(genome_dir: Path) -> list[str]:
+def kept_palette_ids(registry: Path) -> list[str]:
     """Explicitly kept themes only — never auto-seeded."""
-    return list(load_roster(genome_dir).get("palette_ids") or [])
+    return list(load_roster(registry).get("palette_ids") or [])
 
 
 def ship_palette_ids(root: Path) -> list[str]:
     """Kept roster + current draft (if draft is not already kept)."""
-    gdir = root / "genome"
-    kept = kept_palette_ids(gdir)
-    session = load_iteration_session(gdir)
+    reg = registry_dir(root)
+    kept = kept_palette_ids(reg)
+    session = load_iteration_session(reg)
     draft = session.get("draft_palette_id")
     ids = list(dict.fromkeys(kept + ([draft] if draft and draft not in kept else [])))
     return sorted(ids)
 
 
 def record_draft(root: Path, palette_id: str, prompt: str, *, derived_from: str | None) -> None:
-    gdir = root / "genome"
-    session = load_iteration_session(gdir)
+    reg = registry_dir(root)
+    session = load_iteration_session(reg)
     chain = list(session.get("chain") or [])
     if derived_from and derived_from not in chain:
         chain.append(derived_from)
@@ -108,7 +107,7 @@ def record_draft(root: Path, palette_id: str, prompt: str, *, derived_from: str 
     session["chain"] = chain
     session["last_prompt"] = prompt
     session["updated_at"] = _iso_now()
-    save_iteration_session(gdir, session)
+    save_iteration_session(reg, session)
 
 
 def load_palette(root: Path, palette_id: str) -> dict[str, Any]:
@@ -122,12 +121,12 @@ def discard_ide_palette(root: Path, palette_id: str) -> dict[str, Any]:
     """Remove from export roster (unwanted / dropped). Palette JSON may remain on disk."""
     from core.ide_theme import finalize_ide_themes
 
-    gdir = root / "genome"
-    roster_remove(gdir, palette_id)
-    session = load_iteration_session(gdir)
+    reg = registry_dir(root)
+    roster_remove(reg, palette_id)
+    session = load_iteration_session(reg)
     if session.get("draft_palette_id") == palette_id:
         session["draft_palette_id"] = None
-        save_iteration_session(gdir, session)
+        save_iteration_session(reg, session)
     export = finalize_ide_themes(root)
     return {"palette_id": palette_id, "discarded": True, "export": export}
 
@@ -137,12 +136,12 @@ def keep_ide_palette(root: Path, palette_id: str, *, prompt: str | None = None) 
     from core.ide_theme import finalize_ide_themes
 
     palette_dir = root / "outputs" / "palettes"
-    gdir = root / "genome"
+    reg = registry_dir(root)
     pal = load_palette(root, palette_id)
-    roster_add(gdir, palette_dir, palette_id, prompt=prompt or pal.get("user_prompt"))
-    session = load_iteration_session(gdir)
+    roster_add(reg, palette_dir, palette_id, prompt=prompt or pal.get("user_prompt"))
+    session = load_iteration_session(reg)
     session["draft_palette_id"] = palette_id
-    save_iteration_session(gdir, session)
+    save_iteration_session(reg, session)
     export = finalize_ide_themes(root)
     return {
         "palette_id": palette_id,
@@ -165,8 +164,8 @@ def iterate_ide_palette(
     """Next attempt in a chat iteration — inherits prior slot, new id, auto ships."""
     from core.ide_theme import make_ide_palette
 
-    gdir = root / "genome"
-    session = load_iteration_session(gdir)
+    reg = registry_dir(root)
+    session = load_iteration_session(reg)
     parent_id = from_palette_id or session.get("draft_palette_id")
     variety, adherence = 0.55, 0.75
     resolved_style = style or infer_style_from_prompt(prompt)

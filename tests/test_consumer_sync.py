@@ -48,13 +48,14 @@ def test_render_typescript_paid_no_bonfire() -> None:
 
 
 def test_sync_consumer_writes_file(tmp_path: Path) -> None:
-    gdir = tmp_path / "genome"
-    gdir.mkdir()
+    from core.layout import sites_dir
+
+    sites_dir(tmp_path)
     palette_dir = tmp_path / "outputs" / "palettes"
     palette_dir.mkdir(parents=True)
     (palette_dir / "ide_palette_01.json").write_text(json.dumps(_minimal_palette()), encoding="utf-8")
     target = tmp_path / "site" / "themes.ts"
-    (gdir / "web_consumers.json").write_text(
+    (tmp_path / "sites" / "consumers.json").write_text(
         json.dumps(
             {
                 "consumers": {

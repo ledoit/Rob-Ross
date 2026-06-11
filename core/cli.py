@@ -26,6 +26,7 @@ from core.roster import (
 from core.harmony import HARMONY_MODES, describe_harmony
 from core.export.css_site_tokens import export_all_web_palettes, export_palette_file
 from core.export.consumer_sync import load_consumers, sync_consumer
+from core.layout import genome_dir, genome_path, registry_dir
 from core.pathways.web_sites import SITE_PROFILES
 from core.preview_web_html import build_web_preview_page, load_web_palettes_from_dir
 from core.ide_theme import run_theme_export
@@ -44,7 +45,7 @@ def _project_root() -> Path:
 
 
 def _genome_path() -> Path:
-    return _project_root() / "genome" / "genome_v1.json"
+    return genome_path(_project_root())
 
 
 @app.command()
@@ -60,8 +61,8 @@ def ingest(source: str) -> None:
 def build_genome() -> None:
     """Build or update genome from processed principle chunks."""
     root = _project_root()
-    genome_dir = ensure_genome_dir(root / "genome")
-    gpath = genome_dir / "genome_v1.json"
+    gdir = ensure_genome_dir(genome_dir(root))
+    gpath = gdir / "genome_v1.json"
 
     current = load_genome(gpath) if gpath.exists() else default_genome()
     processed_files = sorted((root / "sources" / "processed").glob("principles_*.json"))
@@ -86,7 +87,7 @@ def build_genome() -> None:
             }
         )
 
-    save_genome(merged, gpath, genome_dir / "genome_history")
+    save_genome(merged, gpath, gdir / "genome_history")
     console.print("[green]Genome built and saved.[/green]")
     console.print(f"Path: {gpath}")
     console.print(f"Conflicts flagged: {len(conflicts)}")
@@ -113,7 +114,7 @@ def feedback() -> None:
         console.print(f"- {d['path']}: {d['old']} -> {d['new']}")
 
     if applied:
-        save_genome(updated, gpath, root / "genome" / "genome_history")
+        save_genome(updated, gpath, genome_dir(root) / "genome_history")
         console.print("[green]Genome updated from feedback.[/green]")
     else:
         console.print("[yellow]Genome unchanged.[/yellow]")
@@ -236,9 +237,9 @@ def web_harmonies() -> None:
 
 @web_app.command("consumers")
 def web_consumers() -> None:
-    """List registered downstream sites (genome/web_consumers.json)."""
+    """List registered downstream sites (sites/consumers.json)."""
     root = _project_root()
-    reg = load_consumers(root / "genome")
+    reg = load_consumers(root)
     for key, spec in sorted((reg.get("consumers") or {}).items()):
         console.print(f"[bold]{key}[/bold] - {spec.get('label', '')} -> {spec.get('path')}")
 
@@ -267,7 +268,7 @@ def web_sync(
 def export_themes(
     all_palettes: bool = typer.Option(False, "--all", help="Export every ide_palette_*.json (ignore roster)"),
 ) -> None:
-    """Build vscode-themes/ from disk. Uses genome/theme_roster.json when it lists palette IDs."""
+    """Build vscode-themes/ from disk. Uses registry/theme_roster.json when it lists palette IDs."""
     root = _project_root()
     run_theme_export(root, all_palettes=all_palettes)
     console.print("[green]Theme extension updated.[/green]")
@@ -284,17 +285,17 @@ def roster_add_cmd(
 ) -> None:
     """Final pick: this theme is included when you run export-themes (and VSIX packaging)."""
     root = _project_root()
-    gdir = root / "genome"
+    reg = registry_dir(root)
     palette_dir = root / "outputs" / "palettes"
-    _data, bump = roster_add(gdir, palette_dir, palette_id, prompt=prompt)
-    console.print(f"[green]Added[/green] {palette_id} to export roster ({roster_path(gdir)})")
+    _data, bump = roster_add(reg, palette_dir, palette_id, prompt=prompt)
+    console.print(f"[green]Added[/green] {palette_id} to export roster ({roster_path(reg)})")
     if bump:
         console.print(f"[dim]Taste weights: {bump}[/dim]")
     if learn:
         stats = apply_roster_learning_to_disk(
-            gdir / "genome_v1.json",
-            gdir / "genome_history",
-            load_roster(gdir),
+            genome_path(root),
+            genome_dir(root) / "genome_history",
+            load_roster(reg),
             palette_dir,
         )
         console.print(f"Learning: {stats}")
@@ -303,15 +304,14 @@ def roster_add_cmd(
 @roster_app.command("remove")
 def roster_remove_cmd(palette_id: str = typer.Argument(...)) -> None:
     root = _project_root()
-    gdir = root / "genome"
-    roster_remove(gdir, palette_id)
+    roster_remove(registry_dir(root), palette_id)
     console.print(f"[green]Removed[/green] {palette_id} from roster")
 
 
 @roster_app.command("list")
 def roster_list_cmd() -> None:
     root = _project_root()
-    data = load_roster(root / "genome")
+    data = load_roster(registry_dir(root))
     if not data.get("palette_ids"):
         console.print("Roster is empty (export-themes will use all ide palettes).")
         return
@@ -325,11 +325,10 @@ def roster_list_cmd() -> None:
 def roster_learn_cmd() -> None:
     """Re-run genome update from the current roster (no add/remove)."""
     root = _project_root()
-    gdir = root / "genome"
     stats = apply_roster_learning_to_disk(
-        gdir / "genome_v1.json",
-        gdir / "genome_history",
-        load_roster(gdir),
+        genome_path(root),
+        genome_dir(root) / "genome_history",
+        load_roster(registry_dir(root)),
         root / "outputs" / "palettes",
     )
     console.print(stats)
