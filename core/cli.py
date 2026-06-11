@@ -240,7 +240,7 @@ def web_consumers() -> None:
     root = _project_root()
     reg = load_consumers(root / "genome")
     for key, spec in sorted((reg.get("consumers") or {}).items()):
-        console.print(f"[bold]{key}[/bold] — {spec.get('label', '')} → {spec.get('path')}")
+        console.print(f"[bold]{key}[/bold] - {spec.get('label', '')} -> {spec.get('path')}")
 
 
 @web_app.command("sync")
