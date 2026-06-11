@@ -245,5 +245,10 @@
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
-  "feedback_dimensions": {}
+  "feedback_dimensions": {},
+  "style_archetype": "candy_voltage",
+  "taste_mood": "studio_neon",
+  "is_light": false,
+  "theme_name": "RR Candy Voltage",
+  "theme_display_name": "RR Candy Voltage"
 }

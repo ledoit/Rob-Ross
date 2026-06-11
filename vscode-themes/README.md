@@ -1,4 +1,4 @@
-# Rob Ross IDE themes
+# RR IDE themes
 
 Generated from `outputs/palettes/ide_palette_*.json`.
 

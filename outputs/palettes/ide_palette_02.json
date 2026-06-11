@@ -1,8 +1,8 @@
 {
   "id": "ide_palette_02",
   "context": "ide",
-  "hue_family": "amber",
-  "taste_context": "fjord_ink:kimbie_warm:dark",
+  "hue_family": "azure",
+  "taste_context": "fjord_ink:fjord_hammer:light",
   "design_paradigms_applied": [
     "readability_first",
     "semantic_separation",
@@ -18,237 +18,237 @@
     "contextual_accent_reuse"
   ],
   "genome_version": "1.1.0",
-  "generated": "2026-05-04T10:35:47.336034+00:00",
+  "generated": "2026-04-24T12:07:31.362968+00:00",
   "colors": [
     {
       "role": "background",
-      "hex": "#222225",
+      "hex": "#F7F7F8",
       "hsl": [
         240,
-        4,
-        14
+        7,
+        97
       ],
-      "contrast_with_foreground": 15.2,
+      "contrast_with_foreground": 14.06,
       "contrast_with_background": 1.0,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "background tuned for amber family while preserving dark-editor readability."
+      "rationale": "background tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "surface",
-      "hex": "#2D2E34",
+      "hex": "#E7E8E9",
       "hsl": [
-        231,
-        7,
-        19
+        210,
+        4,
+        91
       ],
-      "contrast_with_foreground": 12.96,
-      "contrast_with_background": 1.17,
+      "contrast_with_foreground": 12.27,
+      "contrast_with_background": 1.15,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "surface tuned for amber family while preserving dark-editor readability."
+      "rationale": "surface tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "border",
-      "hex": "#3B3E59",
+      "hex": "#DBDCE1",
       "hsl": [
-        234,
-        20,
-        29
+        230,
+        9,
+        87
       ],
-      "contrast_with_foreground": 9.96,
-      "contrast_with_background": 1.53,
+      "contrast_with_foreground": 11.0,
+      "contrast_with_background": 1.28,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "border tuned for amber family while preserving dark-editor readability."
+      "rationale": "border tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "muted",
-      "hex": "#606490",
+      "hex": "#8688A2",
       "hsl": [
-        235,
-        20,
-        47
+        236,
+        13,
+        58
       ],
-      "contrast_with_foreground": 5.4,
-      "contrast_with_background": 2.81,
+      "contrast_with_foreground": 4.34,
+      "contrast_with_background": 3.24,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "muted tuned for amber family while preserving dark-editor readability."
+      "rationale": "muted tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "foreground",
-      "hex": "#FAFAFA",
+      "hex": "#262721",
       "hsl": [
-        0,
-        0,
-        98
+        70,
+        8,
+        14
       ],
       "contrast_with_foreground": 1.0,
-      "contrast_with_background": 15.2,
+      "contrast_with_background": 14.06,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "foreground tuned for amber family while preserving dark-editor readability."
+      "rationale": "foreground tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "accent_primary",
-      "hex": "#EDD750",
+      "hex": "#1656D4",
       "hsl": [
-        52,
+        220,
         81,
-        62
+        46
       ],
-      "contrast_with_foreground": 1.39,
-      "contrast_with_background": 10.91,
+      "contrast_with_foreground": 2.38,
+      "contrast_with_background": 5.92,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "accent_primary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_primary tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "accent_secondary",
-      "hex": "#AFD750",
+      "hex": "#3928AF",
       "hsl": [
-        78,
+        248,
         63,
-        58
+        42
       ],
-      "contrast_with_foreground": 1.59,
-      "contrast_with_background": 9.56,
+      "contrast_with_foreground": 1.5,
+      "contrast_with_background": 9.36,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "accent_secondary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_secondary tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_1",
-      "hex": "#DFC771",
+      "hex": "#D64D7A",
       "hsl": [
-        47,
+        340,
         63,
-        66
+        57
       ],
-      "contrast_with_foreground": 1.6,
-      "contrast_with_background": 9.48,
+      "contrast_with_foreground": 3.73,
+      "contrast_with_background": 3.77,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_1 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_1 tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_2",
-      "hex": "#C8D84F",
+      "hex": "#D05048",
       "hsl": [
-        67,
-        64,
-        58
+        4,
+        59,
+        55
       ],
-      "contrast_with_foreground": 1.5,
-      "contrast_with_background": 10.12,
+      "contrast_with_foreground": 3.53,
+      "contrast_with_background": 3.98,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_2 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_2 tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_3",
-      "hex": "#CEB633",
+      "hex": "#B06F35",
       "hsl": [
-        51,
-        61,
-        50
+        28,
+        54,
+        45
       ],
-      "contrast_with_foreground": 1.94,
-      "contrast_with_background": 7.83,
+      "contrast_with_foreground": 3.71,
+      "contrast_with_background": 3.79,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_3 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_3 tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_4",
-      "hex": "#ADDD6E",
+      "hex": "#8A7F32",
       "hsl": [
-        86,
-        62,
-        65
+        52,
+        47,
+        37
       ],
-      "contrast_with_foreground": 1.51,
-      "contrast_with_background": 10.08,
+      "contrast_with_foreground": 3.7,
+      "contrast_with_background": 3.8,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_4 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_4 tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_5",
-      "hex": "#67D94A",
+      "hex": "#529023",
       "hsl": [
-        108,
-        65,
-        57
+        94,
+        61,
+        35
       ],
-      "contrast_with_foreground": 1.73,
-      "contrast_with_background": 8.76,
+      "contrast_with_foreground": 3.85,
+      "contrast_with_background": 3.65,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_5 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_5 tuned for azure family while preserving dark-editor readability."
     },
     {
       "role": "syntax_6",
-      "hex": "#92CD2D",
+      "hex": "#268D84",
       "hsl": [
-        82,
-        64,
-        49
+        175,
+        58,
+        35
       ],
-      "contrast_with_foreground": 1.83,
-      "contrast_with_background": 8.31,
+      "contrast_with_foreground": 3.75,
+      "contrast_with_background": 3.75,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_azure"
       ],
-      "rationale": "syntax_6 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_6 tuned for azure family while preserving dark-editor readability."
     }
   ],
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
   "feedback_dimensions": {},
-  "user_prompt": "black and yellow",
-  "generation_controls": {
-    "chromatic_variety": 0.12,
-    "prompt_adherence": 0.92
-  }
+  "style_archetype": "fjord_hammer",
+  "taste_mood": "fjord_ink",
+  "is_light": true,
+  "theme_name": "RR Fjord Hammer",
+  "theme_display_name": "RR Fjord Hammer"
 }

@@ -1,8 +1,8 @@
 {
   "id": "ide_palette_04",
   "context": "ide",
-  "hue_family": "amber",
-  "taste_context": "studio_neon:forest_canopy:dark",
+  "hue_family": "orange",
+  "taste_context": "studio_neon:kimbie_warm",
   "design_paradigms_applied": [
     "readability_first",
     "semantic_separation",
@@ -18,237 +18,237 @@
     "contextual_accent_reuse"
   ],
   "genome_version": "1.1.0",
-  "generated": "2026-05-04T10:35:47.343653+00:00",
+  "generated": "2026-04-24T11:31:02.060674+00:00",
   "colors": [
     {
       "role": "background",
-      "hex": "#1B1B1D",
+      "hex": "#282420",
       "hsl": [
-        240,
-        4,
-        11
+        30,
+        11,
+        14
       ],
-      "contrast_with_foreground": 16.48,
+      "contrast_with_foreground": 14.49,
       "contrast_with_background": 1.0,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "background tuned for amber family while preserving dark-editor readability."
+      "rationale": "background tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "surface",
-      "hex": "#27273A",
+      "hex": "#383229",
       "hsl": [
-        240,
-        20,
+        36,
+        15,
         19
       ],
-      "contrast_with_foreground": 14.0,
-      "contrast_with_background": 1.18,
+      "contrast_with_foreground": 11.93,
+      "contrast_with_background": 1.21,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "surface tuned for amber family while preserving dark-editor readability."
+      "rationale": "surface tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "border",
-      "hex": "#373953",
+      "hex": "#4B3F2A",
       "hsl": [
-        236,
-        20,
-        27
+        38,
+        28,
+        23
       ],
-      "contrast_with_foreground": 10.74,
-      "contrast_with_background": 1.53,
+      "contrast_with_foreground": 9.67,
+      "contrast_with_background": 1.5,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "border tuned for amber family while preserving dark-editor readability."
+      "rationale": "border tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "muted",
-      "hex": "#5C608A",
+      "hex": "#786C44",
       "hsl": [
-        235,
-        20,
-        45
+        46,
+        28,
+        37
       ],
-      "contrast_with_foreground": 5.76,
-      "contrast_with_background": 2.86,
+      "contrast_with_foreground": 4.91,
+      "contrast_with_background": 2.95,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "muted tuned for amber family while preserving dark-editor readability."
+      "rationale": "muted tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "foreground",
-      "hex": "#FAFAFA",
+      "hex": "#F8F8F7",
       "hsl": [
-        0,
-        0,
-        98
+        60,
+        7,
+        97
       ],
       "contrast_with_foreground": 1.0,
-      "contrast_with_background": 16.48,
+      "contrast_with_background": 14.49,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "foreground tuned for amber family while preserving dark-editor readability."
+      "rationale": "foreground tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "accent_primary",
-      "hex": "#EDD250",
+      "hex": "#ED9E50",
       "hsl": [
-        50,
+        30,
         81,
         62
       ],
-      "contrast_with_foreground": 1.44,
-      "contrast_with_background": 11.41,
+      "contrast_with_foreground": 2.06,
+      "contrast_with_background": 7.05,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "accent_primary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_primary tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "accent_secondary",
-      "hex": "#B8E246",
+      "hex": "#E1DB47",
       "hsl": [
-        76,
-        73,
+        58,
+        72,
         58
       ],
-      "contrast_with_foreground": 1.44,
-      "contrast_with_background": 11.47,
+      "contrast_with_foreground": 1.37,
+      "contrast_with_background": 10.58,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "accent_secondary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_secondary tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_1",
-      "hex": "#EACE7A",
+      "hex": "#E9AC76",
       "hsl": [
-        45,
-        73,
-        70
-      ],
-      "contrast_with_foreground": 1.48,
-      "contrast_with_background": 11.14,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_amber"
-      ],
-      "rationale": "syntax_1 tuned for amber family while preserving dark-editor readability."
-    },
-    {
-      "role": "syntax_2",
-      "hex": "#DAE656",
-      "hsl": [
-        65,
-        74,
-        62
-      ],
-      "contrast_with_foreground": 1.3,
-      "contrast_with_background": 12.64,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_amber"
-      ],
-      "rationale": "syntax_2 tuned for amber family while preserving dark-editor readability."
-    },
-    {
-      "role": "syntax_3",
-      "hex": "#DDBF38",
-      "hsl": [
-        49,
-        71,
-        54
-      ],
-      "contrast_with_foreground": 1.74,
-      "contrast_with_background": 9.49,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_amber"
-      ],
-      "rationale": "syntax_3 tuned for amber family while preserving dark-editor readability."
-    },
-    {
-      "role": "syntax_4",
-      "hex": "#BBE977",
-      "hsl": [
-        84,
+        28,
         72,
         69
       ],
-      "contrast_with_foreground": 1.34,
-      "contrast_with_background": 12.31,
+      "contrast_with_foreground": 1.86,
+      "contrast_with_background": 7.79,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_4 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_1 tuned for orange family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#E4E467",
+      "hsl": [
+        60,
+        70,
+        65
+      ],
+      "contrast_with_foreground": 1.27,
+      "contrast_with_background": 11.44,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_orange"
+      ],
+      "rationale": "syntax_2 tuned for orange family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#7BDD5A",
+      "hsl": [
+        105,
+        66,
+        61
+      ],
+      "contrast_with_foreground": 1.6,
+      "contrast_with_background": 9.05,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_orange"
+      ],
+      "rationale": "syntax_3 tuned for orange family while preserving dark-editor readability."
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#8088DF",
+      "hsl": [
+        235,
+        60,
+        69
+      ],
+      "contrast_with_foreground": 3.04,
+      "contrast_with_background": 4.77,
+      "genome_principles_applied": [
+        "genome_driven_math_engine",
+        "context_ide",
+        "hue_family_orange"
+      ],
+      "rationale": "syntax_4 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_5",
-      "hex": "#71E651",
+      "hex": "#BC64E8",
       "hsl": [
-        107,
-        75,
-        61
+        280,
+        74,
+        65
       ],
-      "contrast_with_foreground": 1.53,
-      "contrast_with_background": 10.76,
+      "contrast_with_foreground": 3.23,
+      "contrast_with_background": 4.49,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_5 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_5 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_6",
-      "hex": "#A7E133",
+      "hex": "#56E1DD",
       "hsl": [
-        80,
-        74,
-        54
+        178,
+        70,
+        61
       ],
-      "contrast_with_foreground": 1.49,
-      "contrast_with_background": 11.02,
+      "contrast_with_foreground": 1.5,
+      "contrast_with_background": 9.69,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_6 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_6 tuned for orange family while preserving dark-editor readability."
     }
   ],
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
   "feedback_dimensions": {},
-  "user_prompt": "black and yellow",
-  "generation_controls": {
-    "chromatic_variety": 0.12,
-    "prompt_adherence": 0.92
-  }
+  "style_archetype": "kimbie_warm",
+  "taste_mood": "studio_neon",
+  "is_light": false,
+  "theme_name": "RR Kimbie Warm",
+  "theme_display_name": "RR Kimbie Warm"
 }

@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from core.math_engine import hex_to_hsl, hsl_to_hex
+from core.ide_schema import enrich_legacy_palette, palette_meta, resolve_theme_name
 
 
 def _load_palette(path: Path) -> dict:
@@ -42,37 +43,6 @@ def _tone(hex_color: str, l_shift: float = 0.0, s_shift: float = 0.0) -> str:
     return hsl_to_hex(h, max(0, min(100, s + s_shift)), max(0, min(100, l + l_shift)))
 
 
-def _style_name(palette: dict) -> str:
-    taste_context = str(palette.get("taste_context", ""))
-    parts = taste_context.split(":")
-    if len(parts) >= 2:
-        return parts[1]
-    return "core"
-
-
-def _theme_label(palette: dict) -> str:
-    display = str(palette.get("theme_display_name", "")).strip()
-    if display:
-        return display if display.lower().startswith("rob ross") else f"Rob Ross {display}"
-    style = _style_name(palette)
-    style_label = style.replace("_", " ").title()
-    prompt = str(palette.get("user_prompt", "")).strip()
-    if prompt and style == "lemon_paper":
-        return f"Rob Ross {' '.join(word.capitalize() for word in prompt.split())}"
-    if prompt:
-        brief = " ".join(word.capitalize() for word in prompt.split())
-        return f"Rob Ross {brief} — {style_label}"
-    return f"Rob Ross {style_label}"
-
-
-def _theme_mode(palette: dict) -> str:
-    taste_context = str(palette.get("taste_context", ""))
-    parts = taste_context.split(":")
-    if len(parts) >= 3 and parts[2] in {"light", "dark"}:
-        return parts[2]
-    return "dark"
-
-
 STYLE_CHROME_PROFILES = {
     "dracula_punch": {"bar_lift": 2, "selection_alpha": "66", "focus": "accent"},
     "fjord_hammer": {"bar_lift": 4, "selection_alpha": "4A", "focus": "accent"},
@@ -81,7 +51,6 @@ STYLE_CHROME_PROFILES = {
     "ion_storm": {"bar_lift": 0, "selection_alpha": "7E", "focus": "accent"},
     "forest_canopy": {"bar_lift": 2, "selection_alpha": "56", "focus": "accent2"},
     "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
-    "bonfire_gold": {"bar_lift": 4, "selection_alpha": "68", "focus": "accent2"},
     "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
     "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
     "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
@@ -91,6 +60,7 @@ STYLE_CHROME_PROFILES = {
 
 
 def _theme_json(palette: dict) -> dict:
+    palette = enrich_legacy_palette(palette)
     roles = _role_map(palette)
     bg = roles.get("background", "#1E1E2E")
     fg = roles.get("foreground", "#CDD6F4")
@@ -110,9 +80,10 @@ def _theme_json(palette: dict) -> dict:
     function_color = syntax[4]
     invalid_color = syntax[5]
 
-    style = _style_name(palette)
-    theme_mode = _theme_mode(palette)
-    name = _theme_label(palette)
+    meta = palette_meta(palette)
+    style = meta["style_archetype"]
+    theme_mode = meta["theme_mode"]
+    name = resolve_theme_name(palette)
     chrome = STYLE_CHROME_PROFILES.get(style, {"bar_lift": 2, "selection_alpha": "55", "focus": "accent"})
     focus_border = accent1 if chrome["focus"] == "accent" else accent2 if chrome["focus"] == "accent2" else muted
     selection_color = accent2 if chrome.get("selection") == "accent2" else accent1
@@ -182,6 +153,18 @@ def _theme_json(palette: dict) -> dict:
     }
 
 
+def _parse_ids_arg(argv: list[str]) -> tuple[list[str] | None, list[str]]:
+    if "--ids" not in argv:
+        return None, argv
+    idx = argv.index("--ids")
+    try:
+        raw = argv[idx + 1]
+    except IndexError:
+        raise SystemExit("--ids requires a comma-separated list") from None
+    new_argv = argv[:idx] + argv[idx + 2 :]
+    return [x.strip().replace(".json", "") for x in raw.split(",") if x.strip()], new_argv
+
+
 def _parse_roster_arg(argv: list[str]) -> tuple[list[str] | None, list[str]]:
     """Return (optional palette stems like ide_palette_01, argv with --roster stripped)."""
     if "--roster" not in argv:
@@ -201,7 +184,9 @@ def _parse_roster_arg(argv: list[str]) -> tuple[list[str] | None, list[str]]:
 
 def main() -> None:
     argv = list(sys.argv[1:])
+    palette_ids, argv = _parse_ids_arg(argv)
     roster_ids, argv = _parse_roster_arg(argv)
+    export_ids = palette_ids or roster_ids
     package_vsix = "--no-package-vsix" not in argv
     root = ROOT
     palettes_dir = root / "outputs" / "palettes"
@@ -209,9 +194,9 @@ def main() -> None:
     themes_dir = ext_dir / "themes"
     themes_dir.mkdir(parents=True, exist_ok=True)
 
-    if roster_ids:
+    if export_ids:
         ide_palettes = []
-        for stem in sorted(roster_ids):
+        for stem in sorted(export_ids):
             p = palettes_dir / f"{stem}.json"
             if p.is_file():
                 ide_palettes.append(p)
@@ -229,7 +214,7 @@ def main() -> None:
 
     contributes = []
     for p in ide_palettes:
-        pal = _load_palette(p)
+        pal = enrich_legacy_palette(_load_palette(p))
         if "hue_family" not in pal:
             accent_hex = _role_map(pal).get("accent_primary")
             if accent_hex:
@@ -265,9 +250,9 @@ def main() -> None:
     next_version = _bump_patch_version(str(current_package.get("version", "0.0.0")))
 
     package_json = {
-        "name": "rob-ross-ide-palettes",
-        "displayName": "Rob Ross IDE Palettes",
-        "description": "Generated IDE themes from Rob Ross palette engine",
+        "name": "robross-ide-palettes",
+        "displayName": "RR IDE Palettes",
+        "description": "Generated IDE themes from RR palette engine",
         "version": next_version,
         "publisher": "local",
         "engines": {"vscode": "^1.85.0"},
@@ -278,7 +263,7 @@ def main() -> None:
     (ext_dir / "README.md").write_text(
         "\n".join(
             [
-                "# Rob Ross IDE themes",
+                "# RR IDE themes",
                 "",
                 "Generated from `outputs/palettes/ide_palette_*.json`.",
                 "",

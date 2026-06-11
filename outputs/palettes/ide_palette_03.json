@@ -1,8 +1,8 @@
 {
   "id": "ide_palette_03",
   "context": "ide",
-  "hue_family": "amber",
-  "taste_context": "retro_terminal:ion_storm:dark",
+  "hue_family": "orange",
+  "taste_context": "retro_terminal:alpenglow_paper:light",
   "design_paradigms_applied": [
     "readability_first",
     "semantic_separation",
@@ -18,237 +18,237 @@
     "contextual_accent_reuse"
   ],
   "genome_version": "1.1.0",
-  "generated": "2026-05-04T10:35:47.342231+00:00",
+  "generated": "2026-04-24T12:07:31.365848+00:00",
   "colors": [
     {
       "role": "background",
-      "hex": "#0F0F10",
+      "hex": "#F5F5F5",
       "hsl": [
-        240,
-        3,
-        6
+        0,
+        0,
+        96
       ],
-      "contrast_with_foreground": 18.36,
+      "contrast_with_foreground": 14.03,
       "contrast_with_background": 1.0,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "background tuned for amber family while preserving dark-editor readability."
+      "rationale": "background tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "surface",
-      "hex": "#1B1E28",
+      "hex": "#E9E8E7",
       "hsl": [
-        226,
-        19,
-        13
+        30,
+        4,
+        91
       ],
-      "contrast_with_foreground": 15.93,
-      "contrast_with_background": 1.15,
+      "contrast_with_foreground": 12.5,
+      "contrast_with_background": 1.12,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "surface tuned for amber family while preserving dark-editor readability."
+      "rationale": "surface tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "border",
-      "hex": "#2F2F46",
+      "hex": "#E1DEDA",
       "hsl": [
-        240,
-        20,
-        23
+        34,
+        10,
+        87
       ],
-      "contrast_with_foreground": 12.45,
-      "contrast_with_background": 1.47,
+      "contrast_with_foreground": 11.41,
+      "contrast_with_background": 1.23,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "border tuned for amber family while preserving dark-editor readability."
+      "rationale": "border tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "muted",
-      "hex": "#585B84",
+      "hex": "#A39785",
       "hsl": [
-        236,
-        20,
-        43
+        36,
+        14,
+        58
       ],
-      "contrast_with_foreground": 6.2,
-      "contrast_with_background": 2.96,
+      "contrast_with_foreground": 5.33,
+      "contrast_with_background": 2.63,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "muted tuned for amber family while preserving dark-editor readability."
+      "rationale": "muted tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "foreground",
-      "hex": "#FAFAFA",
+      "hex": "#272521",
       "hsl": [
-        0,
-        0,
-        98
+        40,
+        8,
+        14
       ],
       "contrast_with_foreground": 1.0,
-      "contrast_with_background": 18.36,
+      "contrast_with_background": 14.03,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "foreground tuned for amber family while preserving dark-editor readability."
+      "rationale": "foreground tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "accent_primary",
-      "hex": "#FECA3E",
+      "hex": "#D45916",
       "hsl": [
-        44,
-        99,
-        62
+        21,
+        81,
+        46
       ],
-      "contrast_with_foreground": 1.47,
-      "contrast_with_background": 12.53,
+      "contrast_with_foreground": 3.82,
+      "contrast_with_background": 3.68,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "accent_primary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_primary tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "accent_secondary",
-      "hex": "#D7F92F",
+      "hex": "#9E8824",
       "hsl": [
-        70,
-        94,
-        58
+        49,
+        63,
+        38
       ],
-      "contrast_with_foreground": 1.15,
-      "contrast_with_background": 15.95,
+      "contrast_with_foreground": 4.37,
+      "contrast_with_background": 3.21,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "accent_secondary tuned for amber family while preserving dark-editor readability."
+      "rationale": "accent_secondary tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_1",
-      "hex": "#FBD183",
+      "hex": "#238A47",
       "hsl": [
-        39,
-        94,
-        75
+        141,
+        60,
+        34
       ],
-      "contrast_with_foreground": 1.38,
-      "contrast_with_background": 13.27,
+      "contrast_with_foreground": 3.49,
+      "contrast_with_background": 4.01,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_1 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_1 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_2",
-      "hex": "#FBF85B",
+      "hex": "#268C92",
       "hsl": [
+        183,
         59,
-        95,
-        67
+        36
       ],
-      "contrast_with_foreground": 1.08,
-      "contrast_with_background": 17.04,
+      "contrast_with_foreground": 3.82,
+      "contrast_with_background": 3.67,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_2 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_2 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_3",
-      "hex": "#F7C039",
+      "hex": "#3371C1",
       "hsl": [
-        43,
-        92,
-        60
+        214,
+        58,
+        48
       ],
-      "contrast_with_foreground": 1.6,
-      "contrast_with_background": 11.45,
+      "contrast_with_foreground": 3.11,
+      "contrast_with_background": 4.51,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_3 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_3 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_4",
-      "hex": "#D7FA7F",
+      "hex": "#5E52CB",
       "hsl": [
-        77,
-        92,
-        74
+        246,
+        54,
+        56
       ],
-      "contrast_with_foreground": 1.13,
-      "contrast_with_background": 16.3,
+      "contrast_with_foreground": 2.58,
+      "contrast_with_background": 5.43,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_4 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_4 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_5",
-      "hex": "#FAD659",
+      "hex": "#BD34D5",
       "hsl": [
-        47,
-        94,
-        66
+        291,
+        66,
+        52
       ],
-      "contrast_with_foreground": 1.36,
-      "contrast_with_background": 13.53,
+      "contrast_with_foreground": 3.36,
+      "contrast_with_background": 4.17,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_5 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_5 tuned for orange family while preserving dark-editor readability."
     },
     {
       "role": "syntax_6",
-      "hex": "#CFFA33",
+      "hex": "#C62F6B",
       "hsl": [
-        73,
-        95,
-        59
+        336,
+        62,
+        48
       ],
-      "contrast_with_foreground": 1.16,
-      "contrast_with_background": 15.85,
+      "contrast_with_foreground": 2.93,
+      "contrast_with_background": 4.79,
       "genome_principles_applied": [
         "genome_driven_math_engine",
         "context_ide",
-        "hue_family_amber"
+        "hue_family_orange"
       ],
-      "rationale": "syntax_6 tuned for amber family while preserving dark-editor readability."
+      "rationale": "syntax_6 tuned for orange family while preserving dark-editor readability."
     }
   ],
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
   "feedback_dimensions": {},
-  "user_prompt": "black and yellow",
-  "generation_controls": {
-    "chromatic_variety": 0.12,
-    "prompt_adherence": 0.92
-  }
+  "style_archetype": "alpenglow_paper",
+  "taste_mood": "retro_terminal",
+  "is_light": true,
+  "theme_name": "RR Alpenglow Paper",
+  "theme_display_name": "RR Alpenglow Paper"
 }

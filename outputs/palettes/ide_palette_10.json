@@ -245,5 +245,10 @@
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
-  "feedback_dimensions": {}
+  "feedback_dimensions": {},
+  "style_archetype": "night_siren",
+  "taste_mood": "forest_console",
+  "is_light": false,
+  "theme_name": "RR Night Siren",
+  "theme_display_name": "RR Night Siren"
 }

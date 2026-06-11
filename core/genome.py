@@ -82,7 +82,6 @@ def default_genome() -> dict[str, Any]:
                 "ion_storm",
                 "forest_canopy",
                 "void_forge",
-                "bonfire_gold",
                 "candy_voltage",
                 "night_siren",
                 "high_contrast_signal",

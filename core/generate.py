@@ -26,6 +26,7 @@ from core.math_engine import (
     hsl_to_hex,
     perceptual_distance,
 )
+from core.ide_schema import build_ide_palette_payload, parse_taste_context
 
 console = Console()
 
@@ -51,7 +52,6 @@ IDE_STYLE_ARCHETYPES: list[str] = [
     "ion_storm",
     "forest_canopy",
     "void_forge",
-    "bonfire_gold",
     "candy_voltage",
     "night_siren",
     "high_contrast_signal",
@@ -81,18 +81,6 @@ ARCHETYPE_PROFILES: dict[str, dict[str, Any]] = {
     "ion_storm": {"relation_mode": "neon_depth", "ui_sat_bias": 14, "accent_boost": 28, "syntax_light_base": 78, "bg_light": 6, "surface_delta": 2, "fg_hue_shift": 34, "theme_mode": "dark"},
     "forest_canopy": {"relation_mode": "analogous", "ui_sat_bias": -6, "accent_boost": 3, "syntax_light_base": 58, "bg_light": 11, "surface_delta": 4, "fg_hue_shift": 18, "theme_mode": "dark"},
     "void_forge": {"relation_mode": "triadic", "ui_sat_bias": 4, "accent_boost": 10, "syntax_light_base": 62, "bg_light": 4, "surface_delta": 3, "fg_hue_shift": 42, "theme_mode": "dark"},
-    "bonfire_gold": {
-        "relation_mode": "warm_split",
-        "ui_sat_bias": 12,
-        "accent_boost": 30,
-        "syntax_light_base": 62,
-        "bg_light": 90,
-        "surface_delta": 8,
-        "fg_hue_shift": 12,
-        "fg_light": 16,
-        "fg_sat_boost": 22,
-        "theme_mode": "light",
-    },
     "lemon_paper": {
         "relation_mode": "split",
         "ui_sat_bias": 24,
@@ -160,7 +148,6 @@ ARCHETYPE_KEYWORDS: dict[str, list[str]] = {
     "ion_storm": ["abyss", "deep", "neon", "signal", "studio"],
     "forest_canopy": ["forest", "green", "earth", "calm"],
     "void_forge": ["void", "forge", "charcoal", "crimson", "violet", "dark"],
-    "bonfire_gold": ["bonfire", "fire", "gold", "orange", "amber", "warm", "sunset"],
     "candy_voltage": ["triadic", "neon", "magenta", "studio"],
     "night_siren": ["red", "night", "siren", "signal", "dark"],
     "high_contrast_signal": ["high_contrast", "signal", "green"],
@@ -632,27 +619,42 @@ def generate_palettes(
             )
             role_map = {c["role"]: c["hex"] for c in colors}
             ps_meta = genome.get("prompt_session") or {}
-            payload = {
-                "id": palette_id,
-                "context": context,
-                "hue_family": family_name,
-                "taste_context": taste_context,
-                "design_paradigms_applied": genome.get("design_paradigms", []),
-                "techniques_applied": genome.get("techniques", []),
-                "genome_version": genome.get("version", "1.0.0"),
-                "generated": _iso_now(),
-                "colors": colors,
-                "palette_rationale": _llm_palette_rationale(genome, context, role_map),
-                "conflicts_flagged": [],
-                "feedback_score": None,
-                "feedback_dimensions": {},
-                "user_prompt": user_prompt,
-                "generation_controls": {
-                    "chromatic_variety": float(ps_meta.get("chromatic_variety", 0.55)),
-                    "prompt_adherence": float(ps_meta.get("prompt_adherence", 0.55)),
-                    "taste_mood_weighted": bool(forced_mood is not None),
-                },
-            }
+            if context == "ide":
+                meta = parse_taste_context(taste_context)
+                payload = build_ide_palette_payload(
+                    palette_id=palette_id,
+                    colors=colors,
+                    hue_family=family_name,
+                    taste_mood=meta["taste_mood"],
+                    style_archetype=meta["style_archetype"],
+                    is_light=meta["is_light"],
+                    genome=genome,
+                    user_prompt=user_prompt,
+                    palette_rationale=_llm_palette_rationale(genome, context, role_map),
+                    taste_mood_weighted=bool(forced_mood is not None),
+                )
+            else:
+                payload = {
+                    "id": palette_id,
+                    "context": context,
+                    "hue_family": family_name,
+                    "taste_context": taste_context,
+                    "design_paradigms_applied": genome.get("design_paradigms", []),
+                    "techniques_applied": genome.get("techniques", []),
+                    "genome_version": genome.get("version", "1.0.0"),
+                    "generated": _iso_now(),
+                    "colors": colors,
+                    "palette_rationale": _llm_palette_rationale(genome, context, role_map),
+                    "conflicts_flagged": [],
+                    "feedback_score": None,
+                    "feedback_dimensions": {},
+                    "user_prompt": user_prompt,
+                    "generation_controls": {
+                        "chromatic_variety": float(ps_meta.get("chromatic_variety", 0.55)),
+                        "prompt_adherence": float(ps_meta.get("prompt_adherence", 0.55)),
+                        "taste_mood_weighted": bool(forced_mood is not None),
+                    },
+                }
             with palette_path.open("w", encoding="utf-8") as f:
                 json.dump(payload, f, indent=2)
             generated.append(payload)

@@ -245,5 +245,10 @@
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
-  "feedback_dimensions": {}
+  "feedback_dimensions": {},
+  "style_archetype": "void_forge",
+  "taste_mood": "fjord_ink",
+  "is_light": false,
+  "theme_name": "RR Void Forge",
+  "theme_display_name": "RR Void Forge"
 }

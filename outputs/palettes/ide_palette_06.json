@@ -245,5 +245,10 @@
   "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
   "conflicts_flagged": [],
   "feedback_score": null,
-  "feedback_dimensions": {}
+  "feedback_dimensions": {},
+  "style_archetype": "forest_canopy",
+  "taste_mood": "nocturne_labs",
+  "is_light": false,
+  "theme_name": "RR Forest Canopy",
+  "theme_display_name": "RR Forest Canopy"
 }

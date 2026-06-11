@@ -31,6 +31,7 @@ from core.harmony import HARMONY_MODES, describe_harmony
 from core.export.css_site_tokens import export_all_web_palettes, export_palette_file
 from core.pathways.web_sites import SITE_PROFILES
 from core.preview_web_html import build_web_preview_page, load_web_palettes_from_dir
+from core.ide_theme import run_theme_export
 from core.quick_session import run_quick
 from core.web_session import run_web_quick
 from core.user_loop import ensure_user_loop_state, state_path as user_loop_state_path
@@ -124,7 +125,7 @@ def generate(task: str = typer.Option(..., "--task", help="Natural language gene
         report_lines.append("")
     report_path.write_text("\n".join(report_lines), encoding="utf-8")
 
-    subprocess.run([sys.executable, str(root / "scripts" / "export_vscode_themes.py")], check=True, cwd=root)
+    run_theme_export(root, all_palettes=True)
 
     console.print("[green]Generation complete.[/green]")
     console.print(f"Palettes dir: {root / 'outputs' / 'palettes'}")
@@ -374,15 +375,10 @@ def export_themes(
 ) -> None:
     """Build vscode-themes/ from disk. Uses genome/theme_roster.json when it lists palette IDs."""
     root = _project_root()
-    cmd = [sys.executable, str(root / "scripts" / "export_vscode_themes.py")]
-    rp = roster_path(root / "genome")
-    if not all_palettes and rp.exists():
-        data = load_roster(root / "genome")
-        if data.get("palette_ids"):
-            cmd.extend(["--roster", str(rp)])
-    subprocess.run(cmd, check=True, cwd=root)
+    run_theme_export(root, all_palettes=all_palettes)
     console.print("[green]Theme extension updated.[/green]")
     console.print(f"VSIX / themes: {root / 'vscode-themes'}")
+
 
 
 @roster_app.command("add")

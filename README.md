@@ -2,9 +2,7 @@
 
 Local-first palette generation engine that learns a user's aesthetic from heterogeneous taste sources and compiles it into a versioned design genome.
 
-Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross)
-
-If your checkout folder is still named `robross-palette-engine`, you can rename it to `rob-ross-palette-engine` locally (close editors first if Windows reports “permission denied”).
+Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross) — single canonical repo. Local checkout: `Menhir Holdings/Color/robross-palette-engine` (ignore any stale `robross-palette-gen` folder; it was a duplicate name, not a second project).
 
 ## Core principles
 
@@ -45,9 +43,8 @@ If your checkout folder is still named `robross-palette-engine`, you can rename 
 6. **Palette Studio** (infinite select → regen loop in the browser):
    - `python -m studio`
    - Open [http://127.0.0.1:8765](http://127.0.0.1:8765) (override host/port with `ROB_ROSS_STUDIO_HOST` / `ROB_ROSS_STUDIO_PORT`; set `ROB_ROSS_STUDIO_RELOAD=true` for dev autoreload)
-   - **IDE Studio** `/` — shortlist + heart → VS Code export roster
-   - **Web Color Studio** `/web` — **Saved** panel (roster) loads params into **Generate**; scratch batch on the right; breed with `seed_from`
-   - Check variants to set the **shortlist** for the next run, edit the brief, **Regenerate**. **Heart** adds a palette to the export roster (same as `roster add`).
+   - **IDE Studio** `/` — optional browser UI (batch regen); **chat agents** use `core/ide_theme.py` instead (see `AGENTS.md`).
+   - **Web pathway** `/web` — compile the same genome into site CSS (e.g. [Paid](../../Employment/Paid/) marketing tokens).
 
 ## Commands
 
@@ -98,6 +95,7 @@ Rob Ross `core/harmony.py` implements that geometry; `core/pathways/web.py` maps
 ## Development
 
 - **Tests:** `pytest` (from repo root with venv active)
-- **Typical workflow:** `ingest` → `quick` / Studio → `preview` → `export-themes` → package in `vscode-themes/`
+- **Typical workflow (agents):** `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette` — auto export + VSIX install (see `AGENTS.md`).
+- **Typical workflow (CLI/studio):** `ingest` → `quick` / Studio → `export-themes` — legacy batch path; do not use `quick` for chat iteration.
 - **Studio dev reload:** `ROB_ROSS_STUDIO_RELOAD=true` when running `python -m studio`
 - **Menhir path:** `Menhir/Color/robross-palette-engine`

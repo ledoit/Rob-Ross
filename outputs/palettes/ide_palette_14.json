@@ -247,10 +247,14 @@
   "feedback_score": null,
   "feedback_dimensions": {},
   "user_prompt": "lemon cream",
-  "theme_display_name": "Lemon Custard",
+  "theme_display_name": "RR Lemon Custard",
   "generation_controls": {
     "chromatic_variety": 0.2,
     "prompt_adherence": 0.9,
     "taste_mood_weighted": false
-  }
+  },
+  "theme_name": "RR Lemon Custard",
+  "style_archetype": "lemon_cream",
+  "taste_mood": "studio_neon",
+  "is_light": true
 }

@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
 from core.generate import generate_palettes
 from core.genome import load_genome, merge_genomes
+from core.ide_theme import run_theme_export
 from core.prompt_brief import apply_prompt_archetype_order, genome_patch_from_prompt
 from core.roster import (
     apply_shortlist_bias_to_session,
@@ -93,7 +92,7 @@ def run_quick(
     report_path = _write_quick_report(root, prompt, count, result)
 
     if export_themes:
-        subprocess.run([sys.executable, str(root / "scripts" / "export_vscode_themes.py")], check=True, cwd=root)
+        run_theme_export(root)
 
     return {
         "generated_count": result["generated_count"],
@@ -120,6 +119,9 @@ def list_ide_palette_meta(palette_dir: Path) -> list[dict[str, Any]]:
             {
                 "id": pid,
                 "user_prompt": payload.get("user_prompt"),
+                "theme_name": payload.get("theme_name"),
+                "is_light": payload.get("is_light"),
+                "style_archetype": payload.get("style_archetype"),
                 "taste_context": payload.get("taste_context"),
                 "chromatic_variety": gc.get("chromatic_variety"),
                 "prompt_adherence": gc.get("prompt_adherence"),

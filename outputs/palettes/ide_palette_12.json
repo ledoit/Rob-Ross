@@ -1,6 +1,6 @@
 {
   "id": "ide_palette_12",
-  "theme_display_name": "Lemon Haze",
+  "theme_display_name": "RR Lemon Haze",
   "context": "ide",
   "hue_family": "amber",
   "taste_context": "nocturne_labs:lemon_paper:light",
@@ -252,5 +252,9 @@
     "chromatic_variety": 0.2,
     "prompt_adherence": 0.9,
     "taste_mood_weighted": false
-  }
+  },
+  "theme_name": "RR Lemon Haze",
+  "style_archetype": "lemon_paper",
+  "taste_mood": "nocturne_labs",
+  "is_light": true
 }

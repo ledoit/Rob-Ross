@@ -1,8 +1,8 @@
 {
-  "name": "rob-ross-ide-palettes",
-  "displayName": "Rob Ross IDE Palettes",
-  "description": "Generated IDE themes from Rob Ross palette engine",
-  "version": "0.0.27",
+  "name": "robross-ide-palettes",
+  "displayName": "RR IDE Palettes",
+  "description": "Generated IDE themes from RR palette engine",
+  "version": "0.0.31",
   "publisher": "local",
   "engines": {
     "vscode": "^1.85.0"
@@ -13,67 +13,62 @@
   "contributes": {
     "themes": [
       {
-        "label": "Rob Ross Dracula Punch",
+        "label": "RR Dracula Punch",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_01.json"
       },
       {
-        "label": "Rob Ross Fjord Hammer",
+        "label": "RR Fjord Hammer",
         "uiTheme": "vs",
         "path": "./themes/ide_palette_02.json"
       },
       {
-        "label": "Rob Ross Alpenglow Paper",
+        "label": "RR Alpenglow Paper",
         "uiTheme": "vs",
         "path": "./themes/ide_palette_03.json"
       },
       {
-        "label": "Rob Ross Kimbie Warm",
+        "label": "RR Kimbie Warm",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_04.json"
       },
       {
-        "label": "Rob Ross Ion Storm",
+        "label": "RR Ion Storm",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_05.json"
       },
       {
-        "label": "Rob Ross Forest Canopy",
+        "label": "RR Forest Canopy",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_06.json"
       },
       {
-        "label": "Rob Ross Void Forge",
+        "label": "RR Void Forge",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_07.json"
       },
       {
-        "label": "Rob Ross Bonfire Gold",
-        "uiTheme": "vs",
-        "path": "./themes/ide_palette_08.json"
-      },
-      {
-        "label": "Rob Ross Candy Voltage",
+        "label": "RR Candy Voltage",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_09.json"
       },
       {
-        "label": "Rob Ross Night Siren",
+        "label": "RR Night Siren",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_10.json"
       },
       {
-        "label": "Rob Ross High Contrast Signal",
+        "label": "RR High Contrast Signal",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_11.json"
       },
       {
-        "label": "Rob Ross Lemon Haze",
+        "label": "RR Lemon Haze",
         "uiTheme": "vs",
         "path": "./themes/ide_palette_12.json"
       },
       {
-        "label": "Rob Ross Lemon Custard",
+        "label": "RR Lemon Custard",
         "uiTheme": "vs",
         "path": "./themes/ide_palette_14.json"
       }
