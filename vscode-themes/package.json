@@ -2,7 +2,7 @@
   "name": "robross-ide-palettes",
   "displayName": "RR IDE Palettes",
   "description": "Generated IDE themes from RR palette engine",
-  "version": "0.0.31",
+  "version": "0.0.40",
   "publisher": "local",
   "engines": {
     "vscode": "^1.85.0"
@@ -71,6 +71,11 @@
         "label": "RR Lemon Custard",
         "uiTheme": "vs",
         "path": "./themes/ide_palette_14.json"
+      },
+      {
+        "label": "RR Velvet Rose",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_15.json"
       }
     ]
   }

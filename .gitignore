@@ -14,3 +14,6 @@ build/
 # Generated local previews (regenerate with `python cli.py preview`)
 outputs/preview/
 genome/user_loop_state.json
+
+# VSIX builds are local install artifacts — regenerate via finalize_ide_themes()
+vscode-themes/*.vsix

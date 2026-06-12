@@ -1,0 +1,73 @@
+{
+  "palette_ids": [
+    "ide_palette_01",
+    "ide_palette_02",
+    "ide_palette_03",
+    "ide_palette_04",
+    "ide_palette_05",
+    "ide_palette_06",
+    "ide_palette_07",
+    "ide_palette_09",
+    "ide_palette_10",
+    "ide_palette_11",
+    "ide_palette_12",
+    "ide_palette_14",
+    "ide_palette_15"
+  ],
+  "entries": {
+    "ide_palette_01": {
+      "added_at": "2026-06-11T12:27:56.577788+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_02": {
+      "added_at": "2026-06-11T12:27:56.605030+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_03": {
+      "added_at": "2026-06-11T12:27:56.623253+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_04": {
+      "added_at": "2026-06-11T12:27:56.642750+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_05": {
+      "added_at": "2026-06-11T12:27:56.659597+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_06": {
+      "added_at": "2026-06-11T12:27:56.686181+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_07": {
+      "added_at": "2026-06-11T12:27:56.705341+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_09": {
+      "added_at": "2026-06-11T12:27:56.728679+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_10": {
+      "added_at": "2026-06-11T12:27:56.748576+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_11": {
+      "added_at": "2026-06-11T12:27:56.768688+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_12": {
+      "added_at": "2026-06-11T12:27:56.789347+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_14": {
+      "added_at": "2026-06-11T12:27:56.810358+00:00",
+      "prompt": "restored classic roster"
+    },
+    "ide_palette_15": {
+      "added_at": "2026-06-12T18:00:00.000000+00:00",
+      "prompt": "red velvet cake with cream cheese frosting, strawberry shortcake layers"
+    }
+  },
+  "shortlist_ids": [],
+  "shortlist_entries": {}
+}

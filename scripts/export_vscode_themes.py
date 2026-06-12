@@ -14,8 +14,6 @@ if str(ROOT) not in sys.path:
 
 from core.math_engine import hex_to_hsl, hsl_to_hex
 from core.ide_schema import enrich_legacy_palette, palette_meta, resolve_theme_name
-
-
 def _load_palette(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -53,6 +51,7 @@ STYLE_CHROME_PROFILES = {
     "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
     "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
     "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
+    "red_velvet_rose": {"bar_lift": 5, "selection_alpha": "44", "focus": "accent2", "selection": "accent2"},
     "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},
@@ -62,6 +61,9 @@ STYLE_CHROME_PROFILES = {
 def _theme_json(palette: dict) -> dict:
     palette = enrich_legacy_palette(palette)
     roles = _role_map(palette)
+    meta = palette_meta(palette)
+    style = meta["style_archetype"]
+    name = resolve_theme_name(palette)
     bg = roles.get("background", "#1E1E2E")
     fg = roles.get("foreground", "#CDD6F4")
     surface = roles.get("surface", bg)

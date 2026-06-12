@@ -23,6 +23,7 @@ STYLE_CHROME_PROFILES: dict[str, dict[str, Any]] = {
     "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
     "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
     "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
+    "red_velvet_rose": {"bar_lift": 5, "selection_alpha": "44", "focus": "accent2", "selection": "accent2"},
     "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},

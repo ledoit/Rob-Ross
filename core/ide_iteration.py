@@ -12,6 +12,7 @@ from core.layout import SESSION_FILENAME, registry_dir
 from core.roster import load_roster, roster_add, roster_remove
 
 STYLE_HINTS: list[tuple[tuple[str, ...], str]] = [
+    (("red velvet", "velvet rose", "strawberry", "shortcake", "rose cake"), "red_velvet_rose"),
     (("custard", "chiffon", "cream", "lemon cream"), "lemon_cream"),
     (("lemon", "yellow haze", "lemon yellow"), "lemon_paper"),
     (("ocean", "teal", "cyan", "abyss", "deep blue"), "ion_storm"),

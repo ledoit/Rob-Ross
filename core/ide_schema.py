@@ -7,6 +7,10 @@ from typing import Any
 
 THEME_PREFIX = "RR"
 
+ARCHETYPE_LABEL_OVERRIDES: dict[str, str] = {
+    "red_velvet_rose": "Velvet Rose",
+}
+
 
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -19,7 +23,10 @@ def normalize_style(style_id: str) -> str:
 
 
 def archetype_label(style_id: str) -> str:
-    return normalize_style(style_id).replace("_", " ").title()
+    style = normalize_style(style_id)
+    if style in ARCHETYPE_LABEL_OVERRIDES:
+        return ARCHETYPE_LABEL_OVERRIDES[style]
+    return style.replace("_", " ").title()
 
 
 def parse_taste_context(taste_context: str) -> dict[str, Any]:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from core.ide_schema import (
+    archetype_label,
     build_ide_palette_payload,
     build_taste_context,
     enrich_legacy_palette,
@@ -68,6 +69,22 @@ def test_prefix_helpers() -> None:
     assert strip_theme_prefix("Rob Ross Lemon Haze") == "Lemon Haze"
     assert with_theme_prefix("Lemon Haze") == "RR Lemon Haze"
     assert with_theme_prefix("RR Lemon Haze") == "RR Lemon Haze"
+
+
+def test_archetype_label_velvet_rose() -> None:
+    assert archetype_label("red_velvet_rose") == "Velvet Rose"
+    payload = build_ide_palette_payload(
+        palette_id="ide_palette_15",
+        colors=[{"role": "background", "hex": "#3B0F14"}],
+        hue_family="red",
+        taste_mood="nocturne_labs",
+        style_archetype="red_velvet_rose",
+        is_light=False,
+        genome={"prompt_session": {}, "design_paradigms": [], "techniques": [], "version": "1.0.0"},
+        user_prompt="velvet cake",
+        palette_rationale="test",
+    )
+    assert payload["theme_name"] == "RR Velvet Rose"
 
 
 def test_build_taste_context() -> None:

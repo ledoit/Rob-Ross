@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -27,9 +28,11 @@ from core.ide_schema import (
 )
 from core.ide_iteration import infer_style_from_prompt, record_draft, ship_palette_ids
 from core.lemon_drop_palette import build_lemon_custard_colors
+from core.red_velvet_palette import build_red_velvet_rose_colors
 from core.prompt_brief import genome_patch_from_prompt
 
 LEMON_CURATED = frozenset({"lemon_custard", "lemon_cream"})
+RED_VELVET_CURATED = frozenset({"red_velvet_rose"})
 
 # Re-export schema helpers for convenience
 __all__ = [
@@ -106,6 +109,9 @@ def _generate_colors(
     if style in LEMON_CURATED:
         colors = build_lemon_custard_colors()
         return colors, "amber", "studio_neon", style, True
+    if style in RED_VELVET_CURATED:
+        colors = build_red_velvet_rose_colors()
+        return colors, "red", "nocturne_labs", style, False
     colors, family_name, taste_context = _build_palette_colors(genome, context="ide", variant_index=0)
     parsed = parse_taste_context(taste_context)
     if is_light is not None:
@@ -232,11 +238,135 @@ def run_theme_export(
     }
 
 
-def install_vsix(vsix_path: Path) -> None:
-    cursor_cmd = shutil.which("cursor") or shutil.which("cursor.cmd")
-    if not cursor_cmd:
+EXTENSION_ID = "local.robross-ide-palettes"
+EXTENSION_FOLDER_PREFIX = "local.robross-ide-palettes-"
+LEGACY_EXTENSION_IDS = frozenset({EXTENSION_ID, "local.rob-ross-ide-palettes"})
+
+
+def _cursor_cmd() -> str:
+    cmd = shutil.which("cursor") or shutil.which("cursor.cmd")
+    if not cmd:
         raise RuntimeError("cursor CLI not found in PATH")
-    subprocess.run([cursor_cmd, "--install-extension", str(vsix_path.resolve()), "--force"], check=True)
+    return cmd
+
+
+def _cursor_extensions_dir() -> Path | None:
+    for key in ("USERPROFILE", "HOME"):
+        base = os.environ.get(key)
+        if not base:
+            continue
+        ext = Path(base) / ".cursor" / "extensions"
+        if ext.is_dir():
+            return ext
+    return None
+
+
+def _cursor_user_dir() -> Path | None:
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        user = Path(appdata) / "Cursor" / "User"
+        if user.is_dir():
+            return user
+    for key in ("USERPROFILE", "HOME"):
+        base = os.environ.get(key)
+        if not base:
+            continue
+        user = Path(base) / "AppData" / "Roaming" / "Cursor" / "User"
+        if user.is_dir():
+            return user
+    return None
+
+
+def _global_extension_entry() -> dict[str, Any] | None:
+    ext_dir = _cursor_extensions_dir()
+    if not ext_dir:
+        return None
+    registry = ext_dir / "extensions.json"
+    if not registry.is_file():
+        return None
+    for entry in json.loads(registry.read_text(encoding="utf-8")):
+        if entry.get("identifier", {}).get("id") == EXTENSION_ID:
+            return entry
+    return None
+
+
+def sync_extension_to_cursor_profiles() -> list[str]:
+    """Mirror the global VSIX install into Cursor profile extensions.json registries.
+
+    `cursor --install-extension` updates ~/.cursor/extensions/extensions.json but
+    leaves profile-scoped registries pointing at deleted folders — themes vanish.
+    """
+    entry = _global_extension_entry()
+    if not entry:
+        return []
+    user_dir = _cursor_user_dir()
+    if not user_dir:
+        return []
+    profiles_dir = user_dir / "profiles"
+    if not profiles_dir.is_dir():
+        return []
+    updated: list[str] = []
+    for profile_registry in profiles_dir.glob("*/extensions.json"):
+        data = json.loads(profile_registry.read_text(encoding="utf-8"))
+        had_rr = any(
+            item.get("identifier", {}).get("id") in LEGACY_EXTENSION_IDS for item in data
+        )
+        if not had_rr:
+            continue
+        next_data = [
+            item
+            for item in data
+            if item.get("identifier", {}).get("id") not in LEGACY_EXTENSION_IDS
+        ]
+        next_data.append(entry)
+        profile_registry.write_text(
+            json.dumps(next_data, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        updated.append(profile_registry.parent.name)
+    return updated
+
+
+def uninstall_stale_extension_versions(*, keep_version: str | None = None) -> list[str]:
+    """Remove stacked local.robross-ide-palettes-* folders (Cursor keeps all VSIX installs)."""
+    removed: list[str] = []
+    ext_dir = _cursor_extensions_dir()
+    if not ext_dir:
+        return removed
+    for folder in sorted(ext_dir.glob(f"{EXTENSION_FOLDER_PREFIX}*")):
+        if not folder.is_dir():
+            continue
+        if keep_version and folder.name == f"{EXTENSION_FOLDER_PREFIX}{keep_version}":
+            continue
+        shutil.rmtree(folder, ignore_errors=True)
+        removed.append(folder.name)
+    return removed
+
+
+def install_vsix(vsix_path: Path) -> None:
+    """Install VSIX, then drop older local.robross-ide-palettes-* folders.
+
+    Never delete extension folders before a successful install — a failed install
+    after a pre-wipe leaves Cursor with zero RR themes.
+    """
+    if not vsix_path.is_file():
+        raise FileNotFoundError(vsix_path)
+    cursor_cmd = _cursor_cmd()
+    version = vsix_path.stem.rsplit("-", 1)[-1] if vsix_path.stem else None
+    subprocess.run(
+        [cursor_cmd, "--install-extension", str(vsix_path.resolve()), "--force"],
+        check=True,
+    )
+    if not version:
+        return
+    target = f"{EXTENSION_FOLDER_PREFIX}{version}"
+    ext_dir = _cursor_extensions_dir()
+    if not ext_dir or not (ext_dir / target).is_dir():
+        raise RuntimeError(
+            f"VSIX install finished but {target} is missing under {ext_dir or '?'}"
+        )
+    uninstall_stale_extension_versions(keep_version=version)
+    sync_extension_to_cursor_profiles()
 
 
 def iterate_ide_palette(root: Path, prompt: str, **kwargs: Any) -> dict[str, Any]:
