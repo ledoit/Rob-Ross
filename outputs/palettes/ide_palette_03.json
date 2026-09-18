@@ -1,24 +1,12 @@
 {
   "id": "ide_palette_03",
   "context": "ide",
+  "style_archetype": "alpenglow_paper",
+  "is_light": true,
+  "theme_display_name": "RR Alpenglow Paper",
+  "theme_name": "RR Alpenglow Paper",
   "hue_family": "orange",
-  "taste_context": "retro_terminal:alpenglow_paper:light",
-  "design_paradigms_applied": [
-    "readability_first",
-    "semantic_separation",
-    "low_fatigue_long_sessions",
-    "accent_as_wayfinding",
-    "cohesive_chrome_minimalism"
-  ],
-  "techniques_applied": [
-    "split_complementary_syntax_distribution",
-    "simultaneous_contrast_balancing",
-    "chroma_taper_for_depth",
-    "luminance_ladder_spacing",
-    "contextual_accent_reuse"
-  ],
-  "genome_version": "1.1.0",
-  "generated": "2026-04-24T12:07:31.365848+00:00",
+  "taste_mood": "retro_terminal",
   "colors": [
     {
       "role": "background",
@@ -29,13 +17,7 @@
         96
       ],
       "contrast_with_foreground": 14.03,
-      "contrast_with_background": 1.0,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "background tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 1.0
     },
     {
       "role": "surface",
@@ -46,13 +28,7 @@
         91
       ],
       "contrast_with_foreground": 12.5,
-      "contrast_with_background": 1.12,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "surface tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 1.12
     },
     {
       "role": "border",
@@ -63,13 +39,7 @@
         87
       ],
       "contrast_with_foreground": 11.41,
-      "contrast_with_background": 1.23,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "border tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 1.23
     },
     {
       "role": "muted",
@@ -80,13 +50,7 @@
         58
       ],
       "contrast_with_foreground": 5.33,
-      "contrast_with_background": 2.63,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "muted tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 2.63
     },
     {
       "role": "foreground",
@@ -97,13 +61,7 @@
         14
       ],
       "contrast_with_foreground": 1.0,
-      "contrast_with_background": 14.03,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "foreground tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 14.03
     },
     {
       "role": "accent_primary",
@@ -114,13 +72,7 @@
         46
       ],
       "contrast_with_foreground": 3.82,
-      "contrast_with_background": 3.68,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "accent_primary tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 3.68
     },
     {
       "role": "accent_secondary",
@@ -131,13 +83,7 @@
         38
       ],
       "contrast_with_foreground": 4.37,
-      "contrast_with_background": 3.21,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "accent_secondary tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 3.21
     },
     {
       "role": "syntax_1",
@@ -148,13 +94,7 @@
         34
       ],
       "contrast_with_foreground": 3.49,
-      "contrast_with_background": 4.01,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_1 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 4.01
     },
     {
       "role": "syntax_2",
@@ -165,13 +105,7 @@
         36
       ],
       "contrast_with_foreground": 3.82,
-      "contrast_with_background": 3.67,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_2 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 3.67
     },
     {
       "role": "syntax_3",
@@ -182,13 +116,7 @@
         48
       ],
       "contrast_with_foreground": 3.11,
-      "contrast_with_background": 4.51,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_3 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 4.51
     },
     {
       "role": "syntax_4",
@@ -199,13 +127,7 @@
         56
       ],
       "contrast_with_foreground": 2.58,
-      "contrast_with_background": 5.43,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_4 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 5.43
     },
     {
       "role": "syntax_5",
@@ -216,13 +138,7 @@
         52
       ],
       "contrast_with_foreground": 3.36,
-      "contrast_with_background": 4.17,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_5 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 4.17
     },
     {
       "role": "syntax_6",
@@ -233,22 +149,11 @@
         48
       ],
       "contrast_with_foreground": 2.93,
-      "contrast_with_background": 4.79,
-      "genome_principles_applied": [
-        "genome_driven_math_engine",
-        "context_ide",
-        "hue_family_orange"
-      ],
-      "rationale": "syntax_6 tuned for orange family while preserving dark-editor readability."
+      "contrast_with_background": 4.79
     }
   ],
-  "palette_rationale": "Generated with deterministic ide profile derived from genome settings.",
-  "conflicts_flagged": [],
-  "feedback_score": null,
-  "feedback_dimensions": {},
-  "style_archetype": "alpenglow_paper",
-  "taste_mood": "retro_terminal",
-  "is_light": true,
-  "theme_name": "RR Alpenglow Paper",
-  "theme_display_name": "RR Alpenglow Paper"
+  "user_prompt": "canon bootstrap",
+  "genome_version": "2.0.0",
+  "generated": "2026-04-24T12:07:31.365848+00:00",
+  "canon": true
 }

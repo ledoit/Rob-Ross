@@ -14,17 +14,16 @@ from core.layout import consumers_path, registry_dir, sites_dir
 
 # Reuse VS Code chrome tuning for bar/panel/selection in site tokens.
 STYLE_CHROME_PROFILES: dict[str, dict[str, Any]] = {
-    "dracula_punch": {"bar_lift": 2, "selection_alpha": "66", "focus": "accent"},
     "fjord_hammer": {"bar_lift": 4, "selection_alpha": "4A", "focus": "accent"},
     "alpenglow_paper": {"bar_lift": 4, "selection_alpha": "3C", "focus": "muted"},
     "kimbie_warm": {"bar_lift": 3, "selection_alpha": "5A", "focus": "accent2"},
-    "ion_storm": {"bar_lift": 0, "selection_alpha": "7E", "focus": "accent"},
     "forest_canopy": {"bar_lift": 2, "selection_alpha": "56", "focus": "accent2"},
-    "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
+    "lemon_haze": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
     "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
+    "lemon_custard": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
     "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
-    "red_velvet_rose": {"bar_lift": 5, "selection_alpha": "44", "focus": "accent2", "selection": "accent2"},
-    "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
+    "cherry_cream": {"bar_lift": 2, "selection_alpha": "35", "focus": "accent", "selection": "accent2"},
+    "sky_azure": {"bar_lift": 2, "selection_alpha": "40", "focus": "accent", "selection": "accent2"},
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},
 }

@@ -1,0 +1,241 @@
+{
+  "name": "RR Sky Azure",
+  "type": "light",
+  "colors": {
+    "editor.background": "#F0F8FF",
+    "editor.foreground": "#0C3D5C",
+    "editorCursor.foreground": "#38BDF8",
+    "editor.lineHighlightBackground": "#E3F4FF40",
+    "editor.selectionBackground": "#0284C740",
+    "editor.inactiveSelectionBackground": "#5B9CC866",
+    "editorIndentGuide.background1": "#5B9CC866",
+    "editorIndentGuide.activeBackground1": "#38BDF888",
+    "editorWhitespace.foreground": "#5B9CC888",
+    "sideBar.background": "#F0F9FF",
+    "sideBar.foreground": "#0C3D5C",
+    "activityBar.background": "#F5FAFF",
+    "activityBar.foreground": "#0C3D5C",
+    "statusBar.background": "#F0F9FF",
+    "statusBar.foreground": "#0C3D5C",
+    "titleBar.activeBackground": "#F5FAFF",
+    "titleBar.activeForeground": "#0C3D5C",
+    "panel.background": "#F0F9FF",
+    "panel.border": "#5B9CC8",
+    "terminal.background": "#F0F8FF",
+    "terminal.foreground": "#0C3D5C",
+    "terminal.ansiBlue": "#38BDF8",
+    "terminal.ansiMagenta": "#0284C7",
+    "terminal.ansiGreen": "#0D9488",
+    "terminal.ansiRed": "#DC2626",
+    "terminal.ansiYellow": "#CA8A04",
+    "focusBorder": "#38BDF8",
+    "button.background": "#38BDF8",
+    "button.foreground": "#F0F8FF",
+    "button.hoverBackground": "#0284C7",
+    "input.foreground": "#0C3D5C",
+    "input.placeholderForeground": "#5B9CC8",
+    "input.border": "#5B9CC888",
+    "dropdown.background": "#F0F9FF",
+    "dropdown.foreground": "#0C3D5C",
+    "dropdown.border": "#5B9CC844",
+    "quickInput.background": "#F0F9FF",
+    "quickInput.foreground": "#0C3D5C",
+    "quickInputList.focusBackground": "#0284C788",
+    "list.activeSelectionBackground": "#0284C766",
+    "list.inactiveSelectionBackground": "#0284C733",
+    "list.hoverBackground": "#0284C744",
+    "list.activeSelectionForeground": "#0C3D5C",
+    "list.inactiveSelectionForeground": "#0C3D5C",
+    "list.focusBackground": "#0284C766",
+    "list.focusForeground": "#0C3D5C",
+    "list.highlightForeground": "#38BDF8",
+    "editorWidget.background": "#F0F9FF",
+    "editorWidget.foreground": "#0C3D5C",
+    "editorWidget.border": "#5B9CC8",
+    "editorHoverWidget.background": "#F0F9FF",
+    "editorHoverWidget.foreground": "#0C3D5C",
+    "editorHoverWidget.border": "#5B9CC866",
+    "editorSuggestWidget.background": "#F0F9FF",
+    "editorSuggestWidget.foreground": "#0C3D5C",
+    "editorSuggestWidget.border": "#5B9CC8",
+    "editorSuggestWidget.selectedBackground": "#0284C766",
+    "sideBar.border": "#5B9CC844",
+    "sideBarSectionHeader.background": "#F5FAFF",
+    "sideBarSectionHeader.foreground": "#0C3D5C",
+    "sideBarTitle.foreground": "#0C3D5C",
+    "tab.inactiveBackground": "#F5FAFF",
+    "tab.activeBackground": "#F0F9FF",
+    "tab.inactiveForeground": "#5B9CC8",
+    "tab.activeForeground": "#0C3D5C",
+    "tab.border": "#F5FAFF",
+    "editorGroupHeader.tabsBackground": "#F5FAFF",
+    "editorGroup.border": "#5B9CC844",
+    "badge.background": "#38BDF8",
+    "badge.foreground": "#F0F8FF",
+    "selection.background": "#0284C755",
+    "pickerGroup.foreground": "#38BDF8",
+    "pickerGroup.border": "#5B9CC866"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#5B9CC8"
+      }
+    },
+    {
+      "scope": [
+        "keyword",
+        "storage",
+        "storage.type"
+      ],
+      "settings": {
+        "foreground": "#1D4ED8"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#7C3AED"
+      }
+    },
+    {
+      "scope": [
+        "string",
+        "constant.other.symbol"
+      ],
+      "settings": {
+        "foreground": "#0D9488"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
+      "settings": {
+        "foreground": "#CA8A04"
+      }
+    },
+    {
+      "scope": [
+        "variable",
+        "meta.definition.variable.name"
+      ],
+      "settings": {
+        "foreground": "#0C3D5C"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type",
+        "support.type"
+      ],
+      "settings": {
+        "foreground": "#6366F1"
+      }
+    },
+    {
+      "scope": [
+        "invalid",
+        "invalid.illegal"
+      ],
+      "settings": {
+        "foreground": "#DC2626"
+      }
+    },
+    {
+      "scope": [
+        "support.class.component.js",
+        "entity.name.type.class.ts"
+      ],
+      "settings": {
+        "foreground": "#6366F1"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type.module.js",
+        "support.type.primitive.ts"
+      ],
+      "settings": {
+        "foreground": "#1D4ED8"
+      }
+    },
+    {
+      "scope": [
+        "storage.type.function.python",
+        "entity.name.function.decorator.python"
+      ],
+      "settings": {
+        "foreground": "#7C3AED"
+      }
+    },
+    {
+      "scope": [
+        "support.type.python",
+        "entity.name.class.python"
+      ],
+      "settings": {
+        "foreground": "#6366F1"
+      }
+    },
+    {
+      "scope": [
+        "support.type.property-name.json"
+      ],
+      "settings": {
+        "foreground": "#0284C7"
+      }
+    },
+    {
+      "scope": [
+        "constant.language.json"
+      ],
+      "settings": {
+        "foreground": "#1D4ED8"
+      }
+    },
+    {
+      "scope": [
+        "markup.heading.markdown",
+        "markup.bold.markdown"
+      ],
+      "settings": {
+        "foreground": "#38BDF8"
+      }
+    },
+    {
+      "scope": [
+        "markup.italic.markdown",
+        "markup.inline.raw.string.markdown"
+      ],
+      "settings": {
+        "foreground": "#0D9488"
+      }
+    },
+    {
+      "scope": [
+        "support.function.builtin.shell",
+        "keyword.operator.pipe.shell"
+      ],
+      "settings": {
+        "foreground": "#7C3AED"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.normal.shell"
+      ],
+      "settings": {
+        "foreground": "#6366F1"
+      }
+    }
+  ]
+}

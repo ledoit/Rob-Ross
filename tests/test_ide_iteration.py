@@ -18,12 +18,13 @@ from core.roster import roster_add, roster_remove
 
 
 def test_infer_style_lemon_cream() -> None:
-    assert infer_style_from_prompt("lemon custard light") == "lemon_cream"
-    assert infer_style_from_prompt("lemon yellow haze") == "lemon_paper"
+    assert infer_style_from_prompt("lemon custard light") == "lemon_custard"
+    assert infer_style_from_prompt("lemon yellow haze") == "lemon_haze"
 
 
-def test_infer_style_ion() -> None:
-    assert infer_style_from_prompt("dark ocean teal abyss") == "ion_storm"
+def test_infer_style_removed_palettes_return_none() -> None:
+    assert infer_style_from_prompt("bubblegum pink") is None
+    assert infer_style_from_prompt("choco raspberry dark") is None
 
 
 def test_tweak_controls_brighter() -> None:

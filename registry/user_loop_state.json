@@ -2,34 +2,30 @@
   "version": 1,
   "use_weighted_taste_moods": true,
   "mood_weights": {
-    "nocturne_labs": 1.5600000000000005,
-    "fjord_ink": 1.2800000000000002,
+    "nocturne_labs": 1.7000000000000006,
+    "fjord_ink": 1.4200000000000004,
     "retro_terminal": 1.1400000000000001,
     "studio_neon": 1.4200000000000004,
-    "forest_console": 1.2800000000000002
+    "forest_console": 1.2800000000000002,
+    "default": 1.4200000000000004
   },
   "archetype_weights": {
-    "dracula_punch": 1.119,
     "fjord_hammer": 1.119,
     "alpenglow_paper": 1.119,
     "kimbie_warm": 1.119,
-    "ion_storm": 1.119,
     "forest_canopy": 1.119,
-    "void_forge": 1.119,
-    "candy_voltage": 1.119,
     "night_siren": 1.119,
     "high_contrast_signal": 1.119,
     "lemon_paper": 1.119,
     "lemon_cream": 1.119,
-    "red_velvet_rose": 1.119
+    "cherry_cream": 1.119,
+    "sky_azure": 1.119,
+    "dracula_punch": 1.119,
+    "violet_nocturne": 1.119,
+    "violet_mist": 1.119,
+    "lime": 1.119
   },
   "events_tail": [
-    {
-      "palette_id": "ide_palette_01",
-      "export_pick": true,
-      "mood": "nocturne_labs",
-      "archetype": "dracula_punch"
-    },
     {
       "palette_id": "ide_palette_02",
       "export_pick": true,
@@ -39,38 +35,20 @@
     {
       "palette_id": "ide_palette_03",
       "export_pick": true,
-      "mood": "retro_terminal",
+      "mood": "fjord_ink",
       "archetype": "alpenglow_paper"
     },
     {
       "palette_id": "ide_palette_04",
       "export_pick": true,
-      "mood": "studio_neon",
+      "mood": "retro_terminal",
       "archetype": "kimbie_warm"
-    },
-    {
-      "palette_id": "ide_palette_05",
-      "export_pick": true,
-      "mood": "forest_console",
-      "archetype": "ion_storm"
     },
     {
       "palette_id": "ide_palette_06",
       "export_pick": true,
-      "mood": "nocturne_labs",
+      "mood": "forest_console",
       "archetype": "forest_canopy"
-    },
-    {
-      "palette_id": "ide_palette_07",
-      "export_pick": true,
-      "mood": "fjord_ink",
-      "archetype": "void_forge"
-    },
-    {
-      "palette_id": "ide_palette_09",
-      "export_pick": true,
-      "mood": "studio_neon",
-      "archetype": "candy_voltage"
     },
     {
       "palette_id": "ide_palette_10",
@@ -99,8 +77,38 @@
     {
       "palette_id": "ide_palette_15",
       "export_pick": true,
+      "mood": "studio_neon",
+      "archetype": "cherry_cream"
+    },
+    {
+      "palette_id": "ide_palette_18",
+      "export_pick": true,
+      "mood": "fjord_ink",
+      "archetype": "sky_azure"
+    },
+    {
+      "palette_id": "ide_palette_20",
+      "export_pick": true,
       "mood": "nocturne_labs",
-      "archetype": "red_velvet_rose"
+      "archetype": "dracula_punch"
+    },
+    {
+      "palette_id": "ide_palette_19",
+      "export_pick": true,
+      "mood": "default",
+      "archetype": "violet_nocturne"
+    },
+    {
+      "palette_id": "ide_palette_22",
+      "export_pick": true,
+      "mood": "default",
+      "archetype": "violet_mist"
+    },
+    {
+      "palette_id": "ide_palette_26",
+      "export_pick": true,
+      "mood": "default",
+      "archetype": "lime"
     }
   ]
 }

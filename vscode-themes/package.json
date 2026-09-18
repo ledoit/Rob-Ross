@@ -2,7 +2,7 @@
   "name": "robross-ide-palettes",
   "displayName": "RR IDE Palettes",
   "description": "Generated IDE themes from RR palette engine",
-  "version": "0.0.40",
+  "version": "0.0.75",
   "publisher": "local",
   "engines": {
     "vscode": "^1.85.0"
@@ -12,11 +12,6 @@
   ],
   "contributes": {
     "themes": [
-      {
-        "label": "RR Dracula Punch",
-        "uiTheme": "vs-dark",
-        "path": "./themes/ide_palette_01.json"
-      },
       {
         "label": "RR Fjord Hammer",
         "uiTheme": "vs",
@@ -33,24 +28,9 @@
         "path": "./themes/ide_palette_04.json"
       },
       {
-        "label": "RR Ion Storm",
-        "uiTheme": "vs-dark",
-        "path": "./themes/ide_palette_05.json"
-      },
-      {
         "label": "RR Forest Canopy",
         "uiTheme": "vs-dark",
         "path": "./themes/ide_palette_06.json"
-      },
-      {
-        "label": "RR Void Forge",
-        "uiTheme": "vs-dark",
-        "path": "./themes/ide_palette_07.json"
-      },
-      {
-        "label": "RR Candy Voltage",
-        "uiTheme": "vs-dark",
-        "path": "./themes/ide_palette_09.json"
       },
       {
         "label": "RR Night Siren",
@@ -73,9 +53,29 @@
         "path": "./themes/ide_palette_14.json"
       },
       {
-        "label": "RR Velvet Rose",
-        "uiTheme": "vs-dark",
+        "label": "RR Cherry Cream",
+        "uiTheme": "vs",
         "path": "./themes/ide_palette_15.json"
+      },
+      {
+        "label": "RR Sky Azure",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_18.json"
+      },
+      {
+        "label": "RR Violet Nocturne",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ide_palette_19.json"
+      },
+      {
+        "label": "RR Violet Mist",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_22.json"
+      },
+      {
+        "label": "RR Lime",
+        "uiTheme": "vs",
+        "path": "./themes/ide_palette_26.json"
       }
     ]
   }

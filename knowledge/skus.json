@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "skus": {
+    "fjord_hammer": {
+      "display": "Fjord Hammer",
+      "rr_name": "RR Fjord Hammer",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_02",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 4,
+        "selection_alpha": "4A",
+        "focus": "accent"
+      }
+    },
+    "alpenglow_paper": {
+      "display": "Alpenglow Paper",
+      "rr_name": "RR Alpenglow Paper",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_03",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 4,
+        "selection_alpha": "3C",
+        "focus": "muted"
+      }
+    },
+    "kimbie_warm": {
+      "display": "Kimbie Warm",
+      "rr_name": "RR Kimbie Warm",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_04",
+      "is_light": false,
+      "chrome": {
+        "bar_lift": 3,
+        "selection_alpha": "5A",
+        "focus": "accent2"
+      }
+    },
+    "forest_canopy": {
+      "display": "Forest Canopy",
+      "rr_name": "RR Forest Canopy",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_06",
+      "is_light": false,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "56",
+        "focus": "accent2"
+      }
+    },
+    "night_siren": {
+      "display": "Night Siren",
+      "rr_name": "RR Night Siren",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_10",
+      "is_light": false,
+      "chrome": {
+        "bar_lift": 0,
+        "selection_alpha": "7A",
+        "focus": "accent2"
+      }
+    },
+    "high_contrast_signal": {
+      "display": "High Contrast Signal",
+      "rr_name": "RR High Contrast Signal",
+      "tier": "pro",
+      "mode": "generative",
+      "palette_id": "ide_palette_11",
+      "is_light": false,
+      "chrome": {
+        "bar_lift": 0,
+        "selection_alpha": "88",
+        "focus": "accent"
+      }
+    },
+    "lemon_haze": {
+      "display": "Lemon Haze",
+      "rr_name": "RR Lemon Haze",
+      "tier": "free",
+      "mode": "curated",
+      "palette_id": "ide_palette_12",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 3,
+        "selection_alpha": "40",
+        "focus": "accent"
+      }
+    },
+    "lemon_custard": {
+      "display": "Lemon Custard",
+      "rr_name": "RR Lemon Custard",
+      "tier": "pro",
+      "mode": "curated",
+      "palette_id": "ide_palette_14",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "50",
+        "focus": "accent",
+        "selection": "accent2"
+      }
+    },
+    "cherry_cream": {
+      "display": "Cherry Cream",
+      "rr_name": "RR Cherry Cream",
+      "tier": "pro",
+      "mode": "curated",
+      "palette_id": "ide_palette_15",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "35",
+        "focus": "accent",
+        "selection": "accent2"
+      }
+    },
+    "sky_azure": {
+      "display": "Sky Azure",
+      "rr_name": "RR Sky Azure",
+      "tier": "pro",
+      "mode": "curated",
+      "palette_id": "ide_palette_18",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "40",
+        "focus": "accent",
+        "selection": "accent2"
+      }
+    },
+    "violet_nocturne": {
+      "display": "Violet Nocturne",
+      "rr_name": "RR Violet Nocturne",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_19",
+      "is_light": false,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "55",
+        "focus": "accent"
+      }
+    },
+    "violet_mist": {
+      "display": "Violet Mist",
+      "rr_name": "RR Violet Mist",
+      "tier": "free",
+      "mode": "generative",
+      "palette_id": "ide_palette_22",
+      "is_light": true,
+      "chrome": {
+        "bar_lift": 2,
+        "selection_alpha": "55",
+        "focus": "accent"
+      }
+    },
+    "lime": {
+      "display": "Lime",
+      "rr_name": "RR Lime",
+      "tier": "pro",
+      "mode": "curated",
+      "palette_id": "ide_palette_26",
+      "is_light": true,
+      "accent_hue": 101
+    }
+  },
+  "bootstrapped_at": "2026-07-28T09:32:28.609420+00:00"
+}

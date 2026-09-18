@@ -1,0 +1,81 @@
+{
+  "version": "2.0.0",
+  "created": "2026-07-13T03:52:34.898295+00:00",
+  "last_modified": "2026-07-13T03:52:34.898295+00:00",
+  "notes": "Slim numeric DNA \u2014 bootstrapped from kept canon. Compounding lives in knowledge/priors.json.",
+  "contrast_philosophy": {
+    "mode": "readability_first",
+    "min_contrast_ratio": 4.5,
+    "ui_min_contrast_ratio": 4.5,
+    "token_min_contrast_ratio": 3.2,
+    "dark_bg_preference": true
+  },
+  "saturation_profile": {
+    "base_saturation": [
+      8,
+      22
+    ],
+    "accent_saturation": [
+      78.67,
+      95
+    ]
+  },
+  "lightness_profile": {
+    "background_range": [
+      6.0,
+      33.0
+    ],
+    "foreground_range": [
+      88,
+      98
+    ],
+    "midtone_range": [
+      38,
+      58
+    ]
+  },
+  "hue_strategy": {
+    "base_hue_range": [
+      210,
+      270
+    ],
+    "accent_hue_center": 57.17,
+    "accent_hue_range": [
+      260,
+      320
+    ]
+  },
+  "style_archetypes": {
+    "ide": [
+      "fjord_hammer",
+      "alpenglow_paper",
+      "kimbie_warm",
+      "forest_canopy",
+      "night_siren",
+      "high_contrast_signal",
+      "lemon_haze",
+      "lemon_custard",
+      "cherry_cream",
+      "choco_raspberry",
+      "bubblegum",
+      "sky_azure"
+    ]
+  },
+  "context_overrides": {
+    "ide": {
+      "token_differentiation_priority": "high",
+      "syntax_color_count": 6,
+      "tone_controls": {
+        "calmness": 0.55,
+        "vibrancy": 0.7,
+        "separation": 0.75
+      }
+    }
+  },
+  "compounding": {
+    "source": "knowledge/priors.json",
+    "light_accent_center": 21.95,
+    "dark_accent_center": 57.17,
+    "canon_count": 12
+  }
+}

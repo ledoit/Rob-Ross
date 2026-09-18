@@ -41,18 +41,79 @@ def _tone(hex_color: str, l_shift: float = 0.0, s_shift: float = 0.0) -> str:
     return hsl_to_hex(h, max(0, min(100, s + s_shift)), max(0, min(100, l + l_shift)))
 
 
+def _workbench_ui_colors(
+    *,
+    style: str,
+    bg: str,
+    fg: str,
+    surface: str,
+    muted: str,
+    accent1: str,
+    accent2: str,
+    panel_bg: str,
+    bar_bg: str,
+    selection_color: str,
+) -> dict[str, str]:
+    """Prompt box, lists, dropdowns — Cursor falls back to dark grey if these are unset."""
+    extras: dict[str, str] = {
+        "input.foreground": fg,
+        "input.placeholderForeground": muted,
+        "input.border": muted + "88",
+        "dropdown.background": panel_bg,
+        "dropdown.foreground": fg,
+        "dropdown.border": muted + "44",
+        "quickInput.background": panel_bg,
+        "quickInput.foreground": fg,
+        "quickInputList.focusBackground": selection_color + "88",
+        "list.activeSelectionBackground": selection_color + "66",
+        "list.inactiveSelectionBackground": selection_color + "33",
+        "list.hoverBackground": selection_color + "44",
+        "list.activeSelectionForeground": fg,
+        "list.inactiveSelectionForeground": fg,
+        "list.focusBackground": selection_color + "66",
+        "list.focusForeground": fg,
+        "list.highlightForeground": accent1,
+        "editorWidget.background": panel_bg,
+        "editorWidget.foreground": fg,
+        "editorWidget.border": muted,
+        "editorHoverWidget.background": panel_bg,
+        "editorHoverWidget.foreground": fg,
+        "editorHoverWidget.border": muted + "66",
+        "editorSuggestWidget.background": panel_bg,
+        "editorSuggestWidget.foreground": fg,
+        "editorSuggestWidget.border": muted,
+        "editorSuggestWidget.selectedBackground": selection_color + "66",
+        "sideBar.border": muted + "44",
+        "sideBarSectionHeader.background": bar_bg,
+        "sideBarSectionHeader.foreground": fg,
+        "sideBarTitle.foreground": fg,
+        "tab.inactiveBackground": bar_bg,
+        "tab.activeBackground": panel_bg,
+        "tab.inactiveForeground": muted,
+        "tab.activeForeground": fg,
+        "tab.border": bar_bg,
+        "editorGroupHeader.tabsBackground": bar_bg,
+        "editorGroup.border": muted + "44",
+        "badge.background": accent1,
+        "badge.foreground": bg,
+        "selection.background": selection_color + "55",
+        "pickerGroup.foreground": accent1,
+        "pickerGroup.border": muted + "66",
+    }
+    return extras
+
+
 STYLE_CHROME_PROFILES = {
-    "dracula_punch": {"bar_lift": 2, "selection_alpha": "66", "focus": "accent"},
     "fjord_hammer": {"bar_lift": 4, "selection_alpha": "4A", "focus": "accent"},
     "alpenglow_paper": {"bar_lift": 4, "selection_alpha": "3C", "focus": "muted"},
     "kimbie_warm": {"bar_lift": 3, "selection_alpha": "5A", "focus": "accent2"},
-    "ion_storm": {"bar_lift": 0, "selection_alpha": "7E", "focus": "accent"},
     "forest_canopy": {"bar_lift": 2, "selection_alpha": "56", "focus": "accent2"},
-    "void_forge": {"bar_lift": 0, "selection_alpha": "72", "focus": "accent2"},
-    "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
+    "lemon_haze": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},
+    "lemon_paper": {"bar_lift": 3, "selection_alpha": "40", "focus": "accent"},  # legacy alias
+    "lemon_custard": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
     "lemon_cream": {"bar_lift": 2, "selection_alpha": "50", "focus": "accent", "selection": "accent2"},
-    "red_velvet_rose": {"bar_lift": 5, "selection_alpha": "44", "focus": "accent2", "selection": "accent2"},
-    "candy_voltage": {"bar_lift": 2, "selection_alpha": "7A", "focus": "accent"},
+    "cherry_cream": {"bar_lift": 2, "selection_alpha": "35", "focus": "accent", "selection": "accent2"},
+    "sky_azure": {"bar_lift": 2, "selection_alpha": "40", "focus": "accent", "selection": "accent2"},
     "night_siren": {"bar_lift": 0, "selection_alpha": "7A", "focus": "accent2"},
     "high_contrast_signal": {"bar_lift": 0, "selection_alpha": "88", "focus": "accent"},
 }
@@ -92,6 +153,18 @@ def _theme_json(palette: dict) -> dict:
 
     panel_bg = _tone(surface, l_shift=chrome["bar_lift"])
     bar_bg = _tone(bg, l_shift=max(0, chrome["bar_lift"] - 1))
+    workbench = _workbench_ui_colors(
+        style=style,
+        bg=bg,
+        fg=fg,
+        surface=surface,
+        muted=muted,
+        accent1=accent1,
+        accent2=accent2,
+        panel_bg=panel_bg,
+        bar_bg=bar_bg,
+        selection_color=selection_color,
+    )
     return {
         "name": name,
         "type": theme_mode,
@@ -126,6 +199,7 @@ def _theme_json(palette: dict) -> dict:
             "button.background": accent1,
             "button.foreground": bg,
             "button.hoverBackground": accent2,
+            **workbench,
         },
         "tokenColors": [
             {"scope": ["comment", "punctuation.definition.comment"], "settings": {"foreground": muted}},

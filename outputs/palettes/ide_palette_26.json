@@ -1,0 +1,255 @@
+{
+  "id": "ide_palette_26",
+  "context": "ide",
+  "hue_family": "green",
+  "style_archetype": "lime",
+  "taste_mood": "default",
+  "is_light": true,
+  "theme_name": "RR Lime",
+  "theme_display_name": "RR Lime",
+  "taste_context": "default:lime:light",
+  "genome_version": "2.0.0",
+  "generated": "2026-09-18T08:48:10.651426+00:00",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#FAFBF9",
+      "hsl": [
+        90,
+        20,
+        98
+      ],
+      "contrast_with_foreground": 14.6,
+      "contrast_with_background": 1.0,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "background revised from parent via feedback nudge."
+    },
+    {
+      "role": "surface",
+      "hex": "#F0F6EF",
+      "hsl": [
+        111,
+        28,
+        95
+      ],
+      "contrast_with_foreground": 13.81,
+      "contrast_with_background": 1.06,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "surface revised from parent via feedback nudge."
+    },
+    {
+      "role": "border",
+      "hex": "#E4F0E0",
+      "hsl": [
+        105,
+        35,
+        91
+      ],
+      "contrast_with_foreground": 12.88,
+      "contrast_with_background": 1.13,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "border revised from parent via feedback nudge."
+    },
+    {
+      "role": "muted",
+      "hex": "#84B979",
+      "hsl": [
+        110,
+        31,
+        60
+      ],
+      "contrast_with_foreground": 6.64,
+      "contrast_with_background": 2.2,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "muted revised from parent via feedback nudge."
+    },
+    {
+      "role": "foreground",
+      "hex": "#2F2323",
+      "hsl": [
+        0,
+        15,
+        16
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 14.6,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "foreground revised from parent via feedback nudge."
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#379A09",
+      "hsl": [
+        101,
+        89,
+        32
+      ],
+      "contrast_with_foreground": 4.18,
+      "contrast_with_background": 3.5,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "accent_primary revised from parent via feedback nudge."
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#2C9816",
+      "hsl": [
+        110,
+        75,
+        34
+      ],
+      "contrast_with_foreground": 4.05,
+      "contrast_with_background": 3.61,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "accent_secondary revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_1",
+      "hex": "#469E1A",
+      "hsl": [
+        100,
+        72,
+        36
+      ],
+      "contrast_with_foreground": 4.45,
+      "contrast_with_background": 3.28,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_1 revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#189A32",
+      "hsl": [
+        132,
+        73,
+        35
+      ],
+      "contrast_with_foreground": 4.12,
+      "contrast_with_background": 3.54,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_2 revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#1A991C",
+      "hsl": [
+        121,
+        71,
+        35
+      ],
+      "contrast_with_foreground": 4.05,
+      "contrast_with_background": 3.6,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_3 revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#1D9546",
+      "hsl": [
+        140,
+        67,
+        35
+      ],
+      "contrast_with_foreground": 3.93,
+      "contrast_with_background": 3.72,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_4 revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_5",
+      "hex": "#1CE388",
+      "hsl": [
+        153,
+        78,
+        50
+      ],
+      "contrast_with_foreground": 8.94,
+      "contrast_with_background": 1.63,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_5 revised from parent via feedback nudge."
+    },
+    {
+      "role": "syntax_6",
+      "hex": "#19AE58",
+      "hsl": [
+        145,
+        75,
+        39
+      ],
+      "contrast_with_foreground": 5.22,
+      "contrast_with_background": 2.8,
+      "genome_principles_applied": [
+        "revised_from_parent",
+        "iterate_feedback",
+        "parent_ide_palette_25"
+      ],
+      "rationale": "syntax_6 revised from parent via feedback nudge."
+    }
+  ],
+  "palette_rationale": "Iteration of ide_palette_25 (lime): feedback nudge on parent roles (canon freeze bypassed). Generated with deterministic ide profile derived from genome settings.",
+  "user_prompt": "more lime on ink and accents. olive ink not brown. mint paper stays light.",
+  "generation_controls": {
+    "chromatic_variety": 0.79,
+    "prompt_adherence": 0.8500000000000001,
+    "taste_mood_weighted": false,
+    "compounding": {
+      "canon_count": 12,
+      "mode_count": 7,
+      "novelty_nudge": true
+    }
+  },
+  "derived_from": "ide_palette_25",
+  "iteration_index": 3,
+  "seeded_from": [
+    "lemon_custard",
+    "lemon_haze",
+    "high_contrast_signal"
+  ]
+}

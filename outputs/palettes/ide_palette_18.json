@@ -1,0 +1,159 @@
+{
+  "id": "ide_palette_18",
+  "context": "ide",
+  "style_archetype": "sky_azure",
+  "is_light": true,
+  "theme_display_name": "RR Sky Azure",
+  "theme_name": "RR Sky Azure",
+  "hue_family": "blue",
+  "taste_mood": "fjord_ink",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#F0F8FF",
+      "hsl": [
+        208,
+        100,
+        97
+      ],
+      "contrast_with_foreground": 10.65,
+      "contrast_with_background": 1.0
+    },
+    {
+      "role": "surface",
+      "hex": "#E3F4FF",
+      "hsl": [
+        204,
+        100,
+        95
+      ],
+      "contrast_with_foreground": 10.15,
+      "contrast_with_background": 1.05
+    },
+    {
+      "role": "border",
+      "hex": "#B8DCFF",
+      "hsl": [
+        210,
+        100,
+        86
+      ],
+      "contrast_with_foreground": 8.01,
+      "contrast_with_background": 1.33
+    },
+    {
+      "role": "muted",
+      "hex": "#5B9CC8",
+      "hsl": [
+        204,
+        50,
+        57
+      ],
+      "contrast_with_foreground": 3.83,
+      "contrast_with_background": 2.78
+    },
+    {
+      "role": "foreground",
+      "hex": "#0C3D5C",
+      "hsl": [
+        203,
+        77,
+        20
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 10.65
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#38BDF8",
+      "hsl": [
+        198,
+        93,
+        60
+      ],
+      "contrast_with_foreground": 5.33,
+      "contrast_with_background": 2.0
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#0284C7",
+      "hsl": [
+        200,
+        98,
+        39
+      ],
+      "contrast_with_foreground": 2.79,
+      "contrast_with_background": 3.82
+    },
+    {
+      "role": "syntax_1",
+      "hex": "#0D9488",
+      "hsl": [
+        175,
+        84,
+        32
+      ],
+      "contrast_with_foreground": 3.05,
+      "contrast_with_background": 3.49
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#6366F1",
+      "hsl": [
+        239,
+        84,
+        67
+      ],
+      "contrast_with_foreground": 2.56,
+      "contrast_with_background": 4.16
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#CA8A04",
+      "hsl": [
+        41,
+        96,
+        40
+      ],
+      "contrast_with_foreground": 3.89,
+      "contrast_with_background": 2.74
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#1D4ED8",
+      "hsl": [
+        224,
+        76,
+        48
+      ],
+      "contrast_with_foreground": 1.71,
+      "contrast_with_background": 6.25
+    },
+    {
+      "role": "syntax_5",
+      "hex": "#7C3AED",
+      "hsl": [
+        262,
+        83,
+        58
+      ],
+      "contrast_with_foreground": 2.01,
+      "contrast_with_background": 5.31
+    },
+    {
+      "role": "syntax_6",
+      "hex": "#DC2626",
+      "hsl": [
+        0,
+        72,
+        51
+      ],
+      "contrast_with_foreground": 2.37,
+      "contrast_with_background": 4.5
+    }
+  ],
+  "user_prompt": "light sky blue baby blue azure IDE theme",
+  "genome_version": "2.0.0",
+  "generated": "2026-06-29T02:29:42.841599+00:00",
+  "canon": true
+}

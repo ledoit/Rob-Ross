@@ -1,260 +1,159 @@
 {
   "id": "ide_palette_15",
   "context": "ide",
+  "style_archetype": "cherry_cream",
+  "is_light": true,
+  "theme_display_name": "RR Cherry Cream",
+  "theme_name": "RR Cherry Cream",
   "hue_family": "red",
-  "style_archetype": "red_velvet_rose",
-  "taste_mood": "nocturne_labs",
-  "is_light": false,
-  "theme_name": "RR Velvet Rose",
-  "theme_display_name": "RR Velvet Rose",
-  "taste_context": "nocturne_labs:red_velvet_rose:dark",
-  "design_paradigms_applied": [
-    "readability_first",
-    "semantic_separation",
-    "low_fatigue_long_sessions",
-    "accent_as_wayfinding",
-    "cohesive_chrome_minimalism"
-  ],
-  "techniques_applied": [
-    "split_complementary_syntax_distribution",
-    "simultaneous_contrast_balancing",
-    "chroma_taper_for_depth",
-    "luminance_ladder_spacing",
-    "contextual_accent_reuse"
-  ],
-  "genome_version": "1.1.0",
-  "generated": "2026-06-12T02:47:46.961836+00:00",
+  "taste_mood": "studio_neon",
   "colors": [
     {
       "role": "background",
-      "hex": "#3B0F14",
+      "hex": "#FFF5F8",
       "hsl": [
-        353,
-        59,
-        15
+        342,
+        100,
+        98
       ],
-      "contrast_with_foreground": 15.46,
-      "contrast_with_background": 1.0,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "background from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 6.57,
+      "contrast_with_background": 1.0
     },
     {
       "role": "surface",
-      "hex": "#5C1823",
+      "hex": "#FFE8F0",
       "hsl": [
-        350,
-        59,
-        23
+        339,
+        100,
+        95
       ],
-      "contrast_with_foreground": 12.14,
-      "contrast_with_background": 1.27,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "surface from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 6.03,
+      "contrast_with_background": 1.09
     },
     {
       "role": "border",
-      "hex": "#7A2438",
+      "hex": "#FFB3C8",
       "hsl": [
-        346,
-        54,
-        31
+        343,
+        100,
+        85
       ],
-      "contrast_with_foreground": 9.15,
-      "contrast_with_background": 1.69,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "border from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 4.19,
+      "contrast_with_background": 1.57
     },
     {
       "role": "muted",
-      "hex": "#C48894",
+      "hex": "#FF85A8",
       "hsl": [
-        348,
-        34,
-        65
+        343,
+        100,
+        76
       ],
-      "contrast_with_foreground": 2.68,
-      "contrast_with_background": 5.77,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "muted from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 3.06,
+      "contrast_with_background": 2.14
     },
     {
       "role": "foreground",
-      "hex": "#FFF5EE",
+      "hex": "#B01040",
       "hsl": [
-        25,
-        100,
-        97
+        342,
+        83,
+        38
       ],
       "contrast_with_foreground": 1.0,
-      "contrast_with_background": 15.46,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "foreground from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_background": 6.57
     },
     {
       "role": "accent_primary",
-      "hex": "#FFF8F0",
+      "hex": "#E82050",
       "hsl": [
-        32,
-        100,
-        97
+        346,
+        81,
+        52
       ],
-      "contrast_with_foreground": 1.02,
-      "contrast_with_background": 15.77,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "accent_primary from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.59,
+      "contrast_with_background": 4.14
     },
     {
       "role": "accent_secondary",
-      "hex": "#E8A4B8",
+      "hex": "#FF2D6F",
       "hsl": [
-        342,
-        60,
-        78
+        341,
+        100,
+        59
       ],
-      "contrast_with_foreground": 1.87,
-      "contrast_with_background": 8.25,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "accent_secondary from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.96,
+      "contrast_with_background": 3.36
     },
     {
       "role": "syntax_1",
-      "hex": "#F5D6E0",
+      "hex": "#DB2777",
       "hsl": [
-        341,
-        61,
-        90
+        333,
+        71,
+        51
       ],
-      "contrast_with_foreground": 1.25,
-      "contrast_with_background": 12.32,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_1 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.53,
+      "contrast_with_background": 4.31
     },
     {
       "role": "syntax_2",
-      "hex": "#FFD4DC",
+      "hex": "#F472B6",
       "hsl": [
-        349,
-        100,
-        92
+        329,
+        86,
+        70
       ],
-      "contrast_with_foreground": 1.24,
-      "contrast_with_background": 12.42,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_2 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 2.65,
+      "contrast_with_background": 2.48
     },
     {
       "role": "syntax_3",
-      "hex": "#FFF8F0",
+      "hex": "#DC2626",
       "hsl": [
-        32,
-        100,
-        97
+        0,
+        72,
+        51
       ],
-      "contrast_with_foreground": 1.02,
-      "contrast_with_background": 15.77,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_3 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.45,
+      "contrast_with_background": 4.52
     },
     {
       "role": "syntax_4",
-      "hex": "#FF6B8A",
+      "hex": "#A11345",
       "hsl": [
-        347,
-        100,
-        71
+        339,
+        79,
+        35
       ],
-      "contrast_with_foreground": 2.53,
-      "contrast_with_background": 6.11,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_4 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.11,
+      "contrast_with_background": 7.3
     },
     {
       "role": "syntax_5",
-      "hex": "#E8A4B8",
+      "hex": "#FF2D6F",
       "hsl": [
-        342,
-        60,
-        78
+        341,
+        100,
+        59
       ],
-      "contrast_with_foreground": 1.87,
-      "contrast_with_background": 8.25,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_5 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.96,
+      "contrast_with_background": 3.36
     },
     {
       "role": "syntax_6",
-      "hex": "#FF4466",
+      "hex": "#EF4444",
       "hsl": [
-        349,
-        100,
-        63
+        0,
+        84,
+        60
       ],
-      "contrast_with_foreground": 3.12,
-      "contrast_with_background": 4.96,
-      "genome_principles_applied": [
-        "curated_velvet_rose",
-        "red_velvet_cake_layers",
-        "cream_frosting_contrast"
-      ],
-      "rationale": "syntax_6 from velvet-cake palette: burgundy crumb, strawberry layers, cream frosting."
+      "contrast_with_foreground": 1.86,
+      "contrast_with_background": 3.52
     }
   ],
-  "palette_rationale": "Curated burgundy velvet crumb, strawberry pink layers, and cream frosting contrast.",
-  "conflicts_flagged": [],
-  "feedback_score": null,
-  "feedback_dimensions": {},
-  "user_prompt": "red velvet cake with cream cheese frosting, strawberry shortcake layers",
-  "generation_controls": {
-    "chromatic_variety": 0.55,
-    "prompt_adherence": 0.55,
-    "taste_mood_weighted": false
-  }
+  "user_prompt": "RR Cherry Cream keeper",
+  "genome_version": "2.0.0",
+  "generated": "2026-06-12T03:42:49.713888+00:00",
+  "canon": true
 }
