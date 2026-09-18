@@ -52,7 +52,7 @@ def test_apply_live_genome_merges_without_persisting(tmp_path: Path) -> None:
     palette_dir = tmp_path / "outputs" / "palettes"
     palette_dir.mkdir(parents=True)
     (palette_dir / "ide_palette_12.json").write_text(
-        json.dumps(_palette("ide_palette_12", "lemon_paper", "#F0E040")),
+        json.dumps(_palette("ide_palette_12", "lemon_haze", "#F0E040")),
         encoding="utf-8",
     )
     roster_add(reg, palette_dir, "ide_palette_12")
@@ -60,5 +60,6 @@ def test_apply_live_genome_merges_without_persisting(tmp_path: Path) -> None:
     base = {"version": "1.1.0", "style_archetypes": {"ide": ["dracula_punch"]}}
     merged = apply_live_genome(base, tmp_path)
     assert "roster_live" in merged
-    assert "lemon_paper" in merged["style_archetypes"]["ide"]
+    assert "lemon_haze" in merged["style_archetypes"]["ide"]
+    assert merged.get("prompt_session", {}).get("accent_hue_center") is not None
     assert not (tmp_path / "genome" / "genome_v1.json").exists()

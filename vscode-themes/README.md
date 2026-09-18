@@ -11,7 +11,4 @@ Generated from `outputs/palettes/ide_palette_*.json`.
 
 ## Regenerate themes
 
-- From project root: `python cli.py export-themes` (themes JSON only)
-- Export + install into Cursor: `python -c "from pathlib import Path; from core.ide_theme import finalize_ide_themes; finalize_ide_themes(Path('.'))"`
-
-VSIX files are local install artifacts (gitignored); rebuild with the commands above.
+- From project root: `python scripts/export_vscode_themes.py`

@@ -16,12 +16,12 @@ from core.feedback import collect_feedback, maybe_apply_feedback_to_genome
 from core.generate import build_superset_from_palettes
 from core.genome import default_genome, ensure_genome_dir, load_genome, merge_genomes, save_genome
 from core.ingest import ingest_source
+from core.canon import remove_ide_palette, repair_canon, validate_canon
 from core.roster import (
     apply_roster_learning_to_disk,
     load_roster,
     roster_add,
     roster_path,
-    roster_remove,
 )
 from core.harmony import HARMONY_MODES, describe_harmony
 from core.export.css_site_tokens import export_all_web_palettes, export_palette_file
@@ -35,8 +35,10 @@ from core.web_session import run_web_quick
 app = typer.Typer(help="Rob Ross palette OS CLI")
 web_app = typer.Typer(help="Website palettes — harmonies, CSS export, consumer sync")
 app.add_typer(web_app, name="web")
-roster_app = typer.Typer(help="IDE export roster (prefer keep_ide_palette in chat)")
+roster_app = typer.Typer(help="IDE export roster (prefer agent_api.remove in chat)")
 app.add_typer(roster_app, name="roster")
+canon_app = typer.Typer(help="Canon health — validate and repair kept theme state")
+app.add_typer(canon_app, name="canon")
 console = Console()
 
 
@@ -302,10 +304,41 @@ def roster_add_cmd(
 
 
 @roster_app.command("remove")
-def roster_remove_cmd(palette_id: str = typer.Argument(...)) -> None:
+def roster_remove_cmd(
+    target: str = typer.Argument(..., help="Palette id (ide_palette_XX) or slug (bubblegum)"),
+) -> None:
+    """Retire a kept theme from canon (full pipeline — not a bare roster edit)."""
     root = _project_root()
-    roster_remove(registry_dir(root), palette_id)
-    console.print(f"[green]Removed[/green] {palette_id} from roster")
+    result = remove_ide_palette(root, target)
+    console.print(
+        f"[green]Removed[/green] {result['slug']} ({result['palette_id']}) — "
+        f"{result['canon_count']} themes remain"
+    )
+
+
+@canon_app.command("validate")
+def canon_validate_cmd() -> None:
+    root = _project_root()
+    issues = validate_canon(root)
+    if not issues:
+        console.print("[green]Canon state is healthy.[/green]")
+        return
+    console.print("[yellow]Canon issues:[/yellow]")
+    for issue in issues:
+        console.print(f"  - {issue}")
+
+
+@canon_app.command("repair")
+def canon_repair_cmd() -> None:
+    root = _project_root()
+    result = repair_canon(root)
+    if result["issues_after"]:
+        console.print("[yellow]Remaining issues after repair:[/yellow]")
+        for issue in result["issues_after"]:
+            console.print(f"  - {issue}")
+    else:
+        console.print("[green]Canon repaired.[/green]")
+    console.print(f"Kept themes: {result['canon_count']}")
 
 
 @roster_app.command("list")

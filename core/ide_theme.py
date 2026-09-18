@@ -27,12 +27,34 @@ from core.ide_schema import (
     resolve_branded_name,
 )
 from core.ide_iteration import infer_style_from_prompt, record_draft, ship_palette_ids
-from core.lemon_drop_palette import build_lemon_custard_colors
-from core.red_velvet_palette import build_red_velvet_rose_colors
+from core.compound import resolve_generation_plan
+from core.knowledge import (
+    apply_priors_to_session,
+    load_priors,
+    record_discard,
+    record_iterate,
+    record_keep,
+    recompute_priors,
+    role_map as knowledge_role_map,
+)
+from core.revise import (
+    build_rich_purple_roles,
+    colors_from_roles,
+    nudge_roles_from_feedback,
+    wants_rich_purple_shades,
+)
+from core.sku import get_sku, normalize_slug, slug_to_display
+from core.math_engine import hex_to_hsl, contrast_ratio
 from core.prompt_brief import genome_patch_from_prompt
 
-LEMON_CURATED = frozenset({"lemon_custard", "lemon_cream"})
-RED_VELVET_CURATED = frozenset({"red_velvet_rose"})
+# Legacy curated builders — used only if canon file missing
+from core.cherry_cream_palette import build_cherry_cream_colors
+from core.sky_azure_palette import build_sky_azure_colors
+from core.lemon_drop_palette import build_lemon_custard_colors
+
+LEMON_CUSTARD_CURATED = frozenset({"lemon_custard", "lemon_cream"})
+CHERRY_CREAM_CURATED = frozenset({"cherry_cream"})
+SKY_AZURE_CURATED = frozenset({"sky_azure"})
 
 # Re-export schema helpers for convenience
 __all__ = [
@@ -87,7 +109,7 @@ def _prepare_genome(
     ps["prompt_adherence"] = max(0.0, min(1.0, adherence))
     if style:
         merged.setdefault("style_archetypes", {})["ide"] = [normalize_style(style)]
-        if style == "lemon_paper":
+        if style in ("lemon_haze", "lemon_paper"):
             merged["saturation_profile"] = {
                 "base_saturation": [38, 58],
                 "accent_saturation": [82, 94],
@@ -99,29 +121,98 @@ def _prepare_genome(
     return merged
 
 
+def _colors_from_role_hex(roles: dict[str, str]) -> list[dict[str, Any]]:
+    bg = roles.get("background", "#111111")
+    fg = roles.get("foreground", "#FAFAFA")
+    order = [
+        "background",
+        "surface",
+        "border",
+        "muted",
+        "foreground",
+        "accent_primary",
+        "accent_secondary",
+        "syntax_1",
+        "syntax_2",
+        "syntax_3",
+        "syntax_4",
+        "syntax_5",
+        "syntax_6",
+    ]
+    out = []
+    for role in order:
+        hx = roles.get(role)
+        if not hx:
+            continue
+        out.append(
+            {
+                "role": role,
+                "hex": hx,
+                "hsl": list(hex_to_hsl(hx)),
+                "contrast_with_foreground": round(contrast_ratio(fg, hx), 2),
+                "contrast_with_background": round(contrast_ratio(hx, bg), 2),
+                "genome_principles_applied": ["canon_role_hex"],
+                "rationale": f"{role} from kept canon.",
+            }
+        )
+    return out
+
+
+def _load_canon_colors(root: Path, slug: str) -> list[dict[str, Any]] | None:
+    """Existing SKUs resolve from kept palette JSON (source of truth)."""
+    sku = get_sku(root, slug)
+    if not sku:
+        return None
+    pid = sku.get("palette_id")
+    if not pid:
+        return None
+    path = root / "outputs" / "palettes" / f"{pid}.json"
+    if not path.is_file():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return _colors_from_role_hex(knowledge_role_map(data))
+
+
 def _generate_colors(
+    root: Path,
     genome: dict[str, Any],
     *,
     style: str,
     is_light: bool | None,
+    math_style: str | None = None,
 ) -> tuple[list[dict[str, Any]], str, str, str, bool]:
     style = normalize_style(style)
-    if style in LEMON_CURATED:
-        colors = build_lemon_custard_colors()
-        return colors, "amber", "studio_neon", style, True
-    if style in RED_VELVET_CURATED:
-        colors = build_red_velvet_rose_colors()
-        return colors, "red", "nocturne_labs", style, False
+
+    # 1) Canon SKU — never re-roll product hex
+    canon = _load_canon_colors(root, style)
+    if canon:
+        sku = get_sku(root, style) or {}
+        light = bool(sku.get("is_light")) if is_light is None else bool(is_light)
+        family = "canon"
+        mood = "fjord_ink" if light else "nocturne_labs"
+        return canon, family, mood, style, light
+
+    # 2) Legacy curated builders (fallback before reboot / missing sku file)
+    if style in LEMON_CUSTARD_CURATED:
+        return build_lemon_custard_colors(), "amber", "studio_neon", "lemon_custard", True
+    if style in CHERRY_CREAM_CURATED:
+        return build_cherry_cream_colors(), "red", "studio_neon", style, True
+    if style in SKY_AZURE_CURATED:
+        return build_sky_azure_colors(), "blue", "fjord_ink", style, True
+
+    # 3) Generative — math engine; identity slug stays `style`, math uses mode profile
+    engine_style = normalize_style(math_style or style)
+    genome.setdefault("style_archetypes", {})["ide"] = [engine_style]
     colors, family_name, taste_context = _build_palette_colors(genome, context="ide", variant_index=0)
     parsed = parse_taste_context(taste_context)
     if is_light is not None:
         parsed["is_light"] = is_light
-    return colors, family_name, parsed["taste_mood"], parsed["style_archetype"], parsed["is_light"]
+    return colors, family_name, parsed["taste_mood"], style, parsed["is_light"]
 
 
 def write_ide_palette(path: Path, payload: dict[str, Any]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return path
 
 
@@ -150,32 +241,166 @@ def make_ide_palette(
     package_vsix: bool = True,
     derived_from: str | None = None,
     iteration_index: int | None = None,
+    fork: bool = False,
 ) -> dict[str, Any]:
-    """Create one IDE palette from a color brief + style archetype."""
+    """Create one IDE palette — compounded from kept canon priors + brief.
+
+    When ``derived_from`` is set (iterate), revise parent hexes from feedback —
+    never freeze-reload a kept SKU's canon. Product DNA only changes on keep.
+
+    ``fork=True`` keeps a sibling slug (parent stays on roster when the draft is kept).
+    """
+    from core.compound import invent_fork_slug
+    from core.ide_iteration import load_palette
+
     palette_dir = root / "outputs" / "palettes"
-    resolved_style = normalize_style(style or infer_style_from_prompt(prompt))
-    genome = _prepare_genome(root, prompt, style=resolved_style, variety=variety, adherence=adherence)
-    pid = palette_id or next_ide_palette_id(palette_dir)
-    colors, family_name, taste_mood, style_archetype, resolved_light = _generate_colors(
-        genome, style=resolved_style, is_light=is_light
+    priors = load_priors(root)
+    parent: dict[str, Any] | None = None
+    if derived_from:
+        parent = load_palette(root, derived_from)
+
+    plan = resolve_generation_plan(
+        prompt, priors, style=style, is_light=is_light, name=name
     )
-    role_map = {c["role"]: c["hex"] for c in colors}
+    if parent is not None:
+        meta = parent
+        parent_slug = str(parent.get("style_archetype") or plan["slug"])
+        if fork and style is None:
+            resolved_style = invent_fork_slug(
+                prompt,
+                parent_slug=parent_slug,
+                is_light=bool(
+                    is_light
+                    if is_light is not None
+                    else parent.get("is_light", plan["is_light"])
+                ),
+                known_slugs=frozenset(priors.get("slugs") or []),
+            )
+        else:
+            resolved_style = normalize_slug(style or parent_slug)
+        resolved_light = (
+            bool(is_light)
+            if is_light is not None
+            else bool(parent.get("is_light", plan["is_light"]))
+        )
+        display_name = name or slug_to_display(resolved_style)
+        family_name = str(parent.get("hue_family") or "violet")
+        taste_mood = str(parent.get("taste_mood") or "default")
+    else:
+        resolved_style = normalize_slug(plan["slug"])
+        resolved_light = bool(plan["is_light"])
+        display_name = name or plan["display"]
+        family_name = None  # filled by generator
+        taste_mood = None
+
+    genome = _prepare_genome(
+        root, prompt, style=resolved_style, variety=variety, adherence=adherence
+    )
+    genome = apply_priors_to_session(
+        genome,
+        priors,
+        accent_hue=plan["accent_hue"],
+        is_light=resolved_light,
+        variety=variety,
+        adherence=adherence,
+    )
+    # Force theme mode into lightness profile for generative path
+    if resolved_light:
+        genome.setdefault("lightness_profile", {})["background_range"] = genome.get(
+            "lightness_profile", {}
+        ).get("background_range") or [88, 96]
+        # nudge archetypes toward light profiles when present
+        genome.setdefault("prompt_session", {})["forced_light"] = True
+    else:
+        genome.setdefault("prompt_session", {})["forced_light"] = False
+
+    pid = palette_id or next_ide_palette_id(palette_dir)
+    neighbor_slugs = [n.get("slug") for n in plan.get("neighbors") or [] if n.get("slug")]
+
+    if parent is not None:
+        parent_roles = knowledge_role_map(parent)
+        if wants_rich_purple_shades(prompt):
+            nudged = build_rich_purple_roles(
+                is_light=resolved_light,
+                prompt=prompt,
+                parent_roles=parent_roles,
+            )
+            principles = [
+                "fork_from_parent" if fork else "revised_from_parent",
+                "rich_purple_spectrum",
+                "twilight_periwinkle_ladder",
+                f"parent_{derived_from}",
+            ]
+        else:
+            nudged = nudge_roles_from_feedback(
+                parent_roles,
+                prompt,
+                is_light=resolved_light,
+                variety=variety,
+            )
+            principles = [
+                "fork_from_parent" if fork else "revised_from_parent",
+                "iterate_feedback",
+                f"parent_{derived_from}",
+            ]
+        colors = colors_from_roles(nudged, principles=principles)
+        style_archetype = resolved_style
+        light_bit = resolved_light
+        mode_label = "Fork" if fork else "Iteration"
+        rationale = (
+            f"{mode_label} of {derived_from} ({resolved_style}): "
+            + (
+                "rich multi-shade purple ladder (twilight/periwinkle reference). "
+                if wants_rich_purple_shades(prompt)
+                else "feedback nudge on parent roles (canon freeze bypassed). "
+            )
+            + _llm_palette_rationale(genome, "ide", nudged)
+        )
+    else:
+        math_style = None
+        if not plan["is_existing_sku"]:
+            math_style = "fjord_hammer" if resolved_light else "night_siren"
+        colors, family_name, taste_mood, style_archetype, light_bit = _generate_colors(
+            root,
+            genome,
+            style=resolved_style,
+            is_light=resolved_light,
+            math_style=math_style,
+        )
+        role_hex = {c["role"]: c["hex"] for c in colors}
+        rationale = (
+            f"Compounded from {priors.get('canon_count', 0)} kept palettes; "
+            f"neighbors={neighbor_slugs}; accent≈{plan['accent_hue']:.0f}°; "
+            f"novelty={plan.get('novelty', 0):.2f}. "
+            + _llm_palette_rationale(genome, "ide", role_hex)
+        )
+
+    role_hex = {c["role"]: c["hex"] for c in colors}
     payload = build_ide_palette_payload(
         palette_id=pid,
         colors=colors,
-        hue_family=family_name,
-        taste_mood=taste_mood,
+        hue_family=family_name or "ide",
+        taste_mood=taste_mood or "default",
         style_archetype=style_archetype,
-        is_light=resolved_light,
+        is_light=light_bit,
         genome=genome,
         user_prompt=prompt,
-        palette_rationale=_llm_palette_rationale(genome, "ide", role_map),
-        theme_display_name=name,
+        palette_rationale=rationale,
+        theme_display_name=display_name,
         derived_from=derived_from,
         iteration_index=iteration_index,
+        neighbors=neighbor_slugs,
     )
     out = write_ide_palette(palette_dir / f"{pid}.json", payload)
     record_draft(root, pid, prompt, derived_from=derived_from)
+    if derived_from:
+        record_iterate(
+            root,
+            parent_id=derived_from,
+            child_id=pid,
+            prompt=prompt,
+            accent_hue=plan["accent_hue"],
+        )
     result: dict[str, Any] = {
         "palette_id": pid,
         "path": str(out),
@@ -184,6 +409,13 @@ def make_ide_palette(
         "style_archetype": payload["style_archetype"],
         "derived_from": derived_from,
         "iteration_index": iteration_index,
+        "fork": fork,
+        "compounding": {
+            "neighbors": neighbor_slugs,
+            "accent_hue": plan["accent_hue"],
+            "novelty": plan.get("novelty"),
+            "canon_count": priors.get("canon_count"),
+        },
     }
     if add_to_roster:
         from core.roster import roster_add
@@ -385,3 +617,9 @@ def discard_ide_palette(root: Path, palette_id: str) -> dict[str, Any]:
     from core.ide_iteration import discard_ide_palette as _discard
 
     return _discard(root, palette_id)
+
+
+def remove_ide_palette_api(root: Path, target: str, *, reason: str | None = None) -> dict[str, Any]:
+    from core.canon import remove_ide_palette as _remove
+
+    return _remove(root, target, reason=reason)

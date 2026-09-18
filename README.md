@@ -3,7 +3,7 @@
 Local-first palette generation: taste sources → versioned genome → IDE themes and website tokens.
 
 Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross)  
-Local checkout: `Menhir Holdings/Color/Rob-Ross` (rename from `robross-palette-engine` when editors are closed if the folder still uses the old name)
+Local checkout: `Menhir Holdings/Color/RobRoss` (rename from `robross-palette-engine` when editors are closed if the folder still uses the old name)
 
 ## Core principles
 
@@ -27,8 +27,10 @@ python cli.py --help
 **IDE themes (chat agents)** — see `AGENTS.md`:
 
 ```python
-from core.ide_theme import make_ide_palette, iterate_ide_palette, keep_ide_palette
+from core.agent_api import make, iterate, keep, discard, remove, roster, show, validate, repair, learn
 ```
+
+Compounding: every `keep` / `discard` / `remove` updates `knowledge/ledger.jsonl` + `knowledge/priors.json`.
 
 **Web Color Studio** (optional browser UI):
 
@@ -42,7 +44,7 @@ python -m studio
 | Area | Command |
 |------|---------|
 | Genome | `ingest`, `build-genome`, `feedback`, `superset` |
-| IDE export | `export-themes` (repair); agents use `keep_ide_palette` |
+| IDE export | `export-themes` (repair); agents use `keep` / `remove` |
 | Web palettes | `web quick`, `web preview`, `web export`, `web sites` |
 | Site sync | `web sync paid` — push kept IDE palettes → registered consumers |
 | Consumers | `web consumers` — list `sites/consumers.json` |
@@ -69,5 +71,10 @@ AGENTS.md         Chat agent instructions
 pytest
 ```
 
-Typical agent flow: `make_ide_palette` → `iterate_ide_palette` → `keep_ide_palette` → auto VSIX.  
+Typical agent flow: `make` → `iterate` → `keep` → auto VSIX. Retire themes: `remove("slug")`. Health: `validate()` / `repair()`.  
 After keeping themes: `python cli.py web sync paid` (or your consumer id).
+
+
+## License
+
+All Rights Reserved © Menhir Holdings

@@ -137,23 +137,32 @@ def build_roster_live_layer(root: Path, palette_ids: list[str] | None = None) ->
 
 
 def apply_live_genome(base: dict[str, Any], root: Path) -> dict[str, Any]:
-    """Merge static genome with dynamic roster color graph (in-memory only)."""
+    """Merge static genome with dynamic roster color graph (in-memory only).
+
+    Writes into prompt_session — the knobs generate.py actually reads.
+    """
     layer = build_roster_live_layer(root)
     if not layer:
         return base
 
     syn = layer["synthesis"]
     patches: dict[str, Any] = {"roster_live": layer}
+    ps = dict(base.get("prompt_session") or {})
 
     center = syn.get("accent_hue_center")
-    if center is not None:
+    if center is not None and ps.get("accent_hue_center") is None:
+        # Only seed if brief hasn't already locked an accent
+        ps["accent_hue_center"] = round(center, 2)
+        ps["accent_hue_spread"] = 28.0
+        ps["from_live_roster"] = True
+        patches["prompt_session"] = ps
         span = 28
         lo = int((center - span) % 360)
         hi = int((center + span) % 360)
         patches["hue_strategy"] = {
             "accent_hue_center": round(center, 2),
             "accent_hue_range": sorted([lo, hi]),
-            "notes": "Derived from roster palette accent hues (live layer).",
+            "notes": "Derived from roster accent hues (live layer → prompt_session).",
         }
 
     styles = syn.get("style_archetypes") or []

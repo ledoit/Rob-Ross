@@ -10,6 +10,9 @@ ROSTER_FILENAME = "theme_roster.json"
 SESSION_FILENAME = "ide_iteration_session.json"
 USER_LOOP_FILENAME = "user_loop_state.json"
 CONSUMERS_FILENAME = "consumers.json"
+PRIORS_FILENAME = "priors.json"
+LEDGER_FILENAME = "ledger.jsonl"
+SKUS_FILENAME = "skus.json"
 
 _LEGACY_MIGRATIONS: tuple[tuple[str, str], ...] = (
     ("genome/theme_roster.json", f"registry/{ROSTER_FILENAME}"),
@@ -21,6 +24,13 @@ _LEGACY_MIGRATIONS: tuple[tuple[str, str], ...] = (
 
 def genome_dir(root: Path) -> Path:
     d = root / "genome"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def knowledge_dir(root: Path) -> Path:
+    """Compounding taste store: skus, priors, ledger. Built from kept palettes."""
+    d = root / "knowledge"
     d.mkdir(parents=True, exist_ok=True)
     return d
 

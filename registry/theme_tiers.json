@@ -1,0 +1,44 @@
+{
+  "product": "Rob Ross IDE Themes",
+  "pricing": {
+    "model": "one_time",
+    "pro_usd": 6.99,
+    "currency": "USD",
+    "includes": "pro_theme_pack_only",
+    "excludes": [
+      "generator",
+      "studio",
+      "genome_sync",
+      "subscription"
+    ]
+  },
+  "channels": {
+    "free": [
+      "vscode_marketplace",
+      "openvsx"
+    ],
+    "pro": [
+      "vscode_marketplace",
+      "gumroad",
+      "itch"
+    ]
+  },
+  "free": [
+    "alpenglow_paper",
+    "fjord_hammer",
+    "forest_canopy",
+    "kimbie_warm",
+    "lemon_haze",
+    "night_siren",
+    "violet_mist",
+    "violet_nocturne"
+  ],
+  "pro": [
+    "cherry_cream",
+    "high_contrast_signal",
+    "lemon_custard",
+    "lime",
+    "sky_azure"
+  ],
+  "marketing_names": {}
+}

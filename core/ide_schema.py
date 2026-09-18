@@ -1,15 +1,13 @@
-"""IDE palette schema and naming — no generate.py imports."""
+"""IDE palette schema and naming — display-aligned slugs only."""
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
 
-THEME_PREFIX = "RR"
+from core.sku import LEGACY_SLUG_ALIASES, normalize_slug, slug_to_display
 
-ARCHETYPE_LABEL_OVERRIDES: dict[str, str] = {
-    "red_velvet_rose": "Velvet Rose",
-}
+THEME_PREFIX = "RR"
 
 
 def _iso_now() -> str:
@@ -17,16 +15,16 @@ def _iso_now() -> str:
 
 
 def normalize_style(style_id: str) -> str:
-    if style_id == "lemon_custard":
-        return "lemon_cream"
-    return style_id
+    return normalize_slug(style_id)
+
+
+def style_display_name(style_id: str) -> str:
+    """Picker label core (no RR prefix). Slug always Title-Cases to display."""
+    return slug_to_display(normalize_style(style_id))
 
 
 def archetype_label(style_id: str) -> str:
-    style = normalize_style(style_id)
-    if style in ARCHETYPE_LABEL_OVERRIDES:
-        return ARCHETYPE_LABEL_OVERRIDES[style]
-    return style.replace("_", " ").title()
+    return style_display_name(style_id)
 
 
 def parse_taste_context(taste_context: str) -> dict[str, Any]:
@@ -70,17 +68,15 @@ def palette_meta(palette: dict[str, Any]) -> dict[str, Any]:
 
 
 def resolve_branded_name(palette: dict[str, Any]) -> str:
-    """Picker label with RR prefix (theme_display_name / theme_name)."""
     for key in ("theme_display_name", "theme_name"):
         raw = str(palette.get(key) or "").strip()
         if raw:
             return with_theme_prefix(strip_theme_prefix(raw))
     meta = palette_meta(palette)
-    return with_theme_prefix(archetype_label(meta["style_archetype"]))
+    return with_theme_prefix(style_display_name(meta["style_archetype"]))
 
 
 def resolve_display_core(palette: dict[str, Any]) -> str:
-    """Deprecated alias — returns branded name with RR prefix."""
     return resolve_branded_name(palette)
 
 
@@ -109,6 +105,7 @@ def build_ide_palette_payload(
     taste_mood_weighted: bool = False,
     derived_from: str | None = None,
     iteration_index: int | None = None,
+    neighbors: list[str] | None = None,
 ) -> dict[str, Any]:
     style = normalize_style(style_archetype)
     branded = (
@@ -116,10 +113,10 @@ def build_ide_palette_payload(
         if theme_name
         else with_theme_prefix(strip_theme_prefix(theme_display_name))
         if theme_display_name
-        else with_theme_prefix(archetype_label(style))
+        else with_theme_prefix(style_display_name(style))
     )
     ps_meta = genome.get("prompt_session") or {}
-    return {
+    payload: dict[str, Any] = {
         "id": palette_id,
         "context": "ide",
         "hue_family": hue_family,
@@ -131,28 +128,33 @@ def build_ide_palette_payload(
         "taste_context": build_taste_context(
             taste_mood=taste_mood, style_archetype=style, is_light=is_light
         ),
-        "design_paradigms_applied": genome.get("design_paradigms", []),
-        "techniques_applied": genome.get("techniques", []),
-        "genome_version": genome.get("version", "1.0.0"),
+        "genome_version": genome.get("version", "2.0.0"),
         "generated": _iso_now(),
         "colors": colors,
         "palette_rationale": palette_rationale,
-        "conflicts_flagged": [],
-        "feedback_score": None,
-        "feedback_dimensions": {},
         "user_prompt": user_prompt,
-        **({"derived_from": derived_from} if derived_from else {}),
-        **({"iteration_index": iteration_index} if iteration_index is not None else {}),
         "generation_controls": {
             "chromatic_variety": float(ps_meta.get("chromatic_variety", 0.55)),
             "prompt_adherence": float(ps_meta.get("prompt_adherence", 0.55)),
             "taste_mood_weighted": taste_mood_weighted,
+            "compounding": ps_meta.get("compounding"),
         },
     }
+    if derived_from:
+        payload["derived_from"] = derived_from
+    if iteration_index is not None:
+        payload["iteration_index"] = iteration_index
+    if neighbors:
+        payload["seeded_from"] = neighbors
+    return payload
 
 
 def enrich_legacy_palette(payload: dict[str, Any]) -> dict[str, Any]:
     enriched = dict(payload)
+    # Migrate legacy slugs in-place for readers
+    raw_style = str(enriched.get("style_archetype") or "")
+    if raw_style in LEGACY_SLUG_ALIASES:
+        enriched["style_archetype"] = LEGACY_SLUG_ALIASES[raw_style]
     meta = palette_meta(enriched)
     enriched.setdefault("style_archetype", meta["style_archetype"])
     enriched.setdefault("taste_mood", meta["taste_mood"])

@@ -1,0 +1,159 @@
+{
+  "id": "ide_palette_22",
+  "context": "ide",
+  "style_archetype": "violet_mist",
+  "is_light": true,
+  "theme_display_name": "RR Violet Mist",
+  "theme_name": "RR Violet Mist",
+  "hue_family": "violet",
+  "taste_mood": "default",
+  "colors": [
+    {
+      "role": "background",
+      "hex": "#F5F0FB",
+      "hsl": [
+        267,
+        58,
+        96
+      ],
+      "contrast_with_foreground": 13.76,
+      "contrast_with_background": 1.0
+    },
+    {
+      "role": "surface",
+      "hex": "#EBE3F5",
+      "hsl": [
+        267,
+        47,
+        93
+      ],
+      "contrast_with_foreground": 12.36,
+      "contrast_with_background": 1.11
+    },
+    {
+      "role": "border",
+      "hex": "#D2C2E8",
+      "hsl": [
+        265,
+        45,
+        84
+      ],
+      "contrast_with_foreground": 9.27,
+      "contrast_with_background": 1.48
+    },
+    {
+      "role": "muted",
+      "hex": "#8B72A8",
+      "hsl": [
+        268,
+        24,
+        55
+      ],
+      "contrast_with_foreground": 3.72,
+      "contrast_with_background": 3.7
+    },
+    {
+      "role": "foreground",
+      "hex": "#2A1F3D",
+      "hsl": [
+        262,
+        33,
+        18
+      ],
+      "contrast_with_foreground": 1.0,
+      "contrast_with_background": 13.76
+    },
+    {
+      "role": "accent_primary",
+      "hex": "#6D28D9",
+      "hsl": [
+        263,
+        70,
+        50
+      ],
+      "contrast_with_foreground": 2.17,
+      "contrast_with_background": 6.34
+    },
+    {
+      "role": "accent_secondary",
+      "hex": "#A21CAF",
+      "hsl": [
+        295,
+        72,
+        40
+      ],
+      "contrast_with_foreground": 2.44,
+      "contrast_with_background": 5.64
+    },
+    {
+      "role": "syntax_1",
+      "hex": "#5B21B6",
+      "hsl": [
+        263,
+        69,
+        42
+      ],
+      "contrast_with_foreground": 1.72,
+      "contrast_with_background": 8.02
+    },
+    {
+      "role": "syntax_2",
+      "hex": "#C026D3",
+      "hsl": [
+        293,
+        69,
+        49
+      ],
+      "contrast_with_foreground": 3.27,
+      "contrast_with_background": 4.2
+    },
+    {
+      "role": "syntax_3",
+      "hex": "#BE185D",
+      "hsl": [
+        335,
+        78,
+        42
+      ],
+      "contrast_with_foreground": 2.55,
+      "contrast_with_background": 5.39
+    },
+    {
+      "role": "syntax_4",
+      "hex": "#DB2777",
+      "hsl": [
+        333,
+        71,
+        51
+      ],
+      "contrast_with_foreground": 3.35,
+      "contrast_with_background": 4.1
+    },
+    {
+      "role": "syntax_5",
+      "hex": "#7C3AED",
+      "hsl": [
+        262,
+        83,
+        58
+      ],
+      "contrast_with_foreground": 2.71,
+      "contrast_with_background": 5.09
+    },
+    {
+      "role": "syntax_6",
+      "hex": "#9333EA",
+      "hsl": [
+        271,
+        81,
+        56
+      ],
+      "contrast_with_foreground": 2.87,
+      "contrast_with_background": 4.8
+    }
+  ],
+  "user_prompt": "more purple haziness overall \u2014 lavender-tint paper, soft violet fog in chrome",
+  "genome_version": "2.0.0",
+  "generated": "2026-07-21T04:08:44.834018+00:00",
+  "canon": true
+}
