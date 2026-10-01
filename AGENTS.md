@@ -61,7 +61,7 @@ from core.agent_api import (
     roster, show, validate, repair, learn, finalize,
 )
 
-root = Path("Menhir Holdings/Color/RobRoss")
+root = Path("personal/Stonehenge/Color/RobRoss")
 
 make(root, "dark theme with soft purple accents")
 iterate(root, "more violet, less magenta")

@@ -3,7 +3,7 @@
 Local-first palette generation: taste sources → versioned genome → IDE themes and website tokens.
 
 Repository: [github.com/ledoit/Rob-Ross](https://github.com/ledoit/Rob-Ross)  
-Local checkout: `Menhir Holdings/Color/RobRoss` (rename from `robross-palette-engine` when editors are closed if the folder still uses the old name)
+Local checkout: `personal/Stonehenge/Color/RobRoss` (rename from `robross-palette-engine` when editors are closed if the folder still uses the old name)
 
 ## Core principles
 

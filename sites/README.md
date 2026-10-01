@@ -16,7 +16,7 @@ Paths are relative to the Rob-Ross repo root.
 
 ## Move an app (e.g. Paid → Flow)
 
-1. `git clone git@github.com:ledoit/paid.git` into `Menhir Holdings/Flow/Paid`
+1. `git clone git@github.com:ledoit/paid.git` into `personal/Stonehenge/Flow/Paid`
 2. Update **only** `sites/consumers.json` → `"path": "../../Flow/Paid/src/lib/themes.ts"`
 3. From Rob-Ross: `python cli.py web sync paid`
 4. Remove the old folder after verifying sync
