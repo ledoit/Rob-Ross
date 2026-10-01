@@ -77,4 +77,4 @@ After keeping themes: `python cli.py web sync paid` (or your consumer id).
 
 ## License
 
-All Rights Reserved © Menhir Holdings
+All Rights Reserved © Philippe Ledoit
